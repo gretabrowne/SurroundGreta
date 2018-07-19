@@ -19,10 +19,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ZoneChoiceActivity" />
-        <activity android:name=".SpeakerPlayingActivity" />
-        <activity android:name=".SongSelectionActivity" />
-        <activity android:name=".ControllerPlayingActivity" />
+        <activity android:name=".ZoneChoiceActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bertogonz3000.surround.LandingActivity"/>
+        </activity>
+
+        <activity android:name=".SpeakerPlayingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bertogonz3000.surround.ZoneChoiceActivity"/>
+        </activity>
+
+        <activity android:name=".SongSelectionActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bertogonz3000.surround.LandingActivity"/>
+        </activity>
+
+        <activity android:name=".ControllerPlayingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bertogonz3000.surround.SongSelectionActivity"/>
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

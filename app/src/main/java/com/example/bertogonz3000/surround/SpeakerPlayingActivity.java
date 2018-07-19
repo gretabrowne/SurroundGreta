@@ -16,6 +16,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     boolean connected;  //TODO - update this?
     int songId;
+    boolean isPlaying;
     MediaPlayer mp;
 
     @Override
@@ -49,7 +50,23 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "onEvent");
                 songId = object.getFileId();
                 mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
+                mp.setVolume(object.getVolume(), object.getVolume());
                 mp.start();
+            }
+        });
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Song>() {
+            @Override
+            public void onEvent(ParseQuery<Song> query, Song object) {
+                // when volume, song, or playing status is updated
+                isPlaying = object.getIsPlaying();
+                if (!isPlaying) {
+                    mp.pause();
+                }
+                else {
+                    mp.setVolume(object.getVolume(), object.getVolume());
+                    mp.start();
+                }
             }
         });
 

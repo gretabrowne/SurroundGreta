@@ -29,4 +29,10 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //volume control by the controller/admin
     implementation 'com.sdsmdg.harjot:croller:1.0.7'
+    //Parse
+    implementation 'com.parse.bolts:bolts-android:1.4.0'
+    implementation 'com.parse:parse-android:1.17.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1' // for logging API calls to LogCat
+    //LiveQuery
+    implementation 'com.parse:parse-livequery-android:1.0.6'
 }

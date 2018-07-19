@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/tvSongName"
+        android:id="@+id/tvTrackName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_margin="10dp"
         android:text="Track Name"
         android:textSize="25dp"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:textAlignment="viewStart"/>
 
 </RelativeLayout>

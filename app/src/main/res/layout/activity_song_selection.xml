@@ -15,6 +15,7 @@
         android:textAlignment="center"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTracks"
         android:layout_below="@id/tvSongSelection"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -71,17 +71,6 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
 
         croller.setOnCrollerChangeListener(new OnCrollerChangeListener() {
-            @Override
-            public void onProgressChanged(Croller croller, int progress) {
-                // use the progress
-             //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                     //   progress, 0);
-
-                float prog = (float) progress/100;
-                track.setVolume(prog);
-
-                track.saveInBackground();
-            }
 
             @Override
             public void onStartTrackingTouch(Croller croller) {
@@ -91,6 +80,17 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
                 track = Parcels.unwrap(getIntent().getParcelableExtra("song"));
                 track.setVolume(leftVol);
+                track.saveInBackground();
+            }
+
+            @Override
+            public void onProgressChanged(Croller croller, int progress) {
+                // use the progress
+                //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                //   progress, 0);
+
+                float prog = (float) progress/100;
+                track.setVolume(prog);
                 track.saveInBackground();
             }
 

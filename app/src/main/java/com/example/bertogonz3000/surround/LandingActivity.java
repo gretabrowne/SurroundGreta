@@ -3,8 +3,13 @@ package com.example.bertogonz3000.surround;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.parse.ParseLiveQueryClient;
+import com.parse.ParseQuery;
+import com.parse.SubscriptionHandling;
 
 public class LandingActivity extends AppCompatActivity {
 
@@ -19,6 +24,22 @@ public class LandingActivity extends AppCompatActivity {
         //init Buttons
         speakerButton = findViewById(R.id.speakerButton);
         controllerButton = findViewById(R.id.controllerButton);
+
+
+        ParseLiveQueryClient liveQueryClient = ParseLiveQueryClient.Factory.getClient();
+
+        ParseQuery<Song> parseQuery = ParseQuery.getQuery(Song.class);
+
+        SubscriptionHandling<Song> subscriptionHandling = liveQueryClient.subscribe(parseQuery);
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Song>() {
+            @Override
+            public void onEvent(ParseQuery<Song> query, Song object) {
+                Log.e("LANDINGACTIVITY", "WITHIN");
+            }
+        });
+
+        Log.e("LANDINGACTIVITY", "WITHOUT");
     }
 
 

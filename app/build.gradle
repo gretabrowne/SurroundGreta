@@ -28,5 +28,5 @@ dependencies {
     //RecyclerView
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     //volume control by the controller/admin
-    compile 'com.sdsmdg.harjot:croller:1.0.7'
+    implementation 'com.sdsmdg.harjot:croller:1.0.7'
 }

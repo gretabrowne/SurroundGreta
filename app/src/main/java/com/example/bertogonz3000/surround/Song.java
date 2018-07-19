@@ -5,11 +5,11 @@ import com.parse.ParseObject;
 
 import org.parceler.Parcel;
 
-@Parcel
+//@Parcel
 @ParseClassName("Song")
 public class Song extends ParseObject{
 
-    public Song(){}
+    //public Song(){}
 
     public boolean getIsPlaying(){
        return getBoolean("isPlaying");

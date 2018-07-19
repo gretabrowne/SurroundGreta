@@ -78,9 +78,11 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                         progress, 0);
 
-                //Get song and set extra
-                Song song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
-                song.setVolume(progress);
+//                //Get song and set extra
+//                Song song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+//                song.setVolume(progress);
+//                song.saveInBackground();
+
             }
 
             @Override

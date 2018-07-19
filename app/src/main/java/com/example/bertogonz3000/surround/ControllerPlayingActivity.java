@@ -30,6 +30,9 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+
+        track = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -59,7 +62,6 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         //TODO - Copy a soundfile into a new directory under "res" and place it here
         //TODO - as the second argument
        // song = MediaPlayer.create(ControllerPlayingActivity.this, R.raw.heyjude);
-
         //MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
 
         AudioAttributes attributes = new AudioAttributes.Builder()
@@ -77,8 +79,6 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 // tracking started
                // song.setVolume(leftVol,rightVol);
               //  song.start();
-
-                track = Parcels.unwrap(getIntent().getParcelableExtra("song"));
                 track.setVolume(leftVol);
                 track.saveInBackground();
             }

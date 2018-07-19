@@ -68,6 +68,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     mp.pause();
                 }
                 else {
+                    Log.d("SpeakerPlayingActivity", "isPlaying");
+
                     mp.setVolume(object.getVolume(), object.getVolume());
                     mp.start();
                 }

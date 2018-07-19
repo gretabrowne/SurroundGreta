@@ -3,8 +3,10 @@ package com.example.bertogonz3000.surround;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.ParseLiveQueryClient;
@@ -24,6 +26,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
         connected = true;
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         //TODO - later make sure the speaker is connected to the master device and server
@@ -70,6 +75,22 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
     //TODO - later make sure the speaker is connected to the master device and server

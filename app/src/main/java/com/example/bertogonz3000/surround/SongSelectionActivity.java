@@ -49,7 +49,7 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         heyJudeList.add(R.raw.heyjude);
 
-        Track heyJude = new Track("Hey Jude", heyJudeList);
+        Track heyJude = new Track("Hey Jude", R.raw.heyjude,heyJudeList);
 
         tracklist.add(heyJude);
 

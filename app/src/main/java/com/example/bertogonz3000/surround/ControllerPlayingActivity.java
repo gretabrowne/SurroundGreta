@@ -1,12 +1,10 @@
 package com.example.bertogonz3000.surround;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -21,9 +19,10 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 import org.parceler.Parcels;
 
 public class ControllerPlayingActivity extends AppCompatActivity {
-    private AudioManager audioManager = null;
-    MediaPlayer song;
+    //private AudioManager audioManager = null;
+    //MediaPlayer song;
     float rightVol, leftVol;
+    Song track;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +46,11 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));
         croller.setProgressSecondaryColor(Color.parseColor("#EEEEEE"));
 
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        croller.setMax(audioManager
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        croller.setProgress(audioManager
-                .getStreamVolume(AudioManager.STREAM_MUSIC));
+        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        //croller.setMax(audioManager
+        //        .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        //croller.setProgress(audioManager
+        //        .getStreamVolume(AudioManager.STREAM_MUSIC));
 
 
         rightVol = 1;
@@ -59,39 +58,43 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
         //TODO - Copy a soundfile into a new directory under "res" and place it here
         //TODO - as the second argument
-        song = MediaPlayer.create(ControllerPlayingActivity.this, R.raw.heyjude);
+       // song = MediaPlayer.create(ControllerPlayingActivity.this, R.raw.heyjude);
 
-        MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
+        //MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
 
         AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
-        song.setAudioAttributes(attributes);
+        //song.setAudioAttributes(attributes);
 
 
         croller.setOnCrollerChangeListener(new OnCrollerChangeListener() {
             @Override
             public void onProgressChanged(Croller croller, int progress) {
                 // use the progress
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                        progress, 0);
+             //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                     //   progress, 0);
 
                 //Get song and set extra
-                Song song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+                track = Parcels.unwrap(getIntent().getParcelableExtra("song"));
                 float prog = (float) progress/100;
-                song.setVolume(prog);
+                track.setVolume(prog);
 
-                song.saveInBackground();
+                track.saveInBackground();
 
             }
 
             @Override
             public void onStartTrackingTouch(Croller croller) {
                 // tracking started
-                song.setVolume(leftVol,rightVol);
-                song.start();
+               // song.setVolume(leftVol,rightVol);
+              //  song.start();
+
+                track = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+                track.setVolume(leftVol);
+                track.saveInBackground();
             }
 
             @Override
@@ -104,7 +107,7 @@ public class ControllerPlayingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        song.release();
+       // song.release();
     }
 
     @Override
@@ -125,11 +128,15 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
 
     public void pauseSong(View view){
-        song.pause();
+        track.setIsPlaying(false);
+        track.saveInBackground();
+        //song.pause();
     }
 
     public void playSong(View view) {
-        song.start();
+        track.setIsPlaying(true);
+        track.saveInBackground();
+        //song.start();
     }
 
     //TODO - make this check the connection of the server (maybe in the onCreate)

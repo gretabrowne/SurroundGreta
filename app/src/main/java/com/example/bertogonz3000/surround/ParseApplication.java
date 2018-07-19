@@ -16,7 +16,7 @@ public class ParseApplication extends Application{
 
         ParseObject.registerSubclass(Song.class);
 
-        //troubelshooting
+        //troubleshooting
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
 
         //monitoring OKHttp traffic

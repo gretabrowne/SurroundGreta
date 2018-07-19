@@ -18,8 +18,6 @@ import android.view.View;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
-import org.parceler.Parcels;
-
 public class ControllerPlayingActivity extends AppCompatActivity {
     private AudioManager audioManager = null;
     MediaPlayer song;
@@ -77,7 +75,6 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 // use the progress
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                         progress, 0);
-
 //                //Get song and set extra
 //                Song song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 //                song.setVolume(progress);
@@ -97,8 +94,14 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 // tracking stopped
             }
         });
-
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        song.release();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

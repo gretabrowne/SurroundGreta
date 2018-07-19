@@ -31,10 +31,11 @@
                 android:value="com.example.bertogonz3000.surround.ZoneChoiceActivity"/>
         </activity>
 
-        <activity android:name=".SongSelectionActivity">
+        <activity android:name=".SongSelectionActivity" android:parentActivityName=".LandingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.LandingActivity"/>
+
         </activity>
 
         <activity android:name=".ControllerPlayingActivity">

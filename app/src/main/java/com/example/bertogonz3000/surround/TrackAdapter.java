@@ -69,7 +69,13 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         }
 
         public void onClick(View view){
-            //Todo - create some server logic that tells other phones what to play and when
+
+            Song song = new Song();
+            song.setFileId(R.raw.heyjude);
+            song.setIsPlaying(true);
+            song.setVolume(1);
+            song.saveInBackground();
+
             Intent i = new Intent(context, ControllerPlayingActivity.class);
             context.startActivity(i);
         }

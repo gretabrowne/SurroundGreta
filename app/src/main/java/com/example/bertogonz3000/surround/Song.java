@@ -27,7 +27,7 @@ public class Song extends ParseObject{
     }
 
     public void setVolume(float volume){
-        put("univVole", volume);
+        put("univVol", volume);
     }
 
 }

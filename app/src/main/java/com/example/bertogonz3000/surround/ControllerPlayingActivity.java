@@ -80,7 +80,9 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
                 //Get song and set extra
                 Song song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
-                song.setVolume(progress/100);
+                float prog = (float) progress/100;
+                song.setVolume(prog);
+
                 song.saveInBackground();
 
             }

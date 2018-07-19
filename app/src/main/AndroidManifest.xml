@@ -19,7 +19,13 @@
         <activity android:name=".ZoneChoiceActivity" />
         <activity android:name=".SpeakerPlayingActivity" />
         <activity android:name=".SongSelectionActivity" />
-        <activity android:name=".ControllerPlayingActivity"></activity>
+        <activity android:name=".ControllerPlayingActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".LostConnectionActivity"></activity>
     </application>
 
 </manifest>

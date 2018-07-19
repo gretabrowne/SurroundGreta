@@ -1,13 +1,21 @@
 package com.example.bertogonz3000.surround;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
+    boolean connected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
+
+        //TODO - later make sure the speaker is connected to the master device and server
+        if(!connected) {
+            Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
+            startActivity(intent);
+        }
     }
 }

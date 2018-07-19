@@ -29,8 +29,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="72dp"
         android:layout_marginTop="40dp"
+        android:background="#bca9e6"
         android:onClick="playSong"
-        android:background="@android:color/holo_purple"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <ImageButton
@@ -38,9 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/playButton"
-        android:onClick="pauseSong"
         android:layout_centerHorizontal="true"
-        android:background="@android:color/holo_purple"
+        android:background="#BCA9E6"
+        android:onClick="pauseSong"
         app:srcCompat="@android:drawable/ic_media_pause" />
 
 </RelativeLayout>

@@ -49,7 +49,7 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
         //TODO - Copy a soundfile into a new directory under "res" and place it here
         //TODO - as the second argument
-      //  song = MediaPlayer.create(ControllerPlayingActivity.this, R.raw.heyjude);
+        song = MediaPlayer.create(ControllerPlayingActivity.this, R.raw.heyjude);
 
         MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
 

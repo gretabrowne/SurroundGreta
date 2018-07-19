@@ -7,11 +7,13 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.bertogonz3000.surround.Models.Track;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SongSelectionActivity extends AppCompatActivity {
 
     ArrayList<Track> tracklist;
+    TrackAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +29,28 @@ public class SongSelectionActivity extends AppCompatActivity {
         //Todo - Populate the trackList
 
         //Create an Adapter
-        TrackAdapter adapter = new TrackAdapter(tracklist);
+        adapter = new TrackAdapter(tracklist);
 
         //attach the adapter to the RV
         rvTracks.setAdapter(adapter);
 
         //Set layout manager
         rvTracks.setLayoutManager(new LinearLayoutManager(this));
+
+        createTracks();
+    }
+
+    //This method should only be called in onCreate
+    public void createTracks(){
+        ArrayList<Integer> heyJudeList = new ArrayList<Integer>();
+
+        heyJudeList.add(R.raw.heyjude);
+
+        Track heyJude = new Track("Hey Jude", heyJudeList);
+
+        tracklist.add(heyJude);
+
+        adapter.notifyItemInserted(0);
     }
 
 

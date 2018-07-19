@@ -6,9 +6,9 @@ import java.util.ArrayList;
 public class Track {
 
     private String name;
-    private ArrayList<File> audio;
+    private ArrayList<Integer> audio;
 
-    public Track(String name, ArrayList<File> audio){
+    public Track(String name, ArrayList<Integer> audio){
         this.name = name;
         this.audio = audio;
     }
@@ -22,11 +22,11 @@ public class Track {
     }
 
 
-    public ArrayList<File> getAudio() {
+    public ArrayList<Integer> getAudio() {
         return audio;
     }
 
-    public void setAudio(ArrayList<File> audio) {
+    public void setAudio(ArrayList<Integer> audio) {
         this.audio = audio;
     }
 }

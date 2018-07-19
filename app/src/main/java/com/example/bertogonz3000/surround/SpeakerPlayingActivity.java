@@ -75,6 +75,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     @Override

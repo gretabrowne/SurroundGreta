@@ -14,6 +14,8 @@ public class ParseApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
+        ParseObject.registerSubclass(Song.class);
+
         //troubelshooting
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
 

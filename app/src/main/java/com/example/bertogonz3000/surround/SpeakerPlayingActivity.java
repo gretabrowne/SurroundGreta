@@ -53,9 +53,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 // when a new song is "created"
                 Log.d("SpeakerPlayingActivity", "onEvent create");
                 songId = object.getFileId();
-               mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
-               mp.setVolume(object.getVolume(), object.getVolume());
-               mp.start();
+                mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
+                mp.setVolume(object.getVolume(), object.getVolume());
+                mp.start();
             }
         });
 
@@ -64,19 +64,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when volume, song, or playing status is updated
                 isPlaying = object.getIsPlaying();
+                Log.d("SpeakerPlayingActivity", "in on update");
                 if (!isPlaying) {
-                   mp.pause();
+                    mp.pause();
+                    Log.d("SpeakerPlayingActivity", "pause");
                 }
                 else {
-<<<<<<< HEAD
-                    Log.d("SpeakerPlayingActivity", "isPlaying");
-
+                    Log.d("SpeakerPlayingActivity", "change volume");
                     mp.setVolume(object.getVolume(), object.getVolume());
                     mp.start();
-=======
-                   mp.setVolume(object.getVolume(), object.getVolume());
-                   mp.start();
->>>>>>> 5ff341bf9135ad7d2d71d5daa076a0832f9de76b
                 }
             }
         });

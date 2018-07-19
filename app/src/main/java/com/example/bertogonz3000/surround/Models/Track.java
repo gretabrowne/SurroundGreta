@@ -21,7 +21,6 @@ public class Track {
         this.name = name;
     }
 
-
     public ArrayList<Integer> getAudio() {
         return audio;
     }

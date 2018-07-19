@@ -3,8 +3,13 @@ package com.example.bertogonz3000.surround;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import org.parceler.Parcel;
+
+@Parcel
 @ParseClassName("Song")
 public class Song extends ParseObject{
+
+    public Song(){}
 
     public boolean getIsPlaying(){
        return getBoolean("isPlaying");

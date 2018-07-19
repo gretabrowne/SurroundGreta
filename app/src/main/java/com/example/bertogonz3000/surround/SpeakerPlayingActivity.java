@@ -7,7 +7,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
@@ -52,7 +51,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when a new song is "created"
-                Log.d("SpeakerPlayingActivity", "onEvent");
+                Log.d("SpeakerPlayingActivity", "onEvent create");
                 songId = object.getFileId();
                 mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
                 mp.setVolume(object.getVolume(), object.getVolume());
@@ -77,6 +76,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
 
 
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.LEAVE, new SubscriptionHandling.HandleEventCallback<Song>() {
+            @Override
+            public void onEvent(ParseQuery<Song> query, Song object) {
+                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect");
+                disconnect();
+            }
+        });
     }
 
     @Override
@@ -96,7 +102,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //TODO - later make sure the speaker is connected to the master device and server
-    public void disconnect(View view) {
+    public void disconnect() {
         Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
         startActivity(intent);
     }

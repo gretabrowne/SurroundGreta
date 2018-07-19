@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.bertogonz3000.surround.Models.Track;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
@@ -80,6 +82,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             song.saveInBackground();
 
             Intent i = new Intent(context, ControllerPlayingActivity.class);
+            i.putExtra("song", Parcels.wrap(song));
             context.startActivity(i);
         }
 

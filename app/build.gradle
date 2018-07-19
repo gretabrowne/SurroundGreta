@@ -39,4 +39,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1' // for logging API calls to LogCat
     //LiveQuery
     implementation 'com.parse:parse-livequery-android:1.0.6'
+    //Parcel
+    implementation 'org.parceler:parceler-api:1.1.11'
+    annotationProcessor 'org.parceler:parceler:1.1.11'
 }

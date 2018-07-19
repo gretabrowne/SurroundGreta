@@ -1,12 +1,16 @@
 package com.example.bertogonz3000.surround;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.sdsmdg.harjot.crollerTest.Croller;
@@ -91,6 +95,43 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
     public void playSong(View view) {
         song.start();
+    }
+
+    //TODO - make this check the connection of the server (maybe in the onCreate)
+    public void checkConnection(View view) {
+        View alertView = LayoutInflater.from(ControllerPlayingActivity.this).inflate(R.layout.dialog_speaker_disconnected, null);
+        // Create alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ControllerPlayingActivity.this);
+        // set message_item.xml to AlertDialog builder
+        alertDialogBuilder.setView(alertView);
+
+        // Create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // Configure dialog button (Dismiss)
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Restart",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //if the restart button is hit, just return to the home screen
+                        Intent intent = new Intent(ControllerPlayingActivity.this, LandingActivity.class);
+                        startActivity(intent);
+
+                    }
+                });
+
+        // Configure dialog button (Cancel)
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Refresh",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //TODO - check again if there is a connection to the server
+                        //if connected, then dismiss and return to the ControllerPlayingActivity
+                        dialog.dismiss();
+                    }
+                });
+        // Display the dialog
+        alertDialog.show();
     }
 
 }

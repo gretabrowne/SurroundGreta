@@ -15,11 +15,12 @@
 
     <ImageButton
         android:id="@+id/ivReconnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="checkConnection"
+        android:layout_width="59dp"
+        android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:background="#BCA9E6"
+        android:onClick="checkConnection"
         app:srcCompat="@android:drawable/stat_notify_sync" />
 
 </RelativeLayout>

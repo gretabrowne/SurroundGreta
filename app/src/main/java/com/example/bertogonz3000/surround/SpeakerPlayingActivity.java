@@ -14,6 +14,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
+        connected = true;
 
         //TODO - later make sure the speaker is connected to the master device and server
         if(!connected) {

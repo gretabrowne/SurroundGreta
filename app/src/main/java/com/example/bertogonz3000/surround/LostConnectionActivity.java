@@ -13,6 +13,8 @@ public class LostConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lost_connection);
 
+        connected = true;
+
         //TODO - check connection here as well
     }
 

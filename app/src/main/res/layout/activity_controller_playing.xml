@@ -43,4 +43,17 @@
         android:onClick="pauseSong"
         app:srcCompat="@android:drawable/ic_media_pause" />
 
+    <Button
+        android:id="@+id/disconnectBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/playButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="19dp"
+        android:background="#BCA9E6"
+        android:fontFamily="@font/roboto"
+        android:onClick="checkConnection"
+        android:text="Disconnect"
+        android:textColor="@android:color/white" />
+
 </RelativeLayout>

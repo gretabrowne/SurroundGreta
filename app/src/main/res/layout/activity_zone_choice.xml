@@ -10,54 +10,65 @@
         android:id="@+id/tvZoneChoice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Zone Choice"
         android:layout_alignParentTop="true"
-        android:textAlignment="center"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/roboto"
+        android:text="Zone Selection"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/centerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/tvZoneChoice"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/roboto"
+        android:onClick="onSelectZone"
         android:text="Center"
-        android:onClick="onSelectZone"/>
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/frontLeftButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Left Front"
-        android:layout_below="@id/centerButton"
         android:layout_alignParentLeft="true"
-        android:onClick="onSelectZone"/>
+        android:layout_below="@id/centerButton"
+        android:fontFamily="@font/roboto"
+        android:onClick="onSelectZone"
+        android:text="Left Front"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/frontRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Right Front"
-        android:layout_below="@id/centerButton"
         android:layout_alignParentRight="true"
-        android:onClick="onSelectZone"/>
+        android:layout_below="@id/centerButton"
+        android:fontFamily="@font/roboto"
+        android:onClick="onSelectZone"
+        android:text="Right Front"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/backLeftButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Left Back"
-        android:layout_below="@id/frontLeftButton"
         android:layout_alignParentLeft="true"
-        android:onClick="onSelectZone"/>
+        android:layout_below="@id/frontLeftButton"
+        android:fontFamily="@font/roboto"
+        android:onClick="onSelectZone"
+        android:text="Left Back"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/backRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Right Back"
-        android:layout_below="@id/frontRightButton"
         android:layout_alignParentRight="true"
-        android:onClick="onSelectZone"/>
+        android:layout_below="@id/frontRightButton"
+        android:fontFamily="@font/roboto"
+        android:onClick="onSelectZone"
+        android:text="Right Back"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>

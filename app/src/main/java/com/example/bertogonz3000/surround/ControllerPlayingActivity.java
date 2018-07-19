@@ -108,21 +108,9 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
 
-        // Configure dialog button (Dismiss)
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Restart",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                        //if the restart button is hit, just return to the home screen
-                        Intent intent = new Intent(ControllerPlayingActivity.this, LandingActivity.class);
-                        startActivity(intent);
-
-                    }
-                });
-
-        // Configure dialog button (Cancel)
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Refresh",
+        // Configure dialog button (Refresh)
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Refresh",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //TODO - check again if there is a connection to the server
@@ -130,6 +118,21 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+
+
+        // Configure dialog button (Restart)
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "End Session",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //if the restart button is hit, just return to the home screen
+                        Intent intent = new Intent(ControllerPlayingActivity.this, LandingActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+
         // Display the dialog
         alertDialog.show();
     }

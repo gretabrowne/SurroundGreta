@@ -1,13 +1,14 @@
 package com.example.bertogonz3000.surround;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import com.example.bertogonz3000.surround.Models.Track;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class SongSelectionActivity extends AppCompatActivity {
@@ -19,6 +20,8 @@ public class SongSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_selection);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Find RV
         RecyclerView rvTracks = findViewById(R.id.rvTracks);
@@ -52,6 +55,20 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         adapter.notifyItemInserted(0);
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
 
 }

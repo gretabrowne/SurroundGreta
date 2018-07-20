@@ -4,15 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".SongSelectionActivity">
 
     <TextView
         android:id="@+id/tvSongSelection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Song Selection"
         android:layout_alignParentTop="true"
-        android:textAlignment="center"/>
+        android:fontFamily="@font/roboto_light"
+        android:text="Song Selection"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTracks"

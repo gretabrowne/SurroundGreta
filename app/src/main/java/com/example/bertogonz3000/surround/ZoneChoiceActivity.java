@@ -46,6 +46,7 @@ public class ZoneChoiceActivity extends AppCompatActivity {
     }
 
     public void onSelectZone(View view){
+
         Intent i = new Intent(this, SpeakerPlayingActivity.class);
         startActivity(i);
     }

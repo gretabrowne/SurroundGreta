@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ZoneChoiceActivity">
 
     <TextView
@@ -12,15 +13,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:fontFamily="@font/roboto"
+        android:fontFamily="@font/roboto_light"
         android:text="Zone Selection"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/centerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvZoneChoice"
+        android:background="@drawable/button_border"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/roboto"
         android:onClick="onSelectZone"
@@ -30,6 +34,7 @@
     <Button
         android:id="@+id/frontLeftButton"
         android:layout_width="wrap_content"
+        android:background="@drawable/button_border"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/centerButton"
@@ -42,6 +47,7 @@
         android:id="@+id/frontRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_border"
         android:layout_alignParentRight="true"
         android:layout_below="@id/centerButton"
         android:fontFamily="@font/roboto"
@@ -54,6 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/button_border"
         android:layout_below="@id/frontLeftButton"
         android:fontFamily="@font/roboto"
         android:onClick="onSelectZone"
@@ -64,6 +71,7 @@
         android:id="@+id/backRightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_border"
         android:layout_alignParentRight="true"
         android:layout_below="@id/frontRightButton"
         android:fontFamily="@font/roboto"

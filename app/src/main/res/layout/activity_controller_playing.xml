@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/background"
     android:layout_height="match_parent"
     tools:context=".ControllerPlayingActivity">
     <com.sdsmdg.harjot.crollerTest.Croller
@@ -11,13 +12,13 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         app:back_circle_color="#EDEDED"
-        app:indicator_color="#0B3C49"
+        app:indicator_color="@color/colorAccent"
         app:indicator_width="10"
         app:is_continuous="true"
         app:label_color="#000000"
         app:main_circle_color="#FFFFFF"
         app:max="1000"
-        app:progress_primary_color="#0B3C49"
+        app:progress_primary_color="#BCA9E6"
         app:progress_secondary_color="#EEEEEE"
         app:start_offset="45" />
 
@@ -29,7 +30,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="72dp"
         android:layout_marginTop="40dp"
-        android:background="#bca9e6"
+        android:background="@drawable/button_border"
         android:onClick="playSong"
         app:srcCompat="@android:drawable/ic_media_play" />
 
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/playButton"
         android:layout_centerHorizontal="true"
-        android:background="#BCA9E6"
+        android:background="@drawable/button_border"
         android:onClick="pauseSong"
         app:srcCompat="@android:drawable/ic_media_pause" />
 
@@ -50,7 +51,7 @@
         android:layout_alignBottom="@+id/playButton"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="19dp"
-        android:background="#BCA9E6"
+        android:background="@drawable/button_border"
         android:fontFamily="@font/roboto"
         android:onClick="checkConnection"
         android:text="Disconnect"

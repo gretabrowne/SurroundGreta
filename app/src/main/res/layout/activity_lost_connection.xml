@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".LostConnectionActivity">
 
     <ImageView
         android:id="@+id/ivWifi"
         android:layout_width="wrap_content"
+        android:tint="@color/colorAccent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         app:srcCompat="@drawable/wifi" />
@@ -19,7 +21,7 @@
         android:layout_height="45dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:background="#BCA9E6"
+        android:background="@drawable/button_border"
         android:onClick="checkConnection"
         app:srcCompat="@android:drawable/stat_notify_sync" />
 

@@ -12,12 +12,13 @@
         android:layout_alignBottom="@id/ivCover"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/ivCover"
         android:fontFamily="@font/roboto"
-        android:text="Track Name"
-        android:layout_marginTop="5dp"
+        android:text="Track name"
         android:textAlignment="viewStart"
         android:textAllCaps="false"
+        android:textColor="@android:color/white"
         android:textSize="25dp" />
 
     <ImageView

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.example.bertogonz3000.surround.Models.Track;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,10 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         heyJudeList.add(R.raw.heyjuderight);
 
+        heyJudeList.add(R.raw.heyjudeleft);
+
+        heyJudeList.add(R.raw.heyjuderight);
+
         Track heyJude = new Track("Hey Jude", heyJudeList);
 
         tracklist.add(heyJude);
@@ -68,11 +73,33 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         yesterdayList.add(R.raw.yesterdayright);
 
+        yesterdayList.add(R.raw.yesterdayleft);
+
+        yesterdayList.add(R.raw.yesterdayright);
+
         Track yesterday = new Track("Yesterday", yesterdayList);
 
         tracklist.add(yesterday);
 
         adapter.notifyItemInserted(1);
+
+        ArrayList<Integer> testList = new ArrayList<Integer>();
+
+        testList.add(R.raw.frontcentertest);
+
+        testList.add(R.raw.frontlefttest);
+
+        testList.add(R.raw.frontrighttest);
+
+        testList.add(R.raw.leftsurroundtest);
+
+        testList.add(R.raw.rightsurroundtest);
+
+        Track testTrack = new Track("Test Track", testList);
+
+        tracklist.add(testTrack);
+
+        adapter.notifyItemInserted(2);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

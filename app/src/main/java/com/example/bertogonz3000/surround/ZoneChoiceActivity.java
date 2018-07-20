@@ -13,6 +13,8 @@ public class ZoneChoiceActivity extends AppCompatActivity {
     //Declare buttons
     Button centerButton, frontLeftButton, frontRightButton, backLeftButton, backRightButton;
 
+    String zone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,24 @@ public class ZoneChoiceActivity extends AppCompatActivity {
     }
 
     public void onSelectZone(View view){
+        if (view.getId() == R.id.centerButton) {
+            // in center zone
+            zone = "center";
+        }
+        else if (view.getId() == R.id.frontLeftButton) {
+            zone = "frontLeft";
+        }
+        else if (view.getId() == R.id.frontRightButton) {
+            zone = "frontRight";
+        }
+        else if (view.getId() == R.id.backLeftButton) {
+            zone = "backLeft";
+        }
+        else {
+            zone = "backRight";
+        }
         Intent i = new Intent(this, SpeakerPlayingActivity.class);
+        i.putExtra("zone", zone);
         startActivity(i);
     }
 }

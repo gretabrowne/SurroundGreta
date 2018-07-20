@@ -14,6 +14,7 @@ import com.example.bertogonz3000.surround.Models.Track;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
@@ -42,7 +43,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         //Get the track
         Track track = trackList.get(position);
 
-        holder.fileId = track.getAudioId();
+        holder.audioIds = track.getAudioIds();
 
         //Set views based on model
 
@@ -62,10 +63,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
 
         public TextView tvTrackName;
         private final Context context = itemView.getContext();
-        public int fileId;
+        public List<Integer> audioIds;
 
         public ViewHolder(View itemView){
             super(itemView);
+
+            audioIds = new ArrayList<Integer>();
 
             tvTrackName = itemView.findViewById(R.id.tvTrackName);
 
@@ -76,7 +79,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         public void onClick(View view){
 
             Song song = new Song();
-            song.setFileId(fileId);
+            song.setAudioIds(audioIds);
             song.setIsPlaying(true);
             song.setVolume(1);
             song.saveInBackground();

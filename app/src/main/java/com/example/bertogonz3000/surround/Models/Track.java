@@ -7,12 +7,10 @@ public class Track {
 
     private String name;
     private ArrayList<Integer> audio;
-    private int audioId;
 
-    public Track(String name, int audioId, ArrayList<Integer> audio){
+    public Track(String name, ArrayList<Integer> audioIds){
         this.name = name;
         this.audio = audio;
-        this.audioId = audioId;
     }
 
     public String getName() {
@@ -23,19 +21,12 @@ public class Track {
         this.name = name;
     }
 
-    public ArrayList<Integer> getAudio() {
+
+    public ArrayList<Integer> getAudioIds() {
         return audio;
     }
 
-    public void setAudio(ArrayList<Integer> audio) {
+    public void setAudioIds(ArrayList<Integer> audio) {
         this.audio = audio;
-    }
-
-    public int getAudioId() {
-        return audioId;
-    }
-
-    public void setAudioId(int audioId) {
-        this.audioId = audioId;
     }
 }

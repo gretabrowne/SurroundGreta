@@ -19,6 +19,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     int songId;
     boolean isPlaying;
     MediaPlayer mp;
+    String zone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_speaker_playing);
         connected = true;
 
+        zone = getIntent().getStringExtra("zone");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -52,7 +54,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when a new song is "created"
                 Log.d("SpeakerPlayingActivity", "onEvent create");
-                songId = object.getFileId();
+                if (zone.equals("center") || zone.equals("frontRight") || zone.equals("backRight")) {
+                    // play right side file
+                    songId = object.getAudioIds().get(1);
+                }else {
+                    songId = object.getAudioIds().get(0);
+                }
                 mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
                 mp.setVolume(object.getVolume(), object.getVolume());
                 mp.start();

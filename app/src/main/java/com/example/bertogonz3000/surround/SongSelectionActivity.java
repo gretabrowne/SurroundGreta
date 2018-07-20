@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.example.bertogonz3000.surround.Models.Track;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SongSelectionActivity extends AppCompatActivity {
 
@@ -47,9 +48,11 @@ public class SongSelectionActivity extends AppCompatActivity {
     public void createTracks(){
         ArrayList<Integer> heyJudeList = new ArrayList<Integer>();
 
-        heyJudeList.add(R.raw.heyjude);
+        heyJudeList.add(R.raw.heyjudeleft);
 
-        Track heyJude = new Track("Hey Jude", R.raw.heyjude,heyJudeList);
+        heyJudeList.add(R.raw.heyjuderight);
+
+        Track heyJude = new Track("Hey Jude", heyJudeList);
 
         tracklist.add(heyJude);
 

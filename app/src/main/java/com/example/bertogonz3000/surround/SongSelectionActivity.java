@@ -48,6 +48,8 @@ public class SongSelectionActivity extends AppCompatActivity {
     public void createTracks(){
         ArrayList<Integer> heyJudeList = new ArrayList<Integer>();
 
+        heyJudeList.add(R.raw.heyjude);
+
         heyJudeList.add(R.raw.heyjudeleft);
 
         heyJudeList.add(R.raw.heyjuderight);

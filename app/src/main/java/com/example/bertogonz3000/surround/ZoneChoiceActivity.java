@@ -62,7 +62,7 @@ public class ZoneChoiceActivity extends AppCompatActivity {
         else if (view.getId() == R.id.backLeftButton) {
             zone = "backLeft";
         }
-        else {
+        else if (view.getId() == R.id.backRightButton){
             zone = "backRight";
         }
 

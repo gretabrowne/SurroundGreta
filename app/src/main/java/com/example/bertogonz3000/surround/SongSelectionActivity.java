@@ -59,6 +59,20 @@ public class SongSelectionActivity extends AppCompatActivity {
         tracklist.add(heyJude);
 
         adapter.notifyItemInserted(0);
+
+        ArrayList<Integer> yesterdayList = new ArrayList<Integer>();
+
+        yesterdayList.add(R.raw.yesterdaycenter);
+
+        yesterdayList.add(R.raw.yesterdayleft);
+
+        yesterdayList.add(R.raw.yesterdayright);
+
+        Track yesterday = new Track("Yesterday", yesterdayList);
+
+        tracklist.add(yesterday);
+
+        adapter.notifyItemInserted(1);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -39,14 +39,15 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         Croller croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
         croller.setBackCircleColor(Color.parseColor("#EDEDED"));
-        croller.setMainCircleColor(Color.WHITE);
+        croller.setMainCircleColor(Color.parseColor("#212121"));
         //croller.setMax(50);
-        croller.setStartOffset(45);
         croller.setIsContinuous(false);
+        croller.setStartOffset(45);
         croller.setLabel("Surround");
         croller.setLabelColor(Color.BLACK);
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));
+        croller.setProgressSecondaryCircleSize(3);
         croller.setProgressSecondaryColor(Color.parseColor("#ffffff"));
         croller.setProgressPrimaryCircleSize(5);
 

@@ -10,7 +10,7 @@ public class Track {
 
     public Track(String name, ArrayList<Integer> audioIds){
         this.name = name;
-        this.audio = audio;
+        this.audio = audioIds;
     }
 
     public String getName() {

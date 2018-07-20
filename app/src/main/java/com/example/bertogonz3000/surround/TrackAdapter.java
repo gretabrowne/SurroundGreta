@@ -43,7 +43,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         //Get the track
         Track track = trackList.get(position);
 
-        holder.audioIds = track.getAudioIds();
 
         //Set views based on model
 
@@ -63,12 +62,9 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
 
         public TextView tvTrackName;
         private final Context context = itemView.getContext();
-        public List<Integer> audioIds;
 
         public ViewHolder(View itemView){
             super(itemView);
-
-            audioIds = new ArrayList<Integer>();
 
             tvTrackName = itemView.findViewById(R.id.tvTrackName);
 
@@ -77,9 +73,9 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         }
 
         public void onClick(View view){
-
+            Track track = trackList.get(getAdapterPosition());
             Song song = new Song();
-            song.setAudioIds(audioIds);
+            song.setAudioIds(track.getAudioIds());
             song.setIsPlaying(true);
             song.setVolume(1);
             song.saveInBackground();

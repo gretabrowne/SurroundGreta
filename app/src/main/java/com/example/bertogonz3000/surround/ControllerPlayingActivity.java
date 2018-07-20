@@ -104,6 +104,7 @@ public class ControllerPlayingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        track.deleteInBackground();
        // song.release();
     }
 
@@ -168,9 +169,9 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                         //if the restart button is hit, just return to the home screen
                         Intent intent = new Intent(ControllerPlayingActivity.this, LandingActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 });
-
 
         // Display the dialog
         alertDialog.show();

@@ -14,6 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/ivCover"
+        android:layout_marginLeft="5dp"
         android:fontFamily="@font/roboto"
         android:text="Track name"
         android:textAlignment="viewStart"

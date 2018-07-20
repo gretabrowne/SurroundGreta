@@ -54,11 +54,16 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when a new song is "created"
                 Log.d("SpeakerPlayingActivity", "onEvent create");
-                if (zone.equals("center") || zone.equals("frontRight") || zone.equals("backRight")) {
-                    // play right side file
+                if (zone.equals("frontLeft") || zone.equals("backLeft")) {
+                    // play left
                     songId = object.getAudioIds().get(1);
-                }else {
+                }else if (zone.equals("center")){
+                    // play both left and right
                     songId = object.getAudioIds().get(0);
+                }
+                else {
+                    // play right
+                    songId = object.getAudioIds().get(2);
                 }
                 mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
                 mp.setVolume(object.getVolume(), object.getVolume());

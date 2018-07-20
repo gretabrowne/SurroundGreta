@@ -61,7 +61,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     // play both left and right
                     songId = object.getAudioIds().get(0);
                 }
-                else {
+                else if(zone.equals("frontRight") || zone.equals("backRight")) {
                     // play right
                     songId = object.getAudioIds().get(2);
                 }

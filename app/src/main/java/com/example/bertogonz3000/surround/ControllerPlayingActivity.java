@@ -47,14 +47,14 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         croller.setLabelColor(Color.BLACK);
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));
-        croller.setProgressSecondaryColor(Color.parseColor("#EEEEEE"));
+        croller.setProgressSecondaryColor(Color.parseColor("#ffffff"));
+        croller.setProgressPrimaryCircleSize(5);
 
         //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //croller.setMax(audioManager
         //        .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         //croller.setProgress(audioManager
         //        .getStreamVolume(AudioManager.STREAM_MUSIC));
-
 
         rightVol = 1;
         leftVol = 1;
@@ -174,6 +174,7 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
         // Display the dialog
         alertDialog.show();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.alertDialogBackground);
     }
 
 }

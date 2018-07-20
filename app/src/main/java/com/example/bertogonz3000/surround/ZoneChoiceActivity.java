@@ -48,6 +48,7 @@ public class ZoneChoiceActivity extends AppCompatActivity {
     }
 
     public void onSelectZone(View view){
+
         if (view.getId() == R.id.centerButton) {
             // in center zone
             zone = "center";
@@ -64,6 +65,7 @@ public class ZoneChoiceActivity extends AppCompatActivity {
         else {
             zone = "backRight";
         }
+
         Intent i = new Intent(this, SpeakerPlayingActivity.class);
         i.putExtra("zone", zone);
         startActivity(i);

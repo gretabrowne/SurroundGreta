@@ -84,8 +84,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
-
-
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.LEAVE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {

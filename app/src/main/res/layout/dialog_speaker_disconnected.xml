@@ -4,27 +4,28 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_margin="5dp"
         android:fontFamily="@font/roboto"
         android:text="Connection Lost"
-        android:layout_marginLeft="5dp"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_height="48dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvTitle"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:fontFamily="@font/roboto"
         android:text="Wifi connection has been lost. Please try to reconnect to the host device in order to continue."
-        android:textColor="@android:color/black" />
+        android:textColor="#8affffff" />
 
 </RelativeLayout>

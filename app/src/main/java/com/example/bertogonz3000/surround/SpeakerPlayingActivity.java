@@ -56,15 +56,25 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "onEvent create");
                 if (zone.equals("frontLeft") || zone.equals("backLeft")) {
                     // play left
+                    Log.d("SpeakerPlayingActivity", "LeftSide");
                     songId = object.getAudioIds().get(1);
                 }else if (zone.equals("center")){
                     // play both left and right
+                    Log.d("SpeakerPlayingActivity", "CenterSide");
                     songId = object.getAudioIds().get(0);
                 }
                 else if(zone.equals("frontRight") || zone.equals("backRight")) {
                     // play right
+                    Log.d("SpeakerPlayingActivity", "RightSide");
                     songId = object.getAudioIds().get(2);
                 }
+                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                    @Override
+                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                        Log.d("SpeakerPlayingActivity", "error create");
+                        return true;
+                    }
+                });
                 mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
                 mp.setVolume(object.getVolume(), object.getVolume());
                 mp.start();
@@ -77,6 +87,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 // when volume, song, or playing status is updated
                 isPlaying = object.getIsPlaying();
                 Log.d("SpeakerPlayingActivity", "in on update");
+                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                    @Override
+                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                        Log.d("SpeakerPlayingActivity", "error create");
+                        return true;
+                    }
+                });
                 if (!isPlaying) {
                     mp.pause();
                     Log.d("SpeakerPlayingActivity", "pause");

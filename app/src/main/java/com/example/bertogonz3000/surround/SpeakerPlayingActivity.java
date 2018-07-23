@@ -55,7 +55,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when a new song is "created"
 
-                // use value of "position" 
+                // use value of "position"
 //                Log.d("SpeakerPlayingActivity", "onEvent create");
 //                if (zone.equals("center")) {
 //                    // play center

@@ -12,6 +12,7 @@ import it.beppi.knoblibrary.Knob;
 
 public class ZoneChoiceUpdateActivity extends AppCompatActivity {
 
+    TextView textView4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,7 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        final TextView textView4 = (TextView) findViewById(R.id.textView4);
+        textView4 = (TextView) findViewById(R.id.textView4);
         int number = knob4.getState() + 1;
         textView4.setText(Integer.toString(number));
         knob4.setOnStateChanged(new Knob.OnStateChanged() {
@@ -33,8 +34,6 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
             }
         });
 
-        Intent i = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
-        i.putExtra("position", Integer.valueOf(textView4.getText().toString())); //todo-- find shorter way to convert this??
     }
 
     public void setLocation(View view) {
@@ -47,11 +46,12 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-//            case R.id.next: {
-//                Intent intent = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
-//                startActivity(intent);
-//                return true;
-//            }
+            case R.id.next: {
+                Intent intent = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
+                intent.putExtra("position", Integer.valueOf(textView4.getText().toString())); //todo-- find shorter way to convert this??
+                startActivity(intent);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
 

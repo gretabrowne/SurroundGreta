@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,7 +95,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                // tracking started
 //                mp.setVolume(10,10);
 //                mp.start();
-
+                mp.start(); //change?
                 song.setVolume(leftVol);
                 song.saveInBackground();
             }
@@ -125,7 +124,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar.setProgress(0);
         seekbar.setMax(100);
 
-        mp.start();
         updateProgressBar();
     }
 
@@ -215,7 +213,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mp.getDuration();
-            Log.d("TotalDuration", String.valueOf(totalDuration));
             long currentDuration = mp.getCurrentPosition();
 
 
@@ -234,10 +231,9 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         }
     };
 
+    //seekbar override methods
     @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-    }
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {

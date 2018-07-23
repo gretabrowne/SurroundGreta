@@ -33,11 +33,13 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
                 textView4.setText(Integer.toString(number));
             }
         });
-
+        
     }
 
     public void setLocation(View view) {
-
+        Intent i = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
+        i.putExtra("position", Integer.valueOf(textView4.getText().toString())); //todo-- find shorter way to convert this??
+        startActivity(i);
     }
 
     @Override
@@ -46,12 +48,11 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.next: {
-                Intent intent = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
-                intent.putExtra("position", Integer.valueOf(textView4.getText().toString())); //todo-- find shorter way to convert this??
-                startActivity(intent);
-                return true;
-            }
+//            case R.id.next: {
+//                Intent intent = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
+//                startActivity(intent);
+//                return true;
+//            }
             default:
                 return super.onOptionsItemSelected(item);
 

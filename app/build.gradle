@@ -30,16 +30,19 @@ dependencies {
     //RecyclerView
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.parse:parse-livequery-android:1.0.6'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1' // for logging API calls to LogCat
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    // for logging API calls to LogCat
     //volume control by the controller/admin
     implementation 'com.sdsmdg.harjot:croller:1.0.7'
     //Parse
     implementation 'com.parse.bolts:bolts-android:1.4.0'
     implementation 'com.parse:parse-android:1.17.3'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1' // for logging API calls to LogCat
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+    // for logging API calls to LogCat
     //LiveQuery
     implementation 'com.parse:parse-livequery-android:1.0.6'
     //Parcel
     implementation 'org.parceler:parceler-api:1.1.11'
     annotationProcessor 'org.parceler:parceler:1.1.11'
+    implementation 'com.github.BeppiMenozzi:Knob:1.9.0'
 }

@@ -70,4 +70,10 @@ public class ZoneChoiceActivity extends AppCompatActivity {
         i.putExtra("zone", zone);
         startActivity(i);
     }
+
+    public void updateZone(View view) {
+        Intent intent = new Intent(ZoneChoiceActivity.this, ZoneChoiceUpdateActivity.class);
+        startActivity(intent);
+    }
+
 }

@@ -16,39 +16,39 @@
         <activity android:name=".LandingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ZoneChoiceActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.LandingActivity"/>
+                android:value="com.example.bertogonz3000.surround.LandingActivity" />
         </activity>
-
         <activity android:name=".SpeakerPlayingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.ZoneChoiceActivity"/>
+                android:value="com.example.bertogonz3000.surround.ZoneChoiceActivity" />
         </activity>
-
-        <activity android:name=".SongSelectionActivity" android:parentActivityName=".LandingActivity">
+        <activity
+            android:name=".SongSelectionActivity"
+            android:parentActivityName=".LandingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.LandingActivity"/>
-
+                android:value="com.example.bertogonz3000.surround.LandingActivity" />
         </activity>
-
         <activity android:name=".ControllerPlayingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.SongSelectionActivity"/>
+                android:value="com.example.bertogonz3000.surround.SongSelectionActivity" />
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".LostConnectionActivity"></activity>
+        <activity android:name=".LostConnectionActivity" />
+        <activity android:name=".ZoneChoiceUpdateActivity"></activity>
     </application>
 
 </manifest>

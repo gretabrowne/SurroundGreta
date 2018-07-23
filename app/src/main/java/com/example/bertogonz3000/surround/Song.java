@@ -35,4 +35,8 @@ public class Song extends ParseObject{
       return getList("audioIds");
     }
 
+    public void setTestString(String test) {
+        put("testString", test);
+    }
+
 }

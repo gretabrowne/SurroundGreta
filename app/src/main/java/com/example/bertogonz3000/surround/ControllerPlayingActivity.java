@@ -108,6 +108,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
                 float prog = (float) progress/100;
                 song.setVolume(prog);
+                song.setTestString("test string");
                 song.saveInBackground();
             }
 

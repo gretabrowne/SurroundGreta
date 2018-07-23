@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +79,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             song.setAudioIds(track.getAudioIds());
             song.setIsPlaying(true);
             song.setVolume(1);
+            // song.setTestString("test string");
             song.saveInBackground();
 
             Intent i = new Intent(context, ControllerPlayingActivity.class);
             i.putExtra("song", Parcels.wrap(song));
+            Log.d("TrackAdapter", "volume" + song.getVolume());
             context.startActivity(i);
         }
 

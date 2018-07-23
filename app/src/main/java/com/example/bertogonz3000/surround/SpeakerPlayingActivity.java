@@ -20,7 +20,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     int songId;
     boolean isPlaying;
     MediaPlayer mp;
-    String zone;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_speaker_playing);
         connected = true;
 
-        zone = getIntent().getStringExtra("zone");
+        position = getIntent().getIntExtra("position", 0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -54,30 +54,32 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when a new song is "created"
-                Log.d("SpeakerPlayingActivity", "onEvent create");
-                if (zone.equals("center")) {
-                    // play center
-                    songId = object.getAudioIds().get(0);
-                }
-                else if (zone.equals("frontLeft")) {
-                    // play front left
-                    songId = object.getAudioIds().get(1);
-                }
-                else if (zone.equals("frontRight")){
-                    // play front right
-                    songId = object.getAudioIds().get(2);
-                }
-                else if(zone.equals("backLeft")) {
-                    // play back left
-                    songId = object.getAudioIds().get(3);
-                }
-                else if (zone.equals("backRight")) {
-                    // play back right
-                    songId = object.getAudioIds().get(4);
-                }
-                mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
-                mp.setVolume(object.getVolume(), object.getVolume());
-                mp.start();
+
+                // use value of "position" 
+//                Log.d("SpeakerPlayingActivity", "onEvent create");
+//                if (zone.equals("center")) {
+//                    // play center
+//                    songId = object.getAudioIds().get(0);
+//                }
+//                else if (zone.equals("frontLeft")) {
+//                    // play front left
+//                    songId = object.getAudioIds().get(1);
+//                }
+//                else if (zone.equals("frontRight")){
+//                    // play front right
+//                    songId = object.getAudioIds().get(2);
+//                }
+//                else if(zone.equals("backLeft")) {
+//                    // play back left
+//                    songId = object.getAudioIds().get(3);
+//                }
+//                else if (zone.equals("backRight")) {
+//                    // play back right
+//                    songId = object.getAudioIds().get(4);
+//                }
+//                mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
+//                mp.setVolume(object.getVolume(), object.getVolume());
+//                mp.start();
             }
         });
 

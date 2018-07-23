@@ -1,5 +1,6 @@
 package com.example.bertogonz3000.surround;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
             }
         });
 
-
-
+        Intent i = new Intent(ZoneChoiceUpdateActivity.this, SpeakerPlayingActivity.class);
+        i.putExtra("position", Integer.valueOf(textView4.getText().toString())); //todo-- find shorter way to convert this??
     }
 }

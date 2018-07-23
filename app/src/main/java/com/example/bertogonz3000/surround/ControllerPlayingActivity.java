@@ -106,6 +106,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   progress, 0);
 
                 float prog = (float) progress/100;
+                int totalDuration = mp.getDuration();
+                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
+
+                song.setTime(currentPosition);
                 song.setVolume(prog);
                 song.setTestString("test string");
                 song.saveInBackground();
@@ -152,12 +156,21 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
 
     public void pauseSong(View view){
+
+        int totalDuration = mp.getDuration();
+        int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
+
+        song.setTime(currentPosition);
         song.setIsPlaying(false);
         song.saveInBackground();
         mp.pause();
     }
 
     public void playSong(View view) {
+        int totalDuration = mp.getDuration();
+        int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
+
+        song.setTime(currentPosition);
         song.setIsPlaying(true);
         song.saveInBackground();
         mp.start();

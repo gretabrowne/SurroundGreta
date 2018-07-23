@@ -6,11 +6,13 @@
     android:background="@color/background"
     android:layout_height="match_parent"
     tools:context=".ControllerPlayingActivity">
+
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/croller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         app:back_circle_color="#EDEDED"
         app:indicator_color="@color/colorAccent"
         app:indicator_width="10"
@@ -62,6 +64,7 @@
         android:id="@+id/seekBar"
         android:layout_width="344dp"
         android:layout_height="wrap_content"
+        android:progressDrawable="@drawable/durationprogress"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="51dp" />

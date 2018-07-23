@@ -3,19 +3,15 @@ package com.example.bertogonz3000.surround;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
-
-import static android.icu.lang.UProperty.MATH;
 
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
@@ -122,6 +118,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     //mp.setVolume(object.getVolume(), object.getVolume());
                     playAll();
                 }
+
+                int time = object.getTime();
+                changeTime(time);
             }
         });
 
@@ -196,6 +195,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         frontRightMP.start();
         backLeftMP.start();
         backRightMP.start();
+    }
+
+    //change time of all 5 media players
+    private void changeTime(int time){
+        centerMP.seekTo(time);
+        frontLeftMP.seekTo(time);
+        frontRightMP.seekTo(time);
+        backLeftMP.seekTo(time);
+        backRightMP.seekTo(time);
     }
 
     private float getMaxVol(int node){

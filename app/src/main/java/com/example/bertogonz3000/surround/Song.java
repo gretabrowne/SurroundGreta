@@ -3,9 +3,6 @@ package com.example.bertogonz3000.surround;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-import org.parceler.Parcel;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @ParseClassName("Song")
@@ -38,5 +35,8 @@ public class Song extends ParseObject{
     public void setTestString(String test) {
         put("testString", test);
     }
+    public void setTime(int time) {put("currentTime", time); }
+
+    public int getTime() { return (int) getInt("currentTime"); }
 
 }

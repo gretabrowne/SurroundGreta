@@ -2,9 +2,15 @@
 
     <item
         android:id="@android:id/background"
-        android:drawable="@drawable/blankseek"/>
-    <item android:id="@android:id/progress">
-        <clip android:drawable="@color/colorPrimary" />
+        android:height="3dp"
+        android:gravity="center_vertical"
+        android:drawable="@color/alertDialogBackground"/>
+    <item android:id="@android:id/progress"
+        android:height="3dp"
+        android:gravity="center_vertical">
+        <clip android:drawable="@color/colorAccent" >
+        </clip>
+
     </item>
 
 </layer-list>

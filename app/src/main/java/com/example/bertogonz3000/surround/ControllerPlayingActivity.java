@@ -94,7 +94,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             public void onStartTrackingTouch(Croller croller) {
 //                // tracking started
 //                mp.setVolume(10,10);
-//                mp.start();
                 mp.start(); //change?
                 song.setVolume(leftVol);
                 song.saveInBackground();

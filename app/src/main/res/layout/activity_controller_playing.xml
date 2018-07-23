@@ -60,7 +60,7 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="323dp"
+        android:layout_width="344dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -88,5 +88,6 @@
         android:gravity="right"
         android:text="02:54"
         android:textColor="@android:color/white" />
+
 
 </RelativeLayout>

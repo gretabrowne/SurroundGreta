@@ -204,12 +204,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //        float left =(float) 2.5066/denom;
 //        Log.e("MATH", "left = " + left);
         float expTop = (float) -(Math.pow((adjustment - node), 2));
-        Log.e("MATH", "expTop = " + expTop);
         float exponent = expTop/50;
-        Log.e("MATH", "exponent = " + exponent);
         //TODO - add LEFT* before Math.pow....if this doesn't work..got rid of cuz it was ~1
         float maxVol = (float) Math.pow(Math.E, exponent);
-        Log.e("MATH", "maxVol = " + maxVol);
+        Log.e("MATH", "maxVol at " + node + " = " + maxVol);
         return maxVol;
     }
 
@@ -230,13 +228,19 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         if (position < node - 10){
             adjustment = (node - 10) + (node - 10 - position);
+
         }
         else if (position > (node + 10)) {
             adjustment = (node + 10) - (position - (node + 10));
         }
 
+        Log.e("Adjustment", "Adjustment = " + adjustment);
+        Log.e("Adjustment", "node = " + node);
+        Log.e("Adjustment", "position = " + position);
+
+
+
         mp.setVolume(getMaxVol(node), getMaxVol(node));
 
-        Toast.makeText(this, "maxVol at " + node + " = " + getMaxVol(node), Toast.LENGTH_SHORT).show();
     }
 }

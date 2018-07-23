@@ -58,4 +58,35 @@
         android:text="Disconnect"
         android:textColor="@android:color/white" />
 
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="323dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="51dp" />
+
+    <TextView
+        android:id="@+id/tvStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/seekBar"
+        android:layout_below="@+id/seekBar"
+        android:layout_marginTop="-51dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="left"
+        android:text="00:00"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/seekBar"
+        android:layout_below="@+id/seekBar"
+        android:layout_marginTop="-51dp"
+        android:gravity="right"
+        android:text="02:54"
+        android:textColor="@android:color/white" />
+
 </RelativeLayout>

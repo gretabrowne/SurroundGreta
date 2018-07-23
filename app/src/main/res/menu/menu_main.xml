@@ -4,10 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/back"
+        android:id="@+id/next"
         android:title="Back"
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"
-
-        tools:icon="@drawable/ic_arrow_back" />
+        tools:icon="@drawable/next_arrow" />
 </menu>

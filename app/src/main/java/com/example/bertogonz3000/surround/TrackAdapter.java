@@ -7,14 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.bertogonz3000.surround.Models.Track;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
@@ -78,6 +76,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             song.setAudioIds(track.getAudioIds());
             song.setIsPlaying(true);
             song.setVolume(1);
+            song.setTime(0);
             song.saveInBackground();
 
             Intent i = new Intent(context, ControllerPlayingActivity.class);

@@ -251,6 +251,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         // update timer progress again
         updateProgressBar();
+        song.setTime(currentPosition);
+        song.saveInBackground();
     }
 
     @Override

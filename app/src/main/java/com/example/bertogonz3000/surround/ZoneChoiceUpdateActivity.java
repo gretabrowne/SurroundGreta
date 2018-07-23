@@ -34,7 +34,6 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
                 textView4.setText(Integer.toString(number));
             }
         });
-
     }
 
     public void setLocation(View view) {

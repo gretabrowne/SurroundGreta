@@ -3,24 +3,28 @@ package com.example.bertogonz3000.surround;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
 
+import static android.icu.lang.UProperty.MATH;
+
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
     boolean connected;  //TODO - update this?
-    int songId;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, position, adjustment;
     boolean isPlaying;
-    MediaPlayer mp;
-    int position;
+    MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
+    float centerVol, frontRightVol, frontLeftVol, backRightVol,backLeftVol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_speaker_playing);
         connected = true;
 
+        //positiion selected for this phone.
         position = getIntent().getIntExtra("position", 0);
+        adjustment = position;
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -53,6 +60,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
+
+                prepMediaPlayers(object);
+
+                setToMaxVol(centerMP);
+                setToMaxVol(frontRightMP);
+                setToMaxVol(backRightMP);
+                setToMaxVol(backLeftMP);
+                setToMaxVol(frontLeftMP);
+
                 // when a new song is "created"
 
                 // use value of "position"
@@ -97,13 +113,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //                    }
 //                });
                 if (!isPlaying) {
-                    mp.pause();
+                    pauseAll();
                     Log.d("SpeakerPlayingActivity", "pause");
                 }
                 else {
                     Log.d("SpeakerPlayingActivity", "change volume");
-                    mp.setVolume(object.getVolume(), object.getVolume());
-                    mp.start();
+                    //TODO - uncomment for full implementation
+                    //mp.setVolume(object.getVolume(), object.getVolume());
+                    playAll();
                 }
             }
         });
@@ -144,5 +161,86 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    //Create mediaplayers based on given songIds
+    private void prepMediaPlayers(Song object){
+
+        centerID = object.getAudioIds().get(0);
+        frontLeftID = object.getAudioIds().get(1);
+        frontRightID = object.getAudioIds().get(2);
+        backLeftID = object.getAudioIds().get(3);
+        backRightID = object.getAudioIds().get(4);
+
+        centerMP = MediaPlayer.create(SpeakerPlayingActivity.this, centerID);
+        frontLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontLeftID);
+        frontRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontRightID);
+        backLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, backLeftID);
+        backRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, backRightID);
+
+    }
+
+    //pause All 5 mediaplayers
+    private void pauseAll(){
+        centerMP.pause();
+        frontLeftMP.pause();
+        frontRightMP.pause();
+        backLeftMP.pause();
+        backRightMP.pause();
+    }
+
+    //play all 5 media players
+    private void playAll(){
+        centerMP.start();
+        frontLeftMP.start();
+        frontRightMP.start();
+        backLeftMP.start();
+        backRightMP.start();
+    }
+
+    private float getMaxVol(int node){
+//        float denom = (float) (Math.sqrt(2*Math.PI));
+//        Log.e("MATH", "denom = " + denom);
+//        float left =(float) 2.5066/denom;
+//        Log.e("MATH", "left = " + left);
+        float expTop = (float) -(Math.pow((adjustment - node), 2));
+        float exponent = expTop/50;
+        //TODO - add LEFT* before Math.pow....if this doesn't work..got rid of cuz it was ~1
+        float maxVol = (float) Math.pow(Math.E, exponent);
+        Log.e("MATH", "maxVol at " + node + " = " + maxVol);
+        return maxVol;
+    }
+
+    //TODO - Might have to differentiate between nodes, not letting center extend???
+    private void setToMaxVol(MediaPlayer mp){
+        int node = 0;
+        if ( mp == centerMP){
+            node = 0;
+        } else if (mp == frontRightMP){
+            node = 4;
+        } else if (mp == backRightMP){
+            node = 8;
+        } else if (mp == backLeftMP){
+            node = 12;
+        } else if (mp == frontLeftMP){
+            node = 16;
+        }
+
+        if (position < node - 10){
+            adjustment = (node - 10) + (node - 10 - position);
+
+        }
+        else if (position > (node + 10)) {
+            adjustment = (node + 10) - (position - (node + 10));
+        }
+
+        Log.e("Adjustment", "Adjustment = " + adjustment);
+        Log.e("Adjustment", "node = " + node);
+        Log.e("Adjustment", "position = " + position);
+
+
+
+        mp.setVolume(getMaxVol(node), getMaxVol(node));
+
     }
 }

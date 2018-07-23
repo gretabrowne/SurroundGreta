@@ -5,24 +5,36 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.example.bertogonz3000.surround.Models.Utilities;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 import org.parceler.Parcels;
 
-public class ControllerPlayingActivity extends AppCompatActivity {
+public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     //private AudioManager audioManager = null;
-    //MediaPlayer song;
     float rightVol, leftVol;
-    Song track;
+    Song song;
+    TextView tvCurrent;
+    TextView tvEnd;
+    SeekBar seekbar;
+    private MediaPlayer mp;
+    // Handler to update UI timer, progress bar etc,.
+    private Handler mHandler = new Handler();
+    private Utilities utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +43,13 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
-        track = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        tvCurrent = findViewById(R.id.tvStart);
+        tvEnd = findViewById(R.id.tvEnd);
+        seekbar = findViewById(R.id.seekBar);
 
 
         Croller croller = (Croller) findViewById(R.id.croller);
@@ -60,9 +76,9 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         rightVol = 1;
         leftVol = 1;
 
-        //TODO - Copy a soundfile into a new directory under "res" and place it here
-        //TODO - as the second argument
-       // song = MediaPlayer.create(ControllerPlayingActivity.this, R.raw.heyjude);
+
+        mp = MediaPlayer.create(ControllerPlayingActivity.this, song.getAudioIds().get(0));
+        mp.setVolume(0,0);
         //MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
 
         AudioAttributes attributes = new AudioAttributes.Builder()
@@ -70,18 +86,19 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
-        //song.setAudioAttributes(attributes);
+        mp.setAudioAttributes(attributes);
 
 
         croller.setOnCrollerChangeListener(new OnCrollerChangeListener() {
 
             @Override
             public void onStartTrackingTouch(Croller croller) {
-                // tracking started
-               // song.setVolume(leftVol,rightVol);
-              //  song.start();
-                track.setVolume(leftVol);
-                track.saveInBackground();
+//                // tracking started
+//                mp.setVolume(10,10);
+//                mp.start();
+
+                song.setVolume(leftVol);
+                song.saveInBackground();
             }
 
             @Override
@@ -91,8 +108,8 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 //   progress, 0);
 
                 float prog = (float) progress/100;
-                track.setVolume(prog);
-                track.saveInBackground();
+                song.setVolume(prog);
+                song.saveInBackground();
             }
 
             @Override
@@ -100,13 +117,23 @@ public class ControllerPlayingActivity extends AppCompatActivity {
                 // tracking stopped
             }
         });
+
+        utils = new Utilities();
+
+        //listeners
+        seekbar.setOnSeekBarChangeListener(this);
+        seekbar.setProgress(0);
+        seekbar.setMax(100);
+
+        mp.start();
+        updateProgressBar();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        track.deleteInBackground();
-       // song.release();
+        song.deleteInBackground();
+        // song.release();
     }
 
     @Override
@@ -127,15 +154,15 @@ public class ControllerPlayingActivity extends AppCompatActivity {
 
 
     public void pauseSong(View view){
-        track.setIsPlaying(false);
-        track.saveInBackground();
-        //song.pause();
+        song.setIsPlaying(false);
+        song.saveInBackground();
+        mp.pause();
     }
 
     public void playSong(View view) {
-        track.setIsPlaying(true);
-        track.saveInBackground();
-        //song.start();
+        song.setIsPlaying(true);
+        song.saveInBackground();
+        mp.start();
     }
 
     //TODO - make this check the connection of the server (maybe in the onCreate)
@@ -179,4 +206,60 @@ public class ControllerPlayingActivity extends AppCompatActivity {
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.alertDialogBackground);
     }
 
+     //Update timer on seekbar
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    //Background Runnable thread
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mp.getDuration();
+            Log.d("TotalDuration", String.valueOf(totalDuration));
+            long currentDuration = mp.getCurrentPosition();
+
+
+            // Displaying Total Duration time
+            tvEnd.setText(""+utils.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            tvCurrent.setText(""+utils.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int)(utils.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            seekbar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // remove message Handler from updating progress bar
+        mHandler.removeCallbacks(mUpdateTimeTask);
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        int totalDuration = mp.getDuration();
+        int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
+
+        // forward or backward to certain seconds
+        mp.seekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        mp.release();
+    }
 }

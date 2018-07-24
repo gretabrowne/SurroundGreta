@@ -130,11 +130,43 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //                    } else {
 //                        playAll();
 //                    }
+//                // when volume, song, or playing status is updated
+//                isPlaying = object.getIsPlaying();
 //
-//                } else {
-//                    changeTime(object.getTime());
+//                changeTime(object.getTime());
 //
+//                Log.d("SpeakerPlayingActivity", "in on update");
+////                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+////                    @Override
+////                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+////                        Log.d("SpeakerPlayingActivity", "error create");
+////                        return true;
+////                    }
+////                });
+//                if (!isPlaying) {
+//                    pauseAll();
+//                    Log.d("SpeakerPlayingActivity", "pause");
 //                }
+//                else {
+//                    Log.d("SpeakerPlayingActivity", "change volume");
+//                    //TODO - uncomment for full implementation
+//                    //mp.setVolume(object.getVolume(), object.getVolume());
+//                    playAll();
+//                }
+
+
+                if (isPlaying != object.getIsPlaying()) {
+                    isPlaying = object.getIsPlaying();
+                    if (!isPlaying){
+                        pauseAll();
+                    } else {
+                        playAll();
+                    }
+
+                } else {
+                    changeTime(object.getTime());
+
+                }
 
             }
         });

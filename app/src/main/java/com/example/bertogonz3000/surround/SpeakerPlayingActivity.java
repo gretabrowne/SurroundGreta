@@ -103,6 +103,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 isPlaying = object.getIsPlaying();
                 changeTime(object.getTime());
                 Log.d("SpeakerPlayingActivity", "in on update");
+                Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 //                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 //                    @Override
 //                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {

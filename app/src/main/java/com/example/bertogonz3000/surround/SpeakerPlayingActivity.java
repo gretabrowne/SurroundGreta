@@ -100,6 +100,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when volume, song, or playing status is updated
                 isPlaying = object.getIsPlaying();
+
+                int time = object.getTime();
+                changeTime(time);
+                
                 Log.d("SpeakerPlayingActivity", "in on update");
 //                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 //                    @Override
@@ -119,8 +123,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     playAll();
                 }
 
-                int time = object.getTime();
-                changeTime(time);
             }
         });
 

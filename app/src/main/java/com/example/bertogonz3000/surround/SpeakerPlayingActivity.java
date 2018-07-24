@@ -21,6 +21,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean isPlaying;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float centerVol, frontRightVol, frontLeftVol, backRightVol,backLeftVol;
+    int currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,9 +102,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 // when volume, song, or playing status is updated
                 isPlaying = object.getIsPlaying();
 
-                int time = object.getTime();
-                changeTime(time);
-                
                 Log.d("SpeakerPlayingActivity", "in on update");
 //                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 //                    @Override

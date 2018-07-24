@@ -157,6 +157,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
 
         song.setTime(currentPosition);
+
         song.setIsPlaying(false);
         song.saveInBackground();
         mp.pause();

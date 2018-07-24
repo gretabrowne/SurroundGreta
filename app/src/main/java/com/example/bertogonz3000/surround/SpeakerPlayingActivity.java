@@ -21,6 +21,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean isPlaying;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float centerVol, frontRightVol, frontLeftVol, backRightVol,backLeftVol;
+    int currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

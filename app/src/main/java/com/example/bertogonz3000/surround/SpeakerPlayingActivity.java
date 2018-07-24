@@ -99,43 +99,43 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
-                // when volume, song, or playing status is updated
-                isPlaying = object.getIsPlaying();
-
-                changeTime(object.getTime());
-
-                Log.d("SpeakerPlayingActivity", "in on update");
-//                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-//                    @Override
-//                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-//                        Log.d("SpeakerPlayingActivity", "error create");
-//                        return true;
-//                    }
-//                });
-                if (!isPlaying) {
-                    pauseAll();
-                    Log.d("SpeakerPlayingActivity", "pause");
-                }
-                else {
-                    Log.d("SpeakerPlayingActivity", "change volume");
-                    //TODO - uncomment for full implementation
-                    //mp.setVolume(object.getVolume(), object.getVolume());
-                    playAll();
-                }
-
-
-//                if (isPlaying != object.getIsPlaying()) {
+//                // when volume, song, or playing status is updated
+//                isPlaying = object.getIsPlaying();
 //
-//                    if (!object.getIsPlaying()){
-//                        pauseAll();
-//                    } else {
-//                        playAll();
-//                    }
+//                changeTime(object.getTime());
 //
-//                } else {
-//                    changeTime(object.getTime());
-//
+//                Log.d("SpeakerPlayingActivity", "in on update");
+////                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+////                    @Override
+////                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+////                        Log.d("SpeakerPlayingActivity", "error create");
+////                        return true;
+////                    }
+////                });
+//                if (!isPlaying) {
+//                    pauseAll();
+//                    Log.d("SpeakerPlayingActivity", "pause");
 //                }
+//                else {
+//                    Log.d("SpeakerPlayingActivity", "change volume");
+//                    //TODO - uncomment for full implementation
+//                    //mp.setVolume(object.getVolume(), object.getVolume());
+//                    playAll();
+//                }
+
+
+                if (isPlaying != object.getIsPlaying()) {
+                    isPlaying = object.getIsPlaying();
+                    if (!isPlaying){
+                        pauseAll();
+                    } else {
+                        playAll();
+                    }
+
+                } else {
+                    changeTime(object.getTime());
+
+                }
 
             }
         });

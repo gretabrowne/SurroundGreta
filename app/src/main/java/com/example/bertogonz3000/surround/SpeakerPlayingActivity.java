@@ -112,7 +112,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 ////                        return true;
 ////                    }
 ////                });
-//                if (!isPlaying) {
+//                if (!isPlaying) {git
 //                    pauseAll();
 //                    Log.d("SpeakerPlayingActivity", "pause");
 //                }

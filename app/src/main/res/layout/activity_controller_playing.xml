@@ -10,7 +10,7 @@
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/croller"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="426dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         app:back_circle_color="#EDEDED"
@@ -26,34 +26,20 @@
 
     <ImageButton
         android:id="@+id/playButton"
-        android:layout_width="51dp"
-        android:layout_height="44dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="53dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/button_border"
-        android:onClick="playSong"
-        app:srcCompat="@android:drawable/ic_media_play" />
-
-    <ImageButton
-        android:id="@+id/pauseButton"
-        android:layout_width="46dp"
-        android:layout_height="45dp"
-        android:layout_alignTop="@+id/playButton"
+        android:layout_width="108dp"
+        android:layout_height="81dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_border"
-        android:onClick="pauseSong"
-        app:srcCompat="@android:drawable/ic_media_pause" />
+        android:layout_marginBottom="173dp"
+        android:background="@android:color/transparent" />
+
 
     <Button
         android:id="@+id/disconnectBtn"
         android:layout_width="101dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/playButton"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="0dp"
-        android:layout_marginEnd="6dp"
+        android:layout_alignParentTop="true"
         android:background="@drawable/button_border"
         android:fontFamily="@font/roboto"
         android:onClick="checkConnection"
@@ -64,10 +50,10 @@
         android:id="@+id/seekBar"
         android:layout_width="344dp"
         android:layout_height="wrap_content"
-        android:progressDrawable="@drawable/durationprogress"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="51dp" />
+        android:layout_marginBottom="99dp"
+        android:progressDrawable="@drawable/durationprogress" />
 
     <TextView
         android:id="@+id/tvStart"
@@ -75,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/seekBar"
         android:layout_below="@+id/seekBar"
-        android:layout_marginTop="-51dp"
+        android:layout_marginTop="-99dp"
         android:fontFamily="@font/roboto"
         android:gravity="left"
         android:text="00:00"
@@ -87,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/seekBar"
         android:layout_below="@+id/seekBar"
-        android:layout_marginTop="-51dp"
+        android:layout_marginTop="-99dp"
         android:gravity="right"
         android:text="02:54"
         android:textColor="@android:color/white" />

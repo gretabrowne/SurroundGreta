@@ -108,6 +108,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //                        return true;
 //                    }
 //                });
+                // if paused on controller's phone, pause speaker
                 if (!isPlaying) {
                     pauseAll();
                     Log.d("SpeakerPlayingActivity", "pause");

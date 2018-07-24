@@ -99,6 +99,38 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
+                // when volume, song, or playing status is updated
+                isPlaying = object.getIsPlaying();
+                changeTime(object.getTime());
+                Log.d("SpeakerPlayingActivity", "in on update");
+                Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
+//                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//                    @Override
+//                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+//                        Log.d("SpeakerPlayingActivity", "error create");
+//                        return true;
+//                    }
+//                });
+                // if paused on controller's phone, pause speaker
+                if (!isPlaying) {
+                    pauseAll();
+                    Log.d("SpeakerPlayingActivity", "pause");
+                }
+                else {
+                    Log.d("SpeakerPlayingActivity", "change volume");
+                    //TODO - uncomment for full implementation
+                    //mp.setVolume(object.getVolume(), object.getVolume());
+                    playAll();
+                }
+
+
+//                if (isPlaying != object.getIsPlaying()) {
+//
+//                    if (!object.getIsPlaying()){
+//                        pauseAll();
+//                    } else {
+//                        playAll();
+//                    }
 //                // when volume, song, or playing status is updated
 //                isPlaying = object.getIsPlaying();
 //
@@ -112,7 +144,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 ////                        return true;
 ////                    }
 ////                });
-//                if (!isPlaying) {
+//                if (!isPlaying) {git
 //                    pauseAll();
 //                    Log.d("SpeakerPlayingActivity", "pause");
 //                }

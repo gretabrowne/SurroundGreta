@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,6 +101,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             public void onStartTrackingTouch(Croller croller) {
 //                // tracking started
 //                mp.setVolume(10,10);
+                Log.d("SpeakerPlayingActivity", "tracking touch");
                 mp.start(); //change?
                 // Changing button image to pause button
                 playButton.setImageResource(R.drawable.ic_pause_circle_filled);
@@ -113,10 +115,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                 //   progress, 0);
 
-                float prog = (float) progress/100;
-                song.setVolume(prog);
-                song.setTestString("test string");
-                song.saveInBackground();
+//                float prog = (float) progress/100;
+//                song.setVolume(prog);
+//                song.setTestString("test string");
+//                song.saveInBackground();
             }
 
             @Override

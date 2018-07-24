@@ -34,7 +34,7 @@ public class ParseApplication extends Application{
         .applicationId("bghsurround")
         .clientKey(null)
         .clientBuilder(builder)
-        .server("http://172.21.69.54:1337/parse").build());
+        .server("http://172.21.70.174:1337/parse").build());
 
     }
 }

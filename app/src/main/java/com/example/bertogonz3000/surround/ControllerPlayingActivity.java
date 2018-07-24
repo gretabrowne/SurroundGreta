@@ -106,10 +106,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   progress, 0);
 
                 float prog = (float) progress/100;
-                int totalDuration = mp.getDuration();
-                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
-
-                song.setTime(currentPosition);
                 song.setVolume(prog);
                 song.setTestString("test string");
                 song.saveInBackground();

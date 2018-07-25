@@ -9,7 +9,7 @@ import java.util.List;
 public class Song extends ParseObject{
 
     public boolean getIsPlaying(){
-       return getBoolean("isPlaying");
+        return getBoolean("isPlaying");
     }
 
     public float getVolume(){
@@ -29,7 +29,7 @@ public class Song extends ParseObject{
     }
 
     public List<Integer> getAudioIds(){
-      return getList("audioIds");
+        return getList("audioIds");
     }
 
     public void setTestString(String test) {

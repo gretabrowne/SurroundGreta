@@ -18,8 +18,11 @@
         app:indicator_width="10"
         app:is_continuous="true"
         app:label_color="#000000"
+        app:min="0"
         app:main_circle_color="#FFFFFF"
+
         app:max="100"
+
         app:progress_primary_color="#BCA9E6"
         app:progress_secondary_color="#EEEEEE"
         app:start_offset="45" />

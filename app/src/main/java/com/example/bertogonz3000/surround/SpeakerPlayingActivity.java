@@ -152,7 +152,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 } else if (movingNode != object.getMovingNode()){
 
-                        movingNode = object.getMovingNode();
+                    movingNode = object.getMovingNode();
 
                 } else {
                     // if nothing else has been updated, it must be the time

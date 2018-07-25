@@ -169,6 +169,13 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         song.deleteInBackground();

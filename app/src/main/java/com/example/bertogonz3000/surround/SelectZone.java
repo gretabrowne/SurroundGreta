@@ -13,6 +13,7 @@ import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 public class SelectZone extends AppCompatActivity {
+    float position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,28 +39,25 @@ public class SelectZone extends AppCompatActivity {
 
 
         croller.setOnCrollerChangeListener(new OnCrollerChangeListener() {
-
             @Override
             public void onStartTrackingTouch(Croller croller) {
-
+                position = 0;
             }
 
             @Override
             public void onProgressChanged(Croller croller, int progress) {
-
+                position = progress;
             }
 
             @Override
-            public void onStopTrackingTouch(Croller croller) {
-                // tracking stopped
-            }
+            public void onStopTrackingTouch(Croller croller) {}
         });
     }
 
     public void setLocation(View view) {
         Intent i = new Intent(SelectZone.this, SpeakerPlayingActivity.class);
-
-        //TODO - make sure to putExtra the position / progress
+        position = (float) position/100;
+        i.putExtra("position", position);
         startActivity(i);
     }
 

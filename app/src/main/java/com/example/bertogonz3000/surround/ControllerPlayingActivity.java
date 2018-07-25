@@ -116,10 +116,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                 //   progress, 0);
 
-//                float prog = (float) progress/100;
-//                song.setVolume(prog);
-//                song.setTestString("test string");
-//                song.saveInBackground();
+                float prog = progress/100;
+                song.setVolume(prog);
+                song.setTestString("test string");
+                song.saveInBackground();
             }
 
             @Override

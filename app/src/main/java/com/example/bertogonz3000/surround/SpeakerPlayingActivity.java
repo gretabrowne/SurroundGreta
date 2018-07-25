@@ -106,13 +106,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 
                 if(object.getTime() != backLeftMP.getCurrentPosition())
+                {
                     changeTime(object.getTime());   //TODO - testing clock
+                    Log.d("SpeakerPlayingActivity", "time is off");
+                }
 
                 if (isPlaying != object.getIsPlaying()) {
                     isPlaying = object.getIsPlaying();
                     if (!isPlaying){
+                        Log.d("SpeakerPlayingActivity", "switching pause/play");
                         pauseAll();
                     } else {
+                        Log.d("SpeakerPlayingActivity", "switching pause/play");
                         playAll();
                     }
 
@@ -120,6 +125,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     //TODO - where we want to do the conversion between whatever input the croller gives
                     //TODO - us and what we need to set volume
                 } else if (phoneVol != object.getVolume()) {
+                    Log.d("SpeakerPlayingActivity", "changing volume");
                     phoneVol = (int) object.getVolume();
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 

@@ -74,7 +74,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
-                audioManager
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,(int) object.getVolume()*100, 0);
 
             }
         });

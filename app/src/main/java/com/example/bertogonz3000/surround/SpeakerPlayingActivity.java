@@ -84,7 +84,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 throwing = object.getIsThrowing();
 
                 if (throwing){
-                    //TODO - what do we do on create if throwing?
+                    //TODO - what do we do on create if throwing? (right now it'll only be throwing when button in ControllerPlaying is hit, so it will never be in CREATE)
                 }
 
                 setToMaxVol(centerMP);
@@ -123,7 +123,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     phoneVol = (int) object.getVolume();
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 
-                }  else if (throwing != object.getIsThrowing()) {
+                }
+                // TODO - check logic of these if statements, right now it'll start as if controller wants node
+                // TODO - 0.5 to be where sound is and will re-ping server when node is moved, this seems like an extra step
+                else if (throwing != object.getIsThrowing()) {
+                    // set throwing boolean to be equal to whether controller wants to be throwing sound or not
                     throwing = object.getIsThrowing();
 
                     if (throwing) {
@@ -145,6 +149,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         movingNode = object.getMovingNode();
 
                 } else {
+                    // if nothing else has been updated, it must be the time
                     changeTime(object.getTime());
 
                 }
@@ -178,7 +183,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //TODO - later make sure the speaker is connected to the master device and server
-    //TODO - Why do we have 2 disconnect methods?
+    //TODO - Why do we have 2 disconnect methods? (idk but they do the exact same thing so we should delete one)
     public void disconnect() {
         Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
         startActivity(intent);

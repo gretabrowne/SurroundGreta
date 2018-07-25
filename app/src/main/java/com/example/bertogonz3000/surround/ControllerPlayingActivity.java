@@ -26,8 +26,6 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 import org.parceler.Parcels;
 
-import java.util.Timer;
-
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     //private AudioManager audioManager = null;
     float rightVol, leftVol;
@@ -169,13 +167,13 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         });
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        MyTimerTask myTask = new MyTimerTask();
-        Timer myTimer = new Timer();
-
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        MyTimerTask myTask = new MyTimerTask();
+//        Timer myTimer = new Timer();
+//
+//    }
 
     @Override
     protected void onDestroy() {

@@ -54,4 +54,14 @@
         android:textColor="@color/colorAccent"
         android:textSize="34sp" />
 
+    <Button
+        android:id="@+id/selectZone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/controllerButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-93dp"
+        android:onClick="selectZone"
+        android:text="Button" />
+
 </RelativeLayout>

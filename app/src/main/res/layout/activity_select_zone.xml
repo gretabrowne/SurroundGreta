@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".SelectZone">
+
+    <ImageView
+        android:id="@+id/nextBtn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="setLocation"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_check_circle_48" />
+
+    <TextView
+        android:id="@+id/tvZoneChoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/roboto_light"
+        android:text="Location Selection"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
+
+    <com.sdsmdg.harjot.crollerTest.Croller
+        android:id="@+id/croller"
+        android:layout_width="match_parent"
+        android:layout_height="426dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvZoneChoice"
+        app:back_circle_color="@color/colorPrimary"
+        app:indicator_color="@color/colorAccent"
+        app:indicator_width="10"
+        app:is_continuous="true"
+        app:label_color="#000000"
+        app:main_circle_color="@color/background"
+        app:max="100"
+        app:progress_primary_color="#BCA9E6" />
+
+</RelativeLayout>

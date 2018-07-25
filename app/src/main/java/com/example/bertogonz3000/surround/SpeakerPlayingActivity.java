@@ -15,8 +15,6 @@ import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
 
-import java.util.Dictionary;
-
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
@@ -107,6 +105,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 
+                if(object.getTime() != backLeftMP.getCurrentPosition())
+                    changeTime(object.getTime());   //TODO - testing clock
 
                 if (isPlaying != object.getIsPlaying()) {
                     isPlaying = object.getIsPlaying();

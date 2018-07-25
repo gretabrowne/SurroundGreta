@@ -26,6 +26,9 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 import org.parceler.Parcels;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     //private AudioManager audioManager = null;
     float rightVol, leftVol;
@@ -38,6 +41,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     private Handler mHandler = new Handler();
     private Utilities utils;
     ImageButton playButton;
+    MyTimerTask myTask;
+    Timer myTimer;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -55,8 +60,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         tvEnd = findViewById(R.id.tvEnd);
         seekbar = findViewById(R.id.seekBar);
         playButton = findViewById(R.id.playButton);
-
-
 
         Croller croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
@@ -85,7 +88,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         mp.setVolume(0,0);
         //MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
         // Changing button image to play button
-        playButton.setImageResource(R.drawable.ic_play_circle_filled_60dp);
+        playButton.setImageResource(R.drawable.ic_pause_circle_filled);
 
         AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -101,6 +104,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             public void onStartTrackingTouch(Croller croller) {
 //                // tracking started
 //                mp.setVolume(10,10);
+//                mp.start(); //TODO- comment out when using timertask
                 Log.d("SpeakerPlayingActivity", "tracking touch");
                 // Changing button image to pause button
                 playButton.setImageResource(R.drawable.ic_pause_circle_filled);
@@ -162,18 +166,30 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                         mp.start();
                     }
                 }
-
             }
         });
     }
+//TODO- fix timer task
+    //start the global clock timer when the activity appears on the screen
+    //start the song
+    @Override
+    public void onResume(){
+        super.onResume();
+        myTask = new MyTimerTask();
+        myTimer = new Timer();
+        myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+        mp.start();
+    }
 
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        MyTimerTask myTask = new MyTimerTask();
-//        Timer myTimer = new Timer();
-//
-//    }
+    class MyTimerTask extends TimerTask {
+        //update the current position every second in the parse song class
+        public void run() {
+            int currentPosition = mp.getCurrentPosition();
+            song.setTime(currentPosition);
+            song.saveInBackground();
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

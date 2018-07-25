@@ -142,7 +142,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 } else if (movingNode != object.getMovingNode()){
 
-                        movingNode = object.getMovingNode();
+                    movingNode = object.getMovingNode();
 
                 } else {
                     changeTime(object.getTime());
@@ -241,7 +241,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //        float left =(float) 2.5066/denom;
 //        Log.e("MATH", "left = " + left);
         float expTop = (float) -(Math.pow((position - node), 2));
-        double exponent = expTop/0.004;
+        float exponent = expTop/5;
         //TODO - add LEFT* before Math.pow....if this doesn't work..got rid of cuz it was ~1
         float maxVol = (float) Math.pow(Math.E, exponent);
         Log.e("MATH", "maxVol at " + node + " = " + maxVol);

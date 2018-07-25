@@ -1,7 +1,6 @@
 package com.example.bertogonz3000.surround;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,7 +27,7 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 import org.parceler.Parcels;
 
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
-    private AudioManager audioManager;
+    //private AudioManager audioManager = null;
     float rightVol, leftVol;
     Song song;
     TextView tvCurrent;
@@ -47,7 +46,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 
@@ -65,6 +63,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setBackCircleColor(Color.parseColor("#EDEDED"));
         croller.setMainCircleColor(Color.parseColor("#212121"));
         croller.setIsContinuous(false);
+        croller.setStartOffset(45);
         croller.setLabel("");
         croller.setLabelColor(Color.BLACK);
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
@@ -72,11 +71,12 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setProgressSecondaryCircleSize(3);
         croller.setProgressSecondaryColor(Color.parseColor("#ffffff"));
         croller.setProgressPrimaryCircleSize(5);
-        croller.setMax(audioManager
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        //TODO - decide where to start the phones
-//        croller.setProgress(audioManager
-//                .getStreamVolume(AudioManager.STREAM_MUSIC));
+
+        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        //croller.setMax(audioManager
+        //        .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        //croller.setProgress(audioManager
+        //        .getStreamVolume(AudioManager.STREAM_MUSIC));
 
         rightVol = 1;
         leftVol = 1;
@@ -102,7 +102,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                // tracking started
 //                mp.setVolume(10,10);
                 Log.d("SpeakerPlayingActivity", "tracking touch");
-                mp.start(); //change?
                 // Changing button image to pause button
                 playButton.setImageResource(R.drawable.ic_pause_circle_filled);
                 song.setVolume(leftVol);
@@ -115,8 +114,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                 //   progress, 0);
 
-                int prog = progress;
-                Log.e("CONTROLLER", "Volume = " + prog);
+                float prog = progress/100;
                 song.setVolume(prog);
                 song.setTestString("test string");
                 song.saveInBackground();
@@ -169,12 +167,13 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         });
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        // put your code here...
-
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        MyTimerTask myTask = new MyTimerTask();
+//        Timer myTimer = new Timer();
+//
+//    }
 
     @Override
     protected void onDestroy() {
@@ -240,7 +239,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.alertDialogBackground);
     }
 
-     //Update timer on seekbar
+    //Update timer on seekbar
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }

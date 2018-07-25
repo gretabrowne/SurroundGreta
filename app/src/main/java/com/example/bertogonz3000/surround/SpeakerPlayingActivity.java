@@ -146,7 +146,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 } else {
                     changeTime(object.getTime());
-
                 }
 
             }

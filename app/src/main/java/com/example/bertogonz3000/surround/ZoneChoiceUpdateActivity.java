@@ -20,9 +20,7 @@ public class ZoneChoiceUpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_zone_choice_update);
         knob4 = (Knob) findViewById(R.id.knob4);
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         textView4 = (TextView) findViewById(R.id.textView4);
         int number = knob4.getState() + 1;

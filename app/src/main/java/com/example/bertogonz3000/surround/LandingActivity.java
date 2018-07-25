@@ -35,5 +35,5 @@ public class LandingActivity extends AppCompatActivity {
         Intent i = new Intent(this, SongSelectionActivity.class);
         startActivity(i);
     }
-    
+
 }

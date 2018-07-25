@@ -254,7 +254,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.alertDialogBackground);
     }
 
-     //Update timer on seekbar
+    //Update timer on seekbar
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }

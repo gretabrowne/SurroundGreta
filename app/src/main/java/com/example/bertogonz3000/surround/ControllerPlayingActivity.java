@@ -26,6 +26,8 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 import org.parceler.Parcels;
 
+import java.util.Timer;
+
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     //private AudioManager audioManager = null;
     float rightVol, leftVol;
@@ -102,7 +104,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                // tracking started
 //                mp.setVolume(10,10);
                 Log.d("SpeakerPlayingActivity", "tracking touch");
-                mp.start(); //change?
                 // Changing button image to pause button
                 playButton.setImageResource(R.drawable.ic_pause_circle_filled);
                 song.setVolume(leftVol);
@@ -171,7 +172,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     public void onResume(){
         super.onResume();
-        // put your code here...
+        MyTimerTask myTask = new MyTimerTask();
+        Timer myTimer = new Timer();
 
     }
 

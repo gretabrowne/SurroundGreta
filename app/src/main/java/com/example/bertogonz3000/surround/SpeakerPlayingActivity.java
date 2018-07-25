@@ -1,6 +1,8 @@
 package com.example.bertogonz3000.surround;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -13,15 +15,19 @@ import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
 
+import java.util.Dictionary;
+
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
     boolean connected;  //TODO - update this?
-    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, position, adjustment;
-    boolean isPlaying;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, phoneVol;
+    boolean isPlaying, throwing;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
-    float centerVol, frontRightVol, frontLeftVol, backRightVol,backLeftVol;
-    int currentTime;
+    float position;
+    AudioManager audioManager;
+    double movingNode = 0.5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +35,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_speaker_playing);
         connected = true;
 
+        throwing = false;
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         //positiion selected for this phone.
-        position = getIntent().getIntExtra("position", 0);
-        adjustment = position;
+        //TODO - switch from int to float from intent
+        position = getIntent().getFloatExtra("position", 0);
+        position = position/100;
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,39 +71,31 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 prepMediaPlayers(object);
 
+                isPlaying = object.getIsPlaying();
+
+                if (isPlaying){
+                    playAll();
+                } else {
+                    pauseAll();
+                }
+
+                movingNode = object.getMovingNode();
+
+                throwing = object.getIsThrowing();
+
+                if (throwing){
+                    //TODO - what do we do on create if throwing?
+                }
+
                 setToMaxVol(centerMP);
                 setToMaxVol(frontRightMP);
                 setToMaxVol(backRightMP);
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
-                // when a new song is "created"
+                phoneVol = (int) object.getVolume();
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 
-                // use value of "position"
-//                Log.d("SpeakerPlayingActivity", "onEvent create");
-//                if (zone.equals("center")) {
-//                    // play center
-//                    songId = object.getAudioIds().get(0);
-//                }
-//                else if (zone.equals("frontLeft")) {
-//                    // play front left
-//                    songId = object.getAudioIds().get(1);
-//                }
-//                else if (zone.equals("frontRight")){
-//                    // play front right
-//                    songId = object.getAudioIds().get(2);
-//                }
-//                else if(zone.equals("backLeft")) {
-//                    // play back left
-//                    songId = object.getAudioIds().get(3);
-//                }
-//                else if (zone.equals("backRight")) {
-//                    // play back right
-//                    songId = object.getAudioIds().get(4);
-//                }
-//                mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
-//                mp.setVolume(object.getVolume(), object.getVolume());
-//                mp.start();
             }
         });
 
@@ -100,60 +103,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when volume, song, or playing status is updated
-                isPlaying = object.getIsPlaying();
-                changeTime(object.getTime());
+
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
-//                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-//                    @Override
-//                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-//                        Log.d("SpeakerPlayingActivity", "error create");
-//                        return true;
-//                    }
-//                });
-                // if paused on controller's phone, pause speaker
-                if (!isPlaying) {
-                    pauseAll();
-                    Log.d("SpeakerPlayingActivity", "pause");
-                }
-                else {
-                    Log.d("SpeakerPlayingActivity", "change volume");
-                    //TODO - uncomment for full implementation
-                    //mp.setVolume(object.getVolume(), object.getVolume());
-                    playAll();
-                }
-
-
-//                if (isPlaying != object.getIsPlaying()) {
-//
-//                    if (!object.getIsPlaying()){
-//                        pauseAll();
-//                    } else {
-//                        playAll();
-//                    }
-//                // when volume, song, or playing status is updated
-//                isPlaying = object.getIsPlaying();
-//
-//                changeTime(object.getTime());
-//
-//                Log.d("SpeakerPlayingActivity", "in on update");
-////                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-////                    @Override
-////                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-////                        Log.d("SpeakerPlayingActivity", "error create");
-////                        return true;
-////                    }
-////                });
-//                if (!isPlaying) {git
-//                    pauseAll();
-//                    Log.d("SpeakerPlayingActivity", "pause");
-//                }
-//                else {
-//                    Log.d("SpeakerPlayingActivity", "change volume");
-//                    //TODO - uncomment for full implementation
-//                    //mp.setVolume(object.getVolume(), object.getVolume());
-//                    playAll();
-//                }
 
 
                 if (isPlaying != object.getIsPlaying()) {
@@ -163,6 +115,34 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     } else {
                         playAll();
                     }
+
+                    //TODO - should object.getVolume be a float or an int? I think it depends on
+                    //TODO - where we want to do the conversion between whatever input the croller gives
+                    //TODO - us and what we need to set volume
+                } else if (phoneVol != object.getVolume()) {
+                    phoneVol = (int) object.getVolume();
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+
+                }  else if (throwing != object.getIsThrowing()) {
+                    throwing = object.getIsThrowing();
+
+                    if (throwing) {
+                        centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                        frontLeftMP.setVolume(0, 0);
+                        backLeftMP.setVolume(0, 0);
+                        frontRightMP.setVolume(0, 0);
+                        backRightMP.setVolume(0, 0);
+                    } else {
+                        setToMaxVol(centerMP);
+                        setToMaxVol(frontLeftMP);
+                        setToMaxVol(backLeftMP);
+                        setToMaxVol(frontRightMP);
+                        setToMaxVol(backRightMP);
+                    }
+
+                } else if (movingNode != object.getMovingNode()){
+
+                        movingNode = object.getMovingNode();
 
                 } else {
                     changeTime(object.getTime());
@@ -198,6 +178,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //TODO - later make sure the speaker is connected to the master device and server
+    //TODO - Why do we have 2 disconnect methods?
     public void disconnect() {
         Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
         startActivity(intent);
@@ -254,12 +235,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backRightMP.seekTo(time);
     }
 
-    private float getMaxVol(int node){
+    private float getMaxVol(double node){
 //        float denom = (float) (Math.sqrt(2*Math.PI));
 //        Log.e("MATH", "denom = " + denom);
 //        float left =(float) 2.5066/denom;
 //        Log.e("MATH", "left = " + left);
-        float expTop = (float) -(Math.pow((adjustment - node), 2));
+        float expTop = (float) -(Math.pow((position - node), 2));
         float exponent = expTop/5;
         //TODO - add LEFT* before Math.pow....if this doesn't work..got rid of cuz it was ~1
         float maxVol = (float) Math.pow(Math.E, exponent);
@@ -268,29 +249,22 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //TODO - Might have to differentiate between nodes, not letting center extend???
+    //TODO - I don't like hardcoding the nodes to the mps here...should we create a dictionary or something?
     private void setToMaxVol(MediaPlayer mp){
-        int node = 0;
+        double node = 0.5;
         if ( mp == centerMP){
-            node = 0;
+            node = 0.5;
         } else if (mp == frontRightMP){
-            node = 4;
+            node = 0.625;
         } else if (mp == backRightMP){
-            node = 8;
+            node = 0.875;
         } else if (mp == backLeftMP){
-            node = 12;
+            node = 0.175;
         } else if (mp == frontLeftMP){
-            node = 16;
+            node = 0.375;
         }
 
-        if (position < node - 10){
-            adjustment = (node - 10) + (node - 10 - position);
 
-        }
-        else if (position > (node + 10)) {
-            adjustment = (node + 10) - (position - (node + 10));
-        }
-
-        Log.e("Adjustment", "Adjustment = " + adjustment);
         Log.e("Adjustment", "node = " + node);
         Log.e("Adjustment", "position = " + position);
 
@@ -299,4 +273,5 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         mp.setVolume(getMaxVol(node), getMaxVol(node));
 
     }
+
 }

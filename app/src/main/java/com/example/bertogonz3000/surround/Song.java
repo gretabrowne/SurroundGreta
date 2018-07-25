@@ -39,4 +39,12 @@ public class Song extends ParseObject{
 
     public int getTime() { return (int) getInt("currentTime"); }
 
+    public boolean getIsThrowing(){return getBoolean("isThrowing");}
+
+    public void setIsThrowing(boolean isThrowing){put("isThrowing", isThrowing);}
+
+    public double getMovingNode(){return getDouble("movingNode");}
+
+    public void setMovingNode(double movingNode){put("movingNode", movingNode);}
+
 }

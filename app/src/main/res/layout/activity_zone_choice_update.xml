@@ -20,24 +20,6 @@
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
-    <!--<com.sdsmdg.harjot.crollerTest.Croller-->
-        <!--android:id="@+id/croller"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--app:back_circle_color="#EDEDED"-->
-        <!--app:indicator_color="@color/colorAccent"-->
-        <!--app:indicator_width="10"-->
-        <!--app:is_continuous="true"-->
-        <!--app:label_color="#000000"-->
-        <!--app:back_circle_radius="-5.0"-->
-        <!--app:main_circle_color="#FFFFFF"-->
-        <!--app:max="1000"-->
-        <!--app:progress_secondary_stroke_width="30"-->
-        <!--app:progress_primary_color="@color/background"-->
-        <!--app:progress_secondary_color="#212121"-->
-        <!--app:start_offset="45" />-->
-
     <it.beppi.knoblibrary.Knob
         android:id="@+id/knob4"
         android:layout_width="296dp"
@@ -75,18 +57,16 @@
         android:textColor="@color/colorAccent"
         android:textSize="100sp" />
 
-    <Button
+    <ImageView
         android:id="@+id/nextBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/knob4"
-        android:layout_marginEnd="33dp"
-        android:background="@drawable/button_border"
-        android:fontFamily="@font/roboto"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
         android:onClick="setLocation"
-        android:text="Continue"
-        android:textColor="@color/colorAccent" />
+        android:src="@drawable/ic_check_circle_48" />
 
 
 </RelativeLayout>

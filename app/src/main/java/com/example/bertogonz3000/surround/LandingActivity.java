@@ -26,7 +26,7 @@ public class LandingActivity extends AppCompatActivity {
     //Become a speaker
     public void selectSpeaker(View view){
         //New intent between this and Zone Choice
-        Intent i = new Intent(this, ZoneChoiceUpdateActivity.class);
+        Intent i = new Intent(this, SelectZone.class);
         startActivity(i);
     }
 
@@ -35,4 +35,5 @@ public class LandingActivity extends AppCompatActivity {
         Intent i = new Intent(this, SongSelectionActivity.class);
         startActivity(i);
     }
+
 }

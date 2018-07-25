@@ -13,14 +13,16 @@ import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
 
+import java.util.Dictionary;
+
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
     boolean connected;  //TODO - update this?
-    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, position, adjustment;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID;
     boolean isPlaying;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
-    float centerVol, frontRightVol, frontLeftVol, backRightVol,backLeftVol;
+    float position;
     int currentTime;
 
     @Override
@@ -30,8 +32,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         connected = true;
 
         //positiion selected for this phone.
+        //TODO - switch from int to float from intent
         position = getIntent().getIntExtra("position", 0);
-        adjustment = position;
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,33 +68,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
-                // when a new song is "created"
-
-                // use value of "position"
-//                Log.d("SpeakerPlayingActivity", "onEvent create");
-//                if (zone.equals("center")) {
-//                    // play center
-//                    songId = object.getAudioIds().get(0);
-//                }
-//                else if (zone.equals("frontLeft")) {
-//                    // play front left
-//                    songId = object.getAudioIds().get(1);
-//                }
-//                else if (zone.equals("frontRight")){
-//                    // play front right
-//                    songId = object.getAudioIds().get(2);
-//                }
-//                else if(zone.equals("backLeft")) {
-//                    // play back left
-//                    songId = object.getAudioIds().get(3);
-//                }
-//                else if (zone.equals("backRight")) {
-//                    // play back right
-//                    songId = object.getAudioIds().get(4);
-//                }
-//                mp = MediaPlayer.create(SpeakerPlayingActivity.this, songId);
-//                mp.setVolume(object.getVolume(), object.getVolume());
-//                mp.start();
             }
         });
 
@@ -104,56 +79,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 changeTime(object.getTime());
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
-//                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-//                    @Override
-//                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-//                        Log.d("SpeakerPlayingActivity", "error create");
-//                        return true;
-//                    }
-//                });
-                // if paused on controller's phone, pause speaker
-                if (!isPlaying) {
-                    pauseAll();
-                    Log.d("SpeakerPlayingActivity", "pause");
-                }
-                else {
-                    Log.d("SpeakerPlayingActivity", "change volume");
-                    //TODO - uncomment for full implementation
-                    //mp.setVolume(object.getVolume(), object.getVolume());
-                    playAll();
-                }
-
-
-//                if (isPlaying != object.getIsPlaying()) {
-//
-//                    if (!object.getIsPlaying()){
-//                        pauseAll();
-//                    } else {
-//                        playAll();
-//                    }
-//                // when volume, song, or playing status is updated
-//                isPlaying = object.getIsPlaying();
-//
-//                changeTime(object.getTime());
-//
-//                Log.d("SpeakerPlayingActivity", "in on update");
-////                mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-////                    @Override
-////                    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-////                        Log.d("SpeakerPlayingActivity", "error create");
-////                        return true;
-////                    }
-////                });
-//                if (!isPlaying) {
-//                    pauseAll();
-//                    Log.d("SpeakerPlayingActivity", "pause");
-//                }
-//                else {
-//                    Log.d("SpeakerPlayingActivity", "change volume");
-//                    //TODO - uncomment for full implementation
-//                    //mp.setVolume(object.getVolume(), object.getVolume());
-//                    playAll();
-//                }
 
 
                 if (isPlaying != object.getIsPlaying()) {
@@ -163,6 +88,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     } else {
                         playAll();
                     }
+
+                } else if () {
 
                 } else {
                     changeTime(object.getTime());
@@ -259,7 +186,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //        Log.e("MATH", "denom = " + denom);
 //        float left =(float) 2.5066/denom;
 //        Log.e("MATH", "left = " + left);
-        float expTop = (float) -(Math.pow((adjustment - node), 2));
+        float expTop = (float) -(Math.pow((position - node), 2));
         float exponent = expTop/5;
         //TODO - add LEFT* before Math.pow....if this doesn't work..got rid of cuz it was ~1
         float maxVol = (float) Math.pow(Math.E, exponent);
@@ -282,15 +209,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             node = 16;
         }
 
-        if (position < node - 10){
-            adjustment = (node - 10) + (node - 10 - position);
 
-        }
-        else if (position > (node + 10)) {
-            adjustment = (node + 10) - (position - (node + 10));
-        }
-
-        Log.e("Adjustment", "Adjustment = " + adjustment);
         Log.e("Adjustment", "node = " + node);
         Log.e("Adjustment", "position = " + position);
 

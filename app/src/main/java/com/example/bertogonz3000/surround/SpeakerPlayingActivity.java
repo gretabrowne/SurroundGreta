@@ -25,8 +25,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean isPlaying, throwing;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position;
-    int currentTime;
-    AudioManager audioManager = audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    AudioManager audioManager;
+    double movingNode = 0.5;
 
 
     @Override
@@ -37,9 +37,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         throwing = false;
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         //positiion selected for this phone.
         //TODO - switch from int to float from intent
-        position = getIntent().getIntExtra("position", 0);
+        position = getIntent().getFloatExtra("position", 0);
+        position = position/100;
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,13 +71,30 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 prepMediaPlayers(object);
 
+                isPlaying = object.getIsPlaying();
+
+                if (isPlaying){
+                    playAll();
+                } else {
+                    pauseAll();
+                }
+
+                movingNode = object.getMovingNode();
+
+                throwing = object.getIsThrowing();
+
+                if (throwing){
+                    //TODO - what do we do on create if throwing?
+                }
+
                 setToMaxVol(centerMP);
                 setToMaxVol(frontRightMP);
                 setToMaxVol(backRightMP);
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,(int) object.getVolume()*100, 0);
+                phoneVol = (int) object.getVolume();
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 
             }
         });
@@ -83,8 +103,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when volume, song, or playing status is updated
-                isPlaying = object.getIsPlaying();
-                changeTime(object.getTime());
+
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 
@@ -102,7 +121,28 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     //TODO - us and what we need to set volume
                 } else if (phoneVol != object.getVolume()) {
                     phoneVol = (int) object.getVolume();
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, phoneVol, 0);
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+
+                }  else if (throwing != object.getIsThrowing()) {
+                    throwing = object.getIsThrowing();
+
+                    if (throwing) {
+                        centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                        frontLeftMP.setVolume(0, 0);
+                        backLeftMP.setVolume(0, 0);
+                        frontRightMP.setVolume(0, 0);
+                        backRightMP.setVolume(0, 0);
+                    } else {
+                        setToMaxVol(centerMP);
+                        setToMaxVol(frontLeftMP);
+                        setToMaxVol(backLeftMP);
+                        setToMaxVol(frontRightMP);
+                        setToMaxVol(backRightMP);
+                    }
+
+                } else if (movingNode != object.getMovingNode()){
+
+                        movingNode = object.getMovingNode();
 
                 } else {
                     changeTime(object.getTime());
@@ -138,6 +178,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //TODO - later make sure the speaker is connected to the master device and server
+    //TODO - Why do we have 2 disconnect methods?
     public void disconnect() {
         Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
         startActivity(intent);

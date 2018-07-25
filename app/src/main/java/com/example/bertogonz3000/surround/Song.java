@@ -43,4 +43,8 @@ public class Song extends ParseObject{
 
     public void setIsThrowing(boolean isThrowing){put("isThrowing", isThrowing);}
 
+    public double getMovingNode(){return getDouble("movingNode");}
+
+    public void setMovingNode(double movingNode){put("movingNode", movingNode);}
+
 }

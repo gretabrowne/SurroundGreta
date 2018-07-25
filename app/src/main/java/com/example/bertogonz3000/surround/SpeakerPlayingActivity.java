@@ -1,6 +1,8 @@
 package com.example.bertogonz3000.surround;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -19,17 +21,21 @@ import java.util.Dictionary;
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
     boolean connected;  //TODO - update this?
-    int centerID, frontRightID, frontLeftID, backRightID, backLeftID;
-    boolean isPlaying;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, phoneVol;
+    boolean isPlaying, throwing;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position;
     int currentTime;
+    AudioManager audioManager = audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
         connected = true;
+
+        throwing = false;
 
         //positiion selected for this phone.
         //TODO - switch from int to float from intent
@@ -68,6 +74,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
+                audioManager
+
             }
         });
 
@@ -89,7 +97,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         playAll();
                     }
 
-                } else if () {
+                    //TODO - should object.getVolume be a float or an int? I think it depends on
+                    //TODO - where we want to do the conversion between whatever input the croller gives
+                    //TODO - us and what we need to set volume
+                } else if (phoneVol != object.getVolume()) {
+                    phoneVol = (int) object.getVolume();
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, phoneVol, 0);
 
                 } else {
                     changeTime(object.getTime());
@@ -181,7 +194,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backRightMP.seekTo(time);
     }
 
-    private float getMaxVol(int node){
+    private float getMaxVol(double node){
 //        float denom = (float) (Math.sqrt(2*Math.PI));
 //        Log.e("MATH", "denom = " + denom);
 //        float left =(float) 2.5066/denom;
@@ -195,18 +208,19 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //TODO - Might have to differentiate between nodes, not letting center extend???
+    //TODO - I don't like hardcoding the nodes to the mps here...should we create a dictionary or something?
     private void setToMaxVol(MediaPlayer mp){
-        int node = 0;
+        double node = 0.5;
         if ( mp == centerMP){
-            node = 0;
+            node = 0.5;
         } else if (mp == frontRightMP){
-            node = 4;
+            node = 0.625;
         } else if (mp == backRightMP){
-            node = 8;
+            node = 0.875;
         } else if (mp == backLeftMP){
-            node = 12;
+            node = 0.175;
         } else if (mp == frontLeftMP){
-            node = 16;
+            node = 0.375;
         }
 
 
@@ -218,4 +232,5 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         mp.setVolume(getMaxVol(node), getMaxVol(node));
 
     }
+
 }

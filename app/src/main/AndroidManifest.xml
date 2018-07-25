@@ -25,13 +25,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.LandingActivity" />
         </activity>
-
         <activity android:name=".ZoneChoiceUpdateActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.LandingActivity" />
         </activity>
-
         <activity android:name=".SpeakerPlayingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -55,6 +53,13 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".LostConnectionActivity" />
+        <activity
+            android:name=".SelectZone"
+            android:parentActivityName=".LandingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bertogonz3000.surround.LandingActivity" />
+        </activity>
     </application>
 
 </manifest>

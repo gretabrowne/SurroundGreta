@@ -1,5 +1,6 @@
 package com.example.bertogonz3000.surround;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -35,7 +37,9 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     // Handler to update UI timer, progress bar etc,.
     private Handler mHandler = new Handler();
     private Utilities utils;
+    ImageButton playButton;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,16 +54,17 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         tvCurrent = findViewById(R.id.tvStart);
         tvEnd = findViewById(R.id.tvEnd);
         seekbar = findViewById(R.id.seekBar);
+        playButton = findViewById(R.id.playButton);
+
 
 
         Croller croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
         croller.setBackCircleColor(Color.parseColor("#EDEDED"));
         croller.setMainCircleColor(Color.parseColor("#212121"));
-        //croller.setMax(50);
         croller.setIsContinuous(false);
         croller.setStartOffset(45);
-        croller.setLabel("Surround");
+        croller.setLabel("");
         croller.setLabelColor(Color.BLACK);
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));
@@ -76,10 +81,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         rightVol = 1;
         leftVol = 1;
 
-
         mp = MediaPlayer.create(ControllerPlayingActivity.this, song.getAudioIds().get(0));
         mp.setVolume(0,0);
         //MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
+        // Changing button image to play button
+        playButton.setImageResource(R.drawable.ic_play_circle_filled_60dp);
 
         AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -97,6 +103,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                mp.setVolume(10,10);
                 Log.d("SpeakerPlayingActivity", "tracking touch");
                 mp.start(); //change?
+                // Changing button image to pause button
+                playButton.setImageResource(R.drawable.ic_pause_circle_filled);
                 song.setVolume(leftVol);
                 song.saveInBackground();
             }
@@ -127,6 +135,37 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar.setMax(100);
 
         updateProgressBar();
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int totalDuration = mp.getDuration();
+                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
+                song.setTime(currentPosition);
+
+                // check for already playing
+                if(mp.isPlaying()){
+                    if(mp!=null){
+                        // Changing button image to play button
+                        playButton.setImageResource(R.drawable.ic_play_circle_filled_60dp);
+                        song.setIsPlaying(false);
+                        song.saveInBackground();
+                        mp.pause();
+                    }
+                }else{
+                    // Resume song
+                    if(mp!=null){
+                        // Changing button image to pause button
+                        playButton.setImageResource(R.drawable.ic_pause_circle_filled);
+                        song.setIsPlaying(true);
+                        song.saveInBackground();
+                        mp.start();
+                    }
+                }
+
+            }
+        });
     }
 
     @Override
@@ -150,29 +189,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     public boolean onSupportNavigateUp(){
         finish();
         return true;
-    }
-
-
-    public void pauseSong(View view){
-
-        int totalDuration = mp.getDuration();
-        int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
-
-        song.setTime(currentPosition);
-
-        song.setIsPlaying(false);
-        song.saveInBackground();
-        mp.pause();
-    }
-
-    public void playSong(View view) {
-        int totalDuration = mp.getDuration();
-        int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
-
-        song.setTime(currentPosition);
-        song.setIsPlaying(true);
-        song.saveInBackground();
-        mp.start();
     }
 
     //TODO - make this check the connection of the server (maybe in the onCreate)

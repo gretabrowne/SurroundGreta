@@ -43,7 +43,6 @@
         app:is_continuous="true"
         app:label_color="#000000"
         app:main_circle_color="@color/background"
-        app:max="100"
         app:progress_primary_color="#BCA9E6" />
 
 </RelativeLayout>

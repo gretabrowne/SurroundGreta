@@ -25,6 +25,8 @@ public class SelectZone extends AppCompatActivity {
         croller.setIndicatorWidth(10);
 
         croller.setStartOffset(0);
+        croller.setMin(0);
+        croller.setMax(100);
         croller.setLabel("");
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));

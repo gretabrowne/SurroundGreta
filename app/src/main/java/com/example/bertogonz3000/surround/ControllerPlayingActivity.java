@@ -179,7 +179,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         super.onResume();
         // myTask = new MyTimerTask();
         myTimer = new Timer();
-        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+//        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
         timerHandler.post(runnableCode);
         // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
         mp.start();

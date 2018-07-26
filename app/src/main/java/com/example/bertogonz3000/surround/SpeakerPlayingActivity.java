@@ -101,7 +101,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
-                phoneVol = (int) object.getVolume();s
+                phoneVol = (int) object.getVolume();
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 
             }

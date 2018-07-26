@@ -37,12 +37,12 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     TextView tvCurrent;
     TextView tvEnd;
     SeekBar seekbar;
+    Button btnThrowSound;
     private MediaPlayer mp;
     // Handler to update UI timer, progress bar etc,.
     private Handler mHandler = new Handler();
     private Utilities utils;
     ImageButton playButton;
-    Button btnThrowSound;
     // MyTimerTask myTask;
     Timer myTimer;
 
@@ -109,7 +109,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                mp.setVolume(10,10);
 //                mp.start(); //TODO- comment out when using timertask
                 // Changing button image to pause button
-               // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
+                // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
                 Log.d("SpeakerPlayingActivity", "tracking touch");
                 song.setVolume(volume);
                 song.saveInBackground();
@@ -123,7 +123,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   progress, 0);
 
                 song.setVolume(progress);
-              //  song.setTestString("test string");
+                //  song.setTestString("test string");
                 song.saveInBackground();
             }
 
@@ -184,7 +184,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         });
 
     }
-//TODO- fix timer task
+    //TODO- fix timer task
     //start the global clock timer when the activity appears on the screen
     //start the song
     Handler timerHandler = new Handler();

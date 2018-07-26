@@ -56,7 +56,7 @@ public class SelectZone extends AppCompatActivity {
 
     public void setLocation(View view) {
         Intent i = new Intent(this, SpeakerPlayingActivity.class);
-        position = (float) position/100;
+        position = position/100;
         i.putExtra("position", position);
         startActivity(i);
     }

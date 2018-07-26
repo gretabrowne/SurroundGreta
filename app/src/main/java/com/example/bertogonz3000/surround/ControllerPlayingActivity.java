@@ -1,6 +1,7 @@
 package com.example.bertogonz3000.surround;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,11 +28,10 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 import org.parceler.Parcels;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
-    //private AudioManager audioManager = null;
-    float rightVol, leftVol;
+    private AudioManager audioManager;
+    int volume;
     Song song;
     TextView tvCurrent;
     TextView tvEnd;
@@ -56,6 +56,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         tvCurrent = findViewById(R.id.tvStart);
         tvEnd = findViewById(R.id.tvEnd);
         seekbar = findViewById(R.id.seekBar);
@@ -65,7 +67,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setBackCircleColor(Color.parseColor("#EDEDED"));
         croller.setMainCircleColor(Color.parseColor("#212121"));
         croller.setIsContinuous(false);
-        croller.setStartOffset(45);
+        //TODO - fix this to work for all phones - create a method to scale
+        croller.setProgress(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2);
         croller.setLabel("");
         croller.setLabelColor(Color.BLACK);
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
@@ -74,14 +77,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setProgressSecondaryColor(Color.parseColor("#ffffff"));
         croller.setProgressPrimaryCircleSize(5);
 
-        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        //croller.setMax(audioManager
-        //        .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        croller.setMax(audioManager
+                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         //croller.setProgress(audioManager
         //        .getStreamVolume(AudioManager.STREAM_MUSIC));
 
-        rightVol = 1;
-        leftVol = 1;
 
         mp = MediaPlayer.create(ControllerPlayingActivity.this, song.getAudioIds().get(0));
         mp.setVolume(0,0);
@@ -101,14 +101,16 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
             @Override
             public void onStartTrackingTouch(Croller croller) {
+
 //                // tracking started
 //                mp.setVolume(10,10);
 //                mp.start(); //TODO- comment out when using timertask
-                Log.d("SpeakerPlayingActivity", "tracking touch");
                 // Changing button image to pause button
-                playButton.setImageResource(R.drawable.ic_pause_circle_filled);
-                song.setVolume(leftVol);
+               // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
+                Log.d("SpeakerPlayingActivity", "tracking touch");
+                song.setVolume(volume);
                 song.saveInBackground();
+
             }
 
             @Override
@@ -117,9 +119,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                 //   progress, 0);
 
-                float prog = progress/100;
-                song.setVolume(prog);
-                song.setTestString("test string");
+                song.setVolume(progress);
+              //  song.setTestString("test string");
                 song.saveInBackground();
             }
 
@@ -138,6 +139,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         updateProgressBar();
 
+        //pausing and playing the song
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,7 +148,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
                 song.setTime(currentPosition);
 
-                // check for already playing
+                // check for already playing, then pause
                 if(mp.isPlaying()){
                     if(mp!=null){
                         // Changing button image to play button
@@ -156,7 +158,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                         mp.pause();
                     }
                 }else{
-                    // Resume song
+                    // Resume song (play)
                     if(mp!=null){
                         // Changing button image to pause button
                         playButton.setImageResource(R.drawable.ic_pause_circle_filled);

@@ -142,9 +142,9 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             @Override
             public void onClick(View view) {
 
-//                int totalDuration = mp.getDuration();
-//                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
-//                song.setTime(currentPosition);
+                int totalDuration = mp.getDuration();
+                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
+                song.setTime(currentPosition);
 
                 // check for already playing, then pause
                 if(mp.isPlaying()){

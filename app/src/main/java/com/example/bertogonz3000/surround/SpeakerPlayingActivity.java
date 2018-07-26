@@ -24,6 +24,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position;
     AudioManager audioManager;
+    int numberSeek;
     double movingNode = 0.5;
 
 
@@ -43,10 +44,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        //positiion selected for this phone.
+        //position selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -76,6 +76,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 //TODO - check discrepancy between adapter and controller
                 isPlaying = object.getIsPlaying();
+
+                numberSeek = object.getNumSeek();
+
+                changeTime(object.getTime());  //if speaker joins late then have it match up with the others
 
                 if (isPlaying){
                     playAll();
@@ -109,8 +113,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
-
+                // TODO-- why is this just back left MP?
                 if(object.getTime() != backLeftMP.getCurrentPosition())
+
+                //if the seekbar was used
+                if(object.getNumSeek() != numberSeek) {
+                    changeTime(object.getTime());
+                    numberSeek = object.getNumSeek();
+                }
+
                 {
                     changeTime(object.getTime());   //TODO - testing clock
                     Log.d("SpeakerPlayingActivity", "time is off");

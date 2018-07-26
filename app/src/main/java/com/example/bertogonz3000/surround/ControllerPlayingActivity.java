@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 import org.parceler.Parcels;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     private AudioManager audioManager;
@@ -43,7 +41,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     private Handler mHandler = new Handler();
     private Utilities utils;
     ImageButton playButton;
-    MyTimerTask myTask;
+    // MyTimerTask myTask;
     Timer myTimer;
 
     @SuppressLint("WrongViewCast")
@@ -103,11 +101,16 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
             @Override
             public void onStartTrackingTouch(Croller croller) {
-////                // tracking started
-////                mp.setVolume(10,10);
-////                mp.start(); //TODO- comment out when using timertask
-//                Log.d("SpeakerPlayingActivity", "tracking touch");
-//                // Changing button image to pause button
+
+//                // tracking started
+//                mp.setVolume(10,10);
+//                mp.start(); //TODO- comment out when using timertask
+                // Changing button image to pause button
+               // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
+                Log.d("SpeakerPlayingActivity", "tracking touch");
+                song.setVolume(volume);
+                song.saveInBackground();
+
             }
 
             @Override
@@ -169,30 +172,47 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //TODO- fix timer task
     //start the global clock timer when the activity appears on the screen
     //start the song
+Handler timerHandler = new Handler();
     @Override
     public void onResume(){
         super.onResume();
-        myTask = new MyTimerTask();
+        // myTask = new MyTimerTask();
         myTimer = new Timer();
-        myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+        timerHandler.post(runnableCode);
+        // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
         mp.start();
     }
+//
+//    class MyTimerTask extends TimerTask {
+//        //update the current position every 10 seconds in the parse song class
+//        public void run() {
+//            Log.d("SpeakerPlayingActivity", "mytimertask");
+//            int currentPosition = mp.getCurrentPosition();
+//            song.setTime(currentPosition);
+//            song.saveInBackground();
+//        }
+//    }
 
-    class MyTimerTask extends TimerTask {
-        //update the current position every second in the parse song class
+
+    private Runnable runnableCode = new Runnable() {
+        @Override
         public void run() {
+            Log.d("ControllerPlayingActivity", "runnable");
             int currentPosition = mp.getCurrentPosition();
             song.setTime(currentPosition);
             song.saveInBackground();
+            timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable in 10 seconds
+            // TODO-- clear handler?
         }
-    }
+    };
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         song.deleteInBackground();
-        // song.release();
+        mp.release();
     }
 
     @Override
@@ -297,6 +317,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         // forward or backward to certain seconds
         mp.seekTo(currentPosition);
+        song.setNumSeek(song.getNumSeek()+1);   //update the number of times used seek bar
 
         // update timer progress again
         updateProgressBar();

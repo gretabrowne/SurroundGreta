@@ -80,6 +80,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             //song.setVolume(0);
             // song.setTestString("test string");
             song.setTime(0);
+            song.setNumSeek(0);
             song.saveInBackground();
 
             Intent i = new Intent(context, ControllerPlayingActivity.class);

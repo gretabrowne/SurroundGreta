@@ -95,7 +95,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 phoneVol = (int) object.getVolume();
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
-
             }
         });
 
@@ -111,11 +110,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(object.getNumSeek() != numberSeek) {
                     changeTime(object.getTime());
                     numberSeek = object.getNumSeek();
-                }
-
-                {
-                    changeTime(object.getTime());   //TODO - testing clock
-                    Log.d("SpeakerPlayingActivity", "time is off");
                 }
 
                 if (isPlaying != object.getIsPlaying()) {

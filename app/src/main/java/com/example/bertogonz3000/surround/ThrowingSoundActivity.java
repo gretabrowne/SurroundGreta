@@ -1,7 +1,6 @@
 package com.example.bertogonz3000.surround;
 
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -20,8 +19,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
 
     CircularSlider slider;
 
-
-    private AudioManager audioManager;
     int volume;
     Song song;
     private MediaPlayer mp;
@@ -58,7 +55,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
 
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override

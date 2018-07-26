@@ -4,17 +4,16 @@ package com.example.bertogonz3000.surround;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import me.angrybyte.circularslider.CircularSlider;
-
 import com.example.bertogonz3000.surround.Models.Utilities;
 
 import org.parceler.Parcels;
+
+import me.angrybyte.circularslider.CircularSlider;
 
 public class ThrowingSoundActivity extends AppCompatActivity {
 
@@ -26,6 +25,8 @@ public class ThrowingSoundActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_throwing_sound);
+        slider = findViewById(R.id.circularSlider);
+        slider = new CircularSlider(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -45,6 +46,10 @@ public class ThrowingSoundActivity extends AppCompatActivity {
 
             }
         });
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+
+        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
     }
 
     @Override

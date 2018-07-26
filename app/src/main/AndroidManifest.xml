@@ -60,6 +60,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.LandingActivity" />
         </activity>
+        <activity
+            android:name=".ThrowingSoundActivity"
+            android:parentActivityName=".ControllerPlayingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.bertogonz3000.surround.ControllerPlayingActivity"/>
+        </activity>
+
     </application>
 
 </manifest>

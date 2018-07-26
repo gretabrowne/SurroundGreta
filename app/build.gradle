@@ -45,5 +45,6 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.11'
     annotationProcessor 'org.parceler:parceler:1.1.11'
     implementation 'com.github.BeppiMenozzi:Knob:1.9.0'
+    implementation 'me.angrybyte.slider:slider:1.4.2'
 
 }

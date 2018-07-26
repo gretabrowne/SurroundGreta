@@ -27,8 +27,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_throwing_sound);
         slider = findViewById(R.id.circularSlider);
-        // slider = new CircularSlider(this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
         song.setIsThrowing(true);
@@ -48,6 +46,8 @@ public class ThrowingSoundActivity extends AppCompatActivity {
                 Log.d("ThrowingSoundActivity", "onSliderMoved");
                 song.setMovingNode(pos);
                 song.saveInBackground();
+
+                Log.d("throw", "sound");
             }
         });
 

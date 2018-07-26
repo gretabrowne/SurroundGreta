@@ -24,6 +24,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position;
     AudioManager audioManager;
+    int numberSeek;
     double movingNode = 0.5;
 
 
@@ -37,7 +38,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        //positiion selected for this phone.
+        //position selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
 
@@ -69,7 +70,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 isPlaying = object.getIsPlaying();
 
+                numberSeek = object.getNumSeek();
+
                 changeTime(object.getTime());  //if speaker joins late then have it match up with the others
+
                 if (isPlaying){
                     playAll();
                 } else {
@@ -104,7 +108,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 
-                if(object.getTime() != backLeftMP.getCurrentPosition())
+
+                //if the seekbar was used
+                if(object.getNumSeek() != numberSeek) {
+                    changeTime(object.getTime());
+                    numberSeek = object.getNumSeek();
+                }
+
                 {
                     changeTime(object.getTime());   //TODO - testing clock
                     Log.d("SpeakerPlayingActivity", "time is off");

@@ -176,7 +176,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         super.onResume();
         myTask = new MyTimerTask();
         myTimer = new Timer();
-        myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+        myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
         mp.start();
     }
 
@@ -299,6 +299,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         // forward or backward to certain seconds
         mp.seekTo(currentPosition);
+        song.setNumSeek(song.getNumSeek()+1);   //update the number of times used seek bar
 
         // update timer progress again
         updateProgressBar();

@@ -194,7 +194,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     protected void onDestroy() {
         super.onDestroy();
         song.deleteInBackground();
-        // song.release();
+        mp.release();
     }
 
     @Override

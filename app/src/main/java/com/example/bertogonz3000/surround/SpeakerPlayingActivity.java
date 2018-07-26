@@ -259,7 +259,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //        float left =(float) 2.5066/denom;
 //        Log.e("MATH", "left = " + left);
         float expTop = (float) -(Math.pow((position - node), 2));
-        float exponent = expTop/5;
+        //TODO - CHANGED 12:49 7/26
+        double exponent = expTop/0.02;
         //TODO - add LEFT* before Math.pow....if this doesn't work..got rid of cuz it was ~1
         float maxVol = (float) Math.pow(Math.E, exponent);
         Log.e("MATH", "maxVol at " + node + " = " + maxVol);
@@ -277,7 +278,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         } else if (mp == backRightMP){
             node = 0.875;
         } else if (mp == backLeftMP){
-            node = 0.175;
+            node = 0.125;
         } else if (mp == frontLeftMP){
             node = 0.375;
         }

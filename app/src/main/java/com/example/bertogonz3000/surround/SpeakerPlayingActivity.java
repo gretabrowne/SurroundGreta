@@ -40,8 +40,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         //positiion selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
-        position = position/100;
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -71,6 +69,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 isPlaying = object.getIsPlaying();
 
+                changeTime(object.getTime());  //if speaker joins late then have it match up with the others
                 if (isPlaying){
                     playAll();
                 } else {

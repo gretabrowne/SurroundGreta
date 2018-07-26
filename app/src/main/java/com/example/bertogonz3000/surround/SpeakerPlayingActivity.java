@@ -116,9 +116,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     isPlaying = object.getIsPlaying();
                     if (!isPlaying){
                         Log.d("SpeakerPlayingActivity", "switching pause/play");
+                        changeTime(object.getTime());
                         pauseAll();
                     } else {
                         Log.d("SpeakerPlayingActivity", "switching pause/play");
+                        changeTime(object.getTime());
                         playAll();
                     }
 

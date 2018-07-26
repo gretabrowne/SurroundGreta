@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     private Handler mHandler = new Handler();
     private Utilities utils;
     ImageButton playButton;
+    Button btnThrowSound;
     // MyTimerTask myTask;
     Timer myTimer;
 
@@ -62,6 +64,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         tvEnd = findViewById(R.id.tvEnd);
         seekbar = findViewById(R.id.seekBar);
         playButton = findViewById(R.id.playButton);
+        btnThrowSound = findViewById(R.id.btnThrowSound);
         Croller croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
         croller.setBackCircleColor(Color.parseColor("#EDEDED"));
@@ -169,6 +172,17 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 }
             }
         });
+
+        btnThrowSound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ControllerPlayingActivity.this, ThrowingSoundActivity.class);
+                // pass song object over
+                i.putExtra("song", Parcels.wrap(song));
+                startActivity(i);
+            }
+        });
+
     }
 //TODO- fix timer task
     //start the global clock timer when the activity appears on the screen

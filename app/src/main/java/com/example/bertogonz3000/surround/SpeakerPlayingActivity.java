@@ -106,10 +106,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
-                // TODO-- why is this just back left MP?
-                if(object.getTime() != backLeftMP.getCurrentPosition())
 
-                //if the seekbar was used
+                //if the scrubber was used to change the position in the song
                 if(object.getNumSeek() != numberSeek) {
                     changeTime(object.getTime());
                     numberSeek = object.getNumSeek();
@@ -163,11 +161,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                     movingNode = object.getMovingNode();
 
-                } else {
-                    // if nothing else has been updated, it must be the time
-                    changeTime(object.getTime());
                 }
-
             }
         });
 

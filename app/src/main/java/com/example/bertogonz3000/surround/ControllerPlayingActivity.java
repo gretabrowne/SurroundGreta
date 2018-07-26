@@ -178,9 +178,9 @@ Handler timerHandler = new Handler();
     public void onResume(){
         super.onResume();
         // myTask = new MyTimerTask();
-//        myTimer = new Timer();
+        myTimer = new Timer();
 //        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
-//        timerHandler.post(runnableCode);
+        timerHandler.post(runnableCode);
         // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
         mp.start();
     }
@@ -195,18 +195,18 @@ Handler timerHandler = new Handler();
 //        }
 //    }
 
-//
-//    private Runnable runnableCode = new Runnable() {
-//        @Override
-//        public void run() {
-//            Log.d("ControllerPlayingActivity", "runnable");
-//            int currentPosition = mp.getCurrentPosition();
-//            song.setTime(currentPosition);
-//            song.saveInBackground();
-//            timerHandler.postDelayed(runnableCode, 10000); // repeat same runnable in 10 seconds
-//            // TODO-- clear handler?
-//        }
-//    };
+
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            Log.d("ControllerPlayingActivity", "runnable");
+            int currentPosition = mp.getCurrentPosition();
+            song.setTime(currentPosition);
+            song.saveInBackground();
+            timerHandler.postDelayed(runnableCode, 10000); // repeat same runnable in 10 seconds
+            // TODO-- clear handler?
+        }
+    };
 
 
     @Override

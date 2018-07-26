@@ -63,10 +63,10 @@
 
         <activity
             android:name=".ThrowingSoundActivity"
-            android:parentActivityName=".ControllerPlayingActivity">
+            android:parentActivityName=".SongSelectionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.ControllerPlayingActivity"/>
+                android:value="com.example.bertogonz3000.surround.SongSelectionActivity"/>
         </activity>
 
     </application>

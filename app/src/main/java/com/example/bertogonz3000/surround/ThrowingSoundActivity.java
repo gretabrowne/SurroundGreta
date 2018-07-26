@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.bertogonz3000.surround.Models.Utilities;
@@ -31,12 +32,12 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_throwing_sound);
         slider = findViewById(R.id.circularSlider);
-        slider = new CircularSlider(this);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        slider.setStartAngle(0);    //double value
+        slider.setStartAngle(0);    //double value
+
 
         slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
             @Override
@@ -47,6 +48,8 @@ public class ThrowingSoundActivity extends AppCompatActivity {
                  * @param pos Value between 0 and 1 representing the current angle.<br>
                  *            {@code pos = (Angle - StartingAngle) / (2 * Pi)}
                  */
+
+                Log.d("throw", "sound");
 
             }
         });

@@ -1,7 +1,6 @@
 package com.example.bertogonz3000.surround;
 
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -19,12 +18,7 @@ import me.angrybyte.circularslider.CircularSlider;
 public class ThrowingSoundActivity extends AppCompatActivity {
 
     CircularSlider slider;
-
-
-    private AudioManager audioManager;
-    int volume;
     Song song;
-    private MediaPlayer mp;
     private Utilities utils;
 
     @Override
@@ -32,12 +26,12 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_throwing_sound);
         slider = findViewById(R.id.circularSlider);
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+        song.setIsThrowing(true);
+        song.saveInBackground();
 
         slider.setStartAngle(0);    //double value
-
 
         slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
             @Override
@@ -48,17 +42,16 @@ public class ThrowingSoundActivity extends AppCompatActivity {
                  * @param pos Value between 0 and 1 representing the current angle.<br>
                  *            {@code pos = (Angle - StartingAngle) / (2 * Pi)}
                  */
+                Log.d("ThrowingSoundActivity", "onSliderMoved");
+                song.setMovingNode(pos);
+                song.saveInBackground();
 
                 Log.d("throw", "sound");
-
             }
         });
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override

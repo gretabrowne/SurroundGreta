@@ -40,7 +40,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         //positiion selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
-        position = position/100;
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -105,6 +104,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 
+                // TODO-- why is this just back left MP?
                 if(object.getTime() != backLeftMP.getCurrentPosition())
                 {
                     changeTime(object.getTime());   //TODO - testing clock

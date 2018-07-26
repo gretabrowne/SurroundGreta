@@ -42,7 +42,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     private Handler mHandler = new Handler();
     private Utilities utils;
     ImageButton playButton;
-    MyTimerTask myTask;
+    // MyTimerTask myTask;
     Timer myTimer;
 
     @SuppressLint("WrongViewCast")
@@ -172,23 +172,39 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //TODO- fix timer task
     //start the global clock timer when the activity appears on the screen
     //start the song
+Handler timerHandler = new Handler();
     @Override
     public void onResume(){
         super.onResume();
-        myTask = new MyTimerTask();
+        // myTask = new MyTimerTask();
         myTimer = new Timer();
-        myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
+        timerHandler.post(runnableCode);
         mp.start();
     }
+//
+//    class MyTimerTask extends TimerTask {
+//        //update the current position every 10 seconds in the parse song class
+//        public void run() {
+//            Log.d("SpeakerPlayingActivity", "mytimertask");
+//            int currentPosition = mp.getCurrentPosition();
+//            song.setTime(currentPosition);
+//            song.saveInBackground();
+//        }
+//    }
 
-    class MyTimerTask extends TimerTask {
-        //update the current position every second in the parse song class
+
+    private Runnable runnableCode = new Runnable() {
+        @Override
         public void run() {
+            Log.d("ControllerPlayingActivity", "runnable");
             int currentPosition = mp.getCurrentPosition();
             song.setTime(currentPosition);
             song.saveInBackground();
+            timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable in 10 seconds
+            // TODO-- clear handler?
         }
-    }
+    };
 
 
     @Override

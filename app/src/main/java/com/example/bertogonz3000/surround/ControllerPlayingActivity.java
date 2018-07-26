@@ -171,7 +171,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //TODO- fix timer task
     //start the global clock timer when the activity appears on the screen
     //start the song
-Handler timerHandler = new Handler();
+    Handler timerHandler = new Handler();
     @Override
     public void onResume(){
         super.onResume();
@@ -201,7 +201,7 @@ Handler timerHandler = new Handler();
             int currentPosition = mp.getCurrentPosition();
             song.setTime(currentPosition);
             song.saveInBackground();
-            timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable in 10 seconds
+            timerHandler.postDelayed(runnableCode, 10000); // repeat same runnable in 10 seconds
             // TODO-- clear handler?
         }
     };

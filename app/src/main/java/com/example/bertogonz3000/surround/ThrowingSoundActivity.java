@@ -19,12 +19,7 @@ import org.parceler.Parcels;
 public class ThrowingSoundActivity extends AppCompatActivity {
 
     CircularSlider slider;
-
-
-    private AudioManager audioManager;
-    int volume;
     Song song;
-    private MediaPlayer mp;
     private Utilities utils;
 
     @Override
@@ -32,8 +27,9 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_throwing_sound);
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 
 //        slider.setStartAngle(0);    //double value
 
@@ -49,13 +45,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
 
             }
         });
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-
-        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override

@@ -18,11 +18,17 @@ public class ThrowingSoundActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        slider.setStartAngle(0);    //double value
+//        slider.setStartAngle(0);    //double value
 
         slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
             @Override
             public void onSliderMoved(double pos) {
+                /**
+                 * This method is invoked when slider moves, providing position of the slider thumb.
+                 *
+                 * @param pos Value between 0 and 1 representing the current angle.<br>
+                 *            {@code pos = (Angle - StartingAngle) / (2 * Pi)}
+                 */
 
             }
         });

@@ -139,15 +139,16 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         updateProgressBar();
 
+        //pausing and playing the song
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int totalDuration = mp.getDuration();
-                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
-                song.setTime(currentPosition);
+//                int totalDuration = mp.getDuration();
+//                int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
+//                song.setTime(currentPosition);
 
-                // check for already playing
+                // check for already playing, then pause
                 if(mp.isPlaying()){
                     if(mp!=null){
                         // Changing button image to play button
@@ -157,7 +158,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                         mp.pause();
                     }
                 }else{
-                    // Resume song
+                    // Resume song (play)
                     if(mp!=null){
                         // Changing button image to pause button
                         playButton.setImageResource(R.drawable.ic_pause_circle_filled);

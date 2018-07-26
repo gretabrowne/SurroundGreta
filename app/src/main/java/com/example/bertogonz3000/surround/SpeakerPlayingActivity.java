@@ -101,7 +101,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
 
-                phoneVol = (int) object.getVolume();
+                phoneVol = (int) object.getVolume();s
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 
             }
         });
@@ -114,7 +115,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
 
-                //if the seekbar was used
+                //if the scrubber was used to change the position in the song
                 if(object.getNumSeek() != numberSeek) {
                     changeTime(object.getTime());
                     numberSeek = object.getNumSeek();
@@ -124,9 +125,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     isPlaying = object.getIsPlaying();
                     if (!isPlaying){
                         Log.d("SpeakerPlayingActivity", "switching pause/play");
+                        changeTime(object.getTime());
                         pauseAll();
                     } else {
                         Log.d("SpeakerPlayingActivity", "switching pause/play");
+                        changeTime(object.getTime());
                         playAll();
                     }
 
@@ -164,7 +167,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     movingNode = object.getMovingNode();
 
                 }
-
             }
         });
 

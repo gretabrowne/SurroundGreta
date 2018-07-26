@@ -35,14 +35,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2, 0);
 
 
         connected = true;
 
         throwing = false;
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //position selected for this phone.
         //TODO - switch from int to float from intent
@@ -113,18 +113,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 Log.d("SpeakerPlayingActivity", "in on update");
                 Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
-                // TODO-- why is this just back left MP?
-                if(object.getTime() != backLeftMP.getCurrentPosition())
 
                 //if the seekbar was used
                 if(object.getNumSeek() != numberSeek) {
                     changeTime(object.getTime());
                     numberSeek = object.getNumSeek();
-                }
-
-                {
-                    changeTime(object.getTime());   //TODO - testing clock
-                    Log.d("SpeakerPlayingActivity", "time is off");
                 }
 
                 if (isPlaying != object.getIsPlaying()) {

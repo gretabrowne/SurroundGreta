@@ -106,7 +106,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                mp.setVolume(10,10);
 //                mp.start(); //TODO- comment out when using timertask
                 // Changing button image to pause button
-               // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
+                // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
                 Log.d("SpeakerPlayingActivity", "tracking touch");
                 song.setVolume(volume);
                 song.saveInBackground();
@@ -120,7 +120,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   progress, 0);
 
                 song.setVolume(progress);
-              //  song.setTestString("test string");
+                //  song.setTestString("test string");
                 song.saveInBackground();
             }
 
@@ -170,17 +170,17 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             }
         });
     }
-//TODO- fix timer task
+    //TODO- fix timer task
     //start the global clock timer when the activity appears on the screen
     //start the song
-Handler timerHandler = new Handler();
+    Handler timerHandler = new Handler();
     @Override
     public void onResume(){
         super.onResume();
         // myTask = new MyTimerTask();
-//        myTimer = new Timer();
+        myTimer = new Timer();
 //        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
-//        timerHandler.post(runnableCode);
+        timerHandler.post(runnableCode);
         // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
         mp.start();
     }
@@ -195,18 +195,18 @@ Handler timerHandler = new Handler();
 //        }
 //    }
 
-//
-//    private Runnable runnableCode = new Runnable() {
-//        @Override
-//        public void run() {
-//            Log.d("ControllerPlayingActivity", "runnable");
-//            int currentPosition = mp.getCurrentPosition();
-//            song.setTime(currentPosition);
-//            song.saveInBackground();
-//            timerHandler.postDelayed(runnableCode, 10000); // repeat same runnable in 10 seconds
-//            // TODO-- clear handler?
-//        }
-//    };
+
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            Log.d("ControllerPlayingActivity", "runnable");
+            int currentPosition = mp.getCurrentPosition();
+            song.setTime(currentPosition);
+            song.saveInBackground();
+            timerHandler.postDelayed(runnableCode, 10000); // repeat same runnable in 10 seconds
+            // TODO-- clear handler?
+        }
+    };
 
 
     @Override

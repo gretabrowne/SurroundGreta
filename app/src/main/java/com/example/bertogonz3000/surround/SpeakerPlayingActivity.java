@@ -295,4 +295,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        frontLeftMP.release();
+        frontRightMP.release();
+        backLeftMP.release();
+        backRightMP.release();
+        centerMP.release();
+    }
+
 }

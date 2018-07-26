@@ -246,7 +246,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     //change time of all 5 media players
     private void changeTime(int time){
-        centerMP.seekTo(time);
+        centerMP
+                .seekTo
+                        (time);
         frontLeftMP.seekTo(time);
         frontRightMP.seekTo(time);
         backLeftMP.seekTo(time);

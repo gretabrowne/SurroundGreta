@@ -30,7 +30,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         // slider = new CircularSlider(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
         song.setIsThrowing(true);
         song.saveInBackground();
@@ -51,7 +50,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
                 song.saveInBackground();
             }
         });
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));

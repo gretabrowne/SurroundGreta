@@ -110,9 +110,9 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                mp.start(); //TODO- comment out when using timertask
                 // Changing button image to pause button
                 // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
-                Log.d("SpeakerPlayingActivity", "tracking touch");
-                song.setVolume(volume);
-                song.saveInBackground();
+//                Log.d("SpeakerPlayingActivity", "tracking touch");
+//                song.setVolume(volume);
+//                song.saveInBackground();
 
             }
 
@@ -156,9 +156,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                     if(mp!=null){
                         // Changing button image to play button
                         playButton.setImageResource(R.drawable.ic_play_circle_filled_60dp);
-                        song.setIsPlaying(false);
-                        song.saveInBackground();
                         mp.pause();
+                        song.setIsPlaying(false);
+                        song.setTime(mp.getCurrentPosition());
+                        song.saveInBackground();
                     }
                 }else{
                     // Resume song (play)
@@ -166,6 +167,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                         // Changing button image to pause button
                         playButton.setImageResource(R.drawable.ic_pause_circle_filled);
                         song.setIsPlaying(true);
+                        song.setTime(mp.getCurrentPosition());
                         song.saveInBackground();
                         mp.start();
                     }
@@ -188,15 +190,17 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     //start the global clock timer when the activity appears on the screen
     //start the song
     Handler timerHandler = new Handler();
+
+    //TODO - Commented out
     @Override
     public void onResume(){
         super.onResume();
         // myTask = new MyTimerTask();
-        myTimer = new Timer();
+//        myTimer = new Timer();
 //        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
-        timerHandler.post(runnableCode);
+//        timerHandler.post(runnableCode);
         // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
-        mp.start();
+//        mp.start();
     }
 //
 //    class MyTimerTask extends TimerTask {
@@ -344,4 +348,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     public void onCompletion(MediaPlayer mediaPlayer) {
         mp.release();
     }
+
+
 }

@@ -71,6 +71,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
 
         }
 
+        //TODO - CHANGED
         public void onClick(View view){
             Track track = trackList.get(getAdapterPosition());
             Song song = new Song();

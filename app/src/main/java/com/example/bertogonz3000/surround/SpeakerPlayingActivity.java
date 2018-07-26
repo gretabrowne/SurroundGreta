@@ -31,6 +31,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2, 0);
+
+
         connected = true;
 
         throwing = false;
@@ -40,7 +46,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         //positiion selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
-        position = position/100;
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,6 +74,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 prepMediaPlayers(object);
 
+                //TODO - check discrepancy between adapter and controller
                 isPlaying = object.getIsPlaying();
 
                 if (isPlaying){
@@ -92,7 +98,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(frontLeftMP);
 
                 phoneVol = (int) object.getVolume();
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
 
             }
         });
@@ -153,10 +158,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 } else if (movingNode != object.getMovingNode()){
 
                     movingNode = object.getMovingNode();
-
-                } else {
-                    // if nothing else has been updated, it must be the time
-                    changeTime(object.getTime());
 
                 }
 

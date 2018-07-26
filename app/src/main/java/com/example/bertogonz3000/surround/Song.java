@@ -47,4 +47,8 @@ public class Song extends ParseObject{
 
     public void setMovingNode(double movingNode){put("movingNode", movingNode);}
 
+    public void setNumSeek(int num) {put("numSeek", num); }
+
+    public int getNumSeek() {return (int) getInt("numSeek"); }
+
 }

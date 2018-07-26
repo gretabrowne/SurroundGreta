@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -180,6 +179,7 @@ Handler timerHandler = new Handler();
         myTimer = new Timer();
         // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
         timerHandler.post(runnableCode);
+        // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
         mp.start();
     }
 //
@@ -211,7 +211,7 @@ Handler timerHandler = new Handler();
     protected void onDestroy() {
         super.onDestroy();
         song.deleteInBackground();
-        // song.release();
+        mp.release();
     }
 
     @Override
@@ -316,6 +316,7 @@ Handler timerHandler = new Handler();
 
         // forward or backward to certain seconds
         mp.seekTo(currentPosition);
+        song.setNumSeek(song.getNumSeek()+1);   //update the number of times used seek bar
 
         // update timer progress again
         updateProgressBar();

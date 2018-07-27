@@ -76,7 +76,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             Track track = trackList.get(getAdapterPosition());
             Song song = new Song();
             song.setAudioIds(track.getAudioIds());
-            song.setIsPlaying(false);
+            song.setIsPlaying(true);
             song.setIsThrowing(false);
             //song.setVolume(0);
             // song.setTestString("test string");

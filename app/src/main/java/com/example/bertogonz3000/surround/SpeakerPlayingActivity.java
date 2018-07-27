@@ -150,14 +150,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     throwing = object.getIsThrowing();
 
                     if (throwing) {
-                        Log.d("SpeakerPlayingActivity", "throwing and setting volume to " + getMaxVol(movingNode) + "" + getMaxVol(movingNode));
-
+                        Log.e("SpeakerPlayingActivity", "throwing and setting volume to " + getMaxVol(movingNode) + "" + getMaxVol(movingNode));
                         centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
                         frontLeftMP.setVolume(0, 0);
                         backLeftMP.setVolume(0, 0);
                         frontRightMP.setVolume(0, 0);
                         backRightMP.setVolume(0, 0);
                     } else {
+                        Log.e("THROWING", "Returned");
                         setToMaxVol(centerMP);
                         setToMaxVol(frontLeftMP);
                         setToMaxVol(backLeftMP);

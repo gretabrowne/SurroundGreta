@@ -107,7 +107,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
 //                // tracking started
 //                mp.setVolume(10,10);
-//                mp.start(); //TODO- comment out when using timertask
+                mp.start(); //TODO- comment out when using timertask
                 // Changing button image to pause button
                 // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
 
@@ -200,7 +200,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
 //        timerHandler.post(runnableCode);
         // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
-//        mp.start();
+        mp.seekTo(0);
+        mp.start();
     }
 //
 //    class MyTimerTask extends TimerTask {

@@ -1,8 +1,6 @@
 package com.example.bertogonz3000.surround;
 
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -54,8 +52,9 @@ public class ThrowingSoundActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: {
                 NavUtils.navigateUpFromSameTask(this);
+            }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

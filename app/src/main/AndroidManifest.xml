@@ -42,7 +42,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.LandingActivity" />
         </activity>
-        <activity android:name=".ControllerPlayingActivity">
+        <activity android:name=".ControllerPlayingActivity"
+            android:parentActivityName=".SongSelectionActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.SongSelectionActivity" />
@@ -63,10 +65,10 @@
 
         <activity
             android:name=".ThrowingSoundActivity"
-            android:parentActivityName=".SongSelectionActivity">
+            android:parentActivityName=".ControllerPlayingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.LandingActivity"/>
+                android:value="com.example.bertogonz3000.surround.ControllerPlayingActivity"/>
         </activity>
 
     </application>

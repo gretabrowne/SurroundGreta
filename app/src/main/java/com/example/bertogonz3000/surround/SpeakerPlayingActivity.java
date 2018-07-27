@@ -1,5 +1,6 @@
 package com.example.bertogonz3000.surround;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -26,6 +27,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     AudioManager audioManager;
     int numberSeek;
     double movingNode = 0.5;
+    View background;
 
 
     @Override
@@ -39,11 +41,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2, 0);
 
+        background = findViewById(R.id.background);
 
         connected = true;
 
         throwing = false;
-
+        background.setAlpha(0);
         //position selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
@@ -108,6 +111,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         });
 
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Song>() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
                 // when volume, song, or playing status is updated
@@ -175,6 +179,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     backLeftMP.setVolume(0, 0);
                     frontRightMP.setVolume(0, 0);
                     backRightMP.setVolume(0, 0);
+
+                    //0 means the view is completely transparent and 1 means the view is completely opaque.
+                    //sets the color to full purple if it is closest to the movingNode position
+                    background.setAlpha(getMaxVol(movingNode));
 
                 }
             }

@@ -28,13 +28,18 @@ public class ParseApplication extends Application{
         builder.networkInterceptors().add(httpLoggingInterceptor);
 
 
-
         //Init the Parse Server
         Parse.initialize(new Parse.Configuration.Builder(this)
-        .applicationId("bghsurround")
-        .clientKey(null)
-        .clientBuilder(builder)
-        .server("http://172.21.78.107:1337/parse").build());
+                .applicationId("SurroundId")
+                .clientKey(null)
+                .clientBuilder(builder)
+                .server("http://172.21.79.146:1337/parse").build());
+//        //Init the Parse Server
+//        Parse.initialize(new Parse.Configuration.Builder(this)
+//        .applicationId("bghsurround")
+//        .clientKey(null)
+//        .clientBuilder(builder)
+//        .server("http://172.21.78.107:1337/parse").build());
 
     }
 }

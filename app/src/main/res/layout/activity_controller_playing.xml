@@ -32,6 +32,7 @@
         android:padding="30dp"
         circular:angle="6.28"
         android:rotation="90"
+        android:scaleX="-1"
         circular:border_color="#505090"
         circular:border_thickness="14dp"
         circular:border_gradient_colors="#6830C9;#BBA6DE;#8253D4;#6830C9"

@@ -71,11 +71,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
 
         }
 
+        //TODO - CHANGED
         public void onClick(View view){
             Track track = trackList.get(getAdapterPosition());
             Song song = new Song();
             song.setAudioIds(track.getAudioIds());
-            song.setIsPlaying(true);
+            song.setIsPlaying(false);
             song.setIsThrowing(false);
             //song.setVolume(0);
             // song.setTestString("test string");

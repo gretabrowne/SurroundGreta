@@ -79,13 +79,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 numberSeek = object.getNumSeek();
 
-                changeTime(object.getTime());  //if speaker joins late then have it match up with the others
-
-                if (isPlaying){
-                    playAll();
-                } else {
-                    pauseAll();
-                }
+                //changeTime(object.getTime());  //if speaker joins late then have it match up with the others
 
                 movingNode = object.getMovingNode();
 
@@ -100,6 +94,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backRightMP);
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
+
+                if (isPlaying){
+                    playAll();
+                } else {
+                    pauseAll();
+                }
 
                 phoneVol = (int) object.getVolume();
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
@@ -180,7 +180,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.LEAVE, new SubscriptionHandling.HandleEventCallback<Song>() {
+        //TODO - CHANGED
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
                 Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect");
@@ -213,8 +214,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         finish();
     }
 
+    //TODO - CHANGED
     public void disconnect(View view) {
         Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
+        pauseAll();
+        releaseAll();
+        nullAll();
         startActivity(intent);
         finish();
     }
@@ -254,6 +259,24 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backRightMP.start();
     }
 
+    //TODO - CREATED
+    private void releaseAll(){
+        centerMP.release();
+        frontLeftMP.release();
+        frontRightMP.release();
+        backLeftMP.release();
+        backRightMP.release();
+    }
+
+    //TODO - CREATED
+    private void nullAll(){
+        centerMP = null;
+        frontLeftMP = null;
+        frontRightMP = null;
+        backLeftMP = null;
+        backRightMP = null;
+    }
+
     //change time of all 5 media players
     private void changeTime(int time){
         centerMP
@@ -264,6 +287,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backLeftMP.seekTo(time);
         backRightMP.seekTo(time);
     }
+
+
 
     private float getMaxVol(double node){
 //        float denom = (float) (Math.sqrt(2*Math.PI));

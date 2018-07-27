@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/background"
     android:layout_height="match_parent"
+    xmlns:circular="http://schemas.android.com/apk/res-auto"
     tools:context=".ControllerPlayingActivity">
 
     <com.sdsmdg.harjot.crollerTest.Croller
@@ -23,6 +24,20 @@
         app:progress_primary_color="#BCA9E6"
         app:progress_secondary_color="#EEEEEE"
         app:start_offset="45" />
+
+    <me.angrybyte.circularslider.CircularSlider
+        android:id="@+id/circularSlider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        circular:angle="6.28"
+        android:rotation="90"
+        circular:border_color="#505090"
+        circular:border_thickness="14dp"
+        circular:border_gradient_colors="#6830C9;#BBA6DE;#8253D4;#6830C9"
+        circular:thumb_color="#FFFFFF"
+        circular:thumb_size="24dp" />
+
 
     <ImageButton
         android:id="@+id/playButton"

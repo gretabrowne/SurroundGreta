@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.bertogonz3000.surround.Models.Utilities;
-
 import org.parceler.Parcels;
 
 import me.angrybyte.circularslider.CircularSlider;
@@ -17,7 +15,6 @@ public class ThrowingSoundActivity extends AppCompatActivity {
 
     CircularSlider slider;
     Song song;
-    private Utilities utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

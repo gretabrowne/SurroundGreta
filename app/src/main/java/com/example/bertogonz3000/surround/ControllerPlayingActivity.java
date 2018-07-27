@@ -30,8 +30,11 @@ import org.parceler.Parcels;
 
 import java.util.Timer;
 
+import me.angrybyte.circularslider.CircularSlider;
+
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     private AudioManager audioManager;
+    CircularSlider slider;
     int volume;
     Song song;
     TextView tvCurrent;
@@ -45,6 +48,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     ImageButton playButton;
     // MyTimerTask myTask;
     Timer myTimer;
+    Croller croller;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -65,7 +69,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar = findViewById(R.id.seekBar);
         playButton = findViewById(R.id.playButton);
         btnThrowSound = findViewById(R.id.btnThrowSound);
-        Croller croller = (Croller) findViewById(R.id.croller);
+        slider = findViewById(R.id.circularSlider);
+
+        slider.setVisibility(View.GONE);
+        croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
         croller.setBackCircleColor(Color.parseColor("#EDEDED"));
         croller.setMainCircleColor(Color.parseColor("#212121"));
@@ -107,7 +114,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
 //                // tracking started
 //                mp.setVolume(10,10);
-                mp.start(); //TODO- comment out when using timertask
+//                mp.start(); //TODO- comment out when using timertask
                 // Changing button image to pause button
                 // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
 //                Log.d("SpeakerPlayingActivity", "tracking touch");
@@ -177,10 +184,42 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         btnThrowSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ControllerPlayingActivity.this, ThrowingSoundActivity.class);
-                // pass song object over
-                i.putExtra("song", Parcels.wrap(song));
-                startActivity(i);
+//                Intent i = new Intent(ControllerPlayingActivity.this, ThrowingSoundActivity.class);
+//                // pass song object over
+//                song.setTime(mp.getCurrentPosition());
+//                i.putExtra("song", Parcels.wrap(song));
+//                startActivity(i);
+                if(song.getIsThrowing() == false) {
+                    song.setIsThrowing(true);
+                    song.saveInBackground();
+                    slider.setVisibility(View.VISIBLE);
+                    croller.setVisibility(View.GONE);
+                    btnThrowSound.setText("Surround");
+                }
+                else {
+                    song.setIsThrowing(false);
+                    song.saveInBackground();
+                    slider.setVisibility(View.GONE);
+                    croller.setVisibility(View.VISIBLE);
+                    btnThrowSound.setText("Throw");
+                }
+
+
+            }
+        });
+
+        slider.setStartAngle(0);    //double value
+
+        slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
+            @Override
+            public void onSliderMoved(double pos) {
+                if (pos < 0) {
+                    // if negative, make it bigger
+                    pos = pos + 1;
+                }
+                Log.d("ThrowingSoundActivity", "in listener");
+                song.setMovingNode(pos);
+                song.saveInBackground();
             }
         });
 
@@ -199,7 +238,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
 //        timerHandler.post(runnableCode);
         // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
-        mp.seekTo(0);
+        mp.seekTo(song.getTime());
         mp.start();
     }
 //

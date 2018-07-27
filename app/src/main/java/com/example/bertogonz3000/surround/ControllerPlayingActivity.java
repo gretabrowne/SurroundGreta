@@ -110,7 +110,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //                mp.start(); //TODO- comment out when using timertask
                 // Changing button image to pause button
                 // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
-                Log.d("SpeakerPlayingActivity", "tracking touch");
+                // Log.d("SpeakerPlayingActivity", "tracking touch");
                 song.setVolume(volume);
                 song.saveInBackground();
 

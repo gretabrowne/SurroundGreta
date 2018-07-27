@@ -37,22 +37,16 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
             @Override
             public void onSliderMoved(double pos) {
-                /**
-                 * This method is invoked when slider moves, providing position of the slider thumb.
-                 *
-                 * @param pos Value between 0 and 1 representing the current angle.<br>
-                 *            {@code pos = (Angle - StartingAngle) / (2 * Pi)}
-                 */
-                Log.d("ThrowingSoundActivity", "onSliderMoved");
+                if (pos < 0) {
+                    // if negative, make it bigger
+                    pos = pos + 1;
+                }
+                Log.d("ThrowingSoundActivity", "in listener");
                 song.setMovingNode(pos);
                 song.saveInBackground();
-
-                Log.d("throw", "sound");
             }
         });
 
-
-        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
     }
 
     @Override

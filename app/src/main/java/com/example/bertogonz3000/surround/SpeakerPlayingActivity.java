@@ -81,12 +81,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 //changeTime(object.getTime());  //if speaker joins late then have it match up with the others
 
-                if (isPlaying){
-                    playAll();
-                } else {
-                    pauseAll();
-                }
-
                 movingNode = object.getMovingNode();
 
                 throwing = object.getIsThrowing();
@@ -100,6 +94,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 setToMaxVol(backRightMP);
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
+
+                if (isPlaying){
+                    playAll();
+                } else {
+                    pauseAll();
+                }
 
                 phoneVol = (int) object.getVolume();
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);

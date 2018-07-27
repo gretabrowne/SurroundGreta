@@ -1,8 +1,6 @@
 package com.example.bertogonz3000.surround;
 
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -36,26 +34,24 @@ public class ThrowingSoundActivity extends AppCompatActivity {
         slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
             @Override
             public void onSliderMoved(double pos) {
-                if (pos < 0){
-                    pos = pos+1;
+                if (pos < 0) {
+                    // if negative, make it bigger
+                    pos = pos + 1;
                 }
-                Log.d("ThrowingSoundActivity", "onSliderMoved");
+                Log.d("ThrowingSoundActivity", "in listener");
                 song.setMovingNode(pos);
                 song.saveInBackground();
-
-                Log.d("throw", "sound");
             }
         });
 
-
-        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: {
                 NavUtils.navigateUpFromSameTask(this);
+            }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

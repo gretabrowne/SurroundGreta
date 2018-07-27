@@ -145,10 +145,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 // TODO - check logic of these if statements, right now it'll start as if controller wants node
                 // TODO - 0.5 to be where sound is and will re-ping server when node is moved, this seems like an extra step
                 else if (throwing != object.getIsThrowing()) {
+                    Log.d("SpeakerPlayingActivity", "throwing != object.getIsThrowing");
                     // set throwing boolean to be equal to whether controller wants to be throwing sound or not
                     throwing = object.getIsThrowing();
 
                     if (throwing) {
+                        Log.d("SpeakerPlayingActivity", "throwing and setting volume to " + getMaxVol(movingNode) + "" + getMaxVol(movingNode));
+
                         centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
                         frontLeftMP.setVolume(0, 0);
                         backLeftMP.setVolume(0, 0);
@@ -165,6 +168,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 } else if (movingNode != object.getMovingNode()){
 
                     movingNode = object.getMovingNode();
+                    Log.d("SpeakerPlayingActivity", "movingnode != object.getmovingnode");
+                    Log.d("SpeakerPlayingActivity", "setting volume to " + getMaxVol(movingNode) + " , " + getMaxVol(movingNode));
+                    centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                    frontLeftMP.setVolume(0, 0);
+                    backLeftMP.setVolume(0, 0);
+                    frontRightMP.setVolume(0, 0);
+                    backRightMP.setVolume(0, 0);
 
                 }
             }

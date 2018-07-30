@@ -25,4 +25,13 @@
         android:onClick="checkConnection"
         app:srcCompat="@android:drawable/stat_notify_sync" />
 
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="95dp"
+        android:layout_toStartOf="@+id/ivReconnect"
+        app:srcCompat="@drawable/ic_close_white" />
+
 </RelativeLayout>

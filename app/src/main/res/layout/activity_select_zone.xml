@@ -7,14 +7,14 @@
     android:background="@color/background"
     tools:context=".SelectZone">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/nextBtn"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:onClick="setLocation"
         android:layout_marginBottom="20dp"
+        android:background="@android:color/transparent"
         android:layout_marginEnd="20dp"
         android:src="@drawable/ic_check_circle_48" />
 

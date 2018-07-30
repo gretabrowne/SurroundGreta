@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<style name="CustomDialog" parent="@android:style/Theme.Dialog">-->
+        <!--<item name="android:background">@color/background</item>-->
+        <!--<item name="android:textColor">#FFFFFF</item>-->
+        <!--<item name="android:font">@font/roboto</item>-->
+        <!--<item name="android:windowBackground">@null</item>-->
+        <!--<item name="android:windowFrame">@null</item>-->
+    <!--</style>-->
+</resources>

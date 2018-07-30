@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.parse.LiveQueryException;
 import com.parse.ParseLiveQueryClient;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
@@ -28,6 +29,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     int numberSeek;
     double movingNode = 0.5;
     View background;
+    ParseLiveQueryClient parseLiveQueryClient;
 
 
     @Override
@@ -62,9 +64,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         //        // Make sure the Parse server is setup to configured for live queries
 //        // URL for server is determined by Parse.initialize() call.
-        ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
+        parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
 //
         ParseQuery<Song> query = ParseQuery.getQuery(Song.class);
+
+//        if(!query.isRunning())
+//            disconnect();
+
         // This query can even be more granular (i.e. only refresh if the entry was added by some other user)
         // parseQuery.whereNotEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
 //
@@ -196,6 +202,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 disconnect();
             }
         });
+
+        //if error in subscription handling, then call disconnect
+        subscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<Song>() {
+            @Override
+            public void onError(ParseQuery<Song> query, LiveQueryException exception) {
+                disconnect();
+            }
+        });
     }
 
     @Override
@@ -217,19 +231,30 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     //TODO - later make sure the speaker is connected to the master device and server
     //TODO - Why do we have 2 disconnect methods? (idk but they do the exact same thing so we should delete one)
     public void disconnect() {
-        Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
-        startActivity(intent);
-        finish();
+//        Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
+//        startActivity(intent);
+//        finish();
+        parseLiveQueryClient.disconnect();
+        setContentView(R.layout.activity_lost_connection);
     }
 
     //TODO - CHANGED
     public void disconnect(View view) {
-        Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
-        pauseAll();
-        releaseAll();
-        nullAll();
-        startActivity(intent);
-        finish();
+//        Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
+        if(frontRightMP != null) {
+            pauseAll();
+            releaseAll();
+            nullAll();
+        }
+        parseLiveQueryClient.disconnect();
+        setContentView(R.layout.activity_lost_connection);
+//        startActivity(intent);
+//        finish();
+    }
+
+    public void checkConnection(View view) {
+        setContentView(R.layout.activity_speaker_playing);
+        parseLiveQueryClient.reconnect();
     }
 
     //Create mediaplayers based on given songIds

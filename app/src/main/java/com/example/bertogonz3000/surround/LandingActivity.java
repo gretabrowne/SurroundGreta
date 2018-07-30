@@ -11,6 +11,7 @@ public class LandingActivity extends AppCompatActivity {
     //declare Buttons
     Button speakerButton, controllerButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

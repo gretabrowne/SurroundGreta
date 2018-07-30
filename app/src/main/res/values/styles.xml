@@ -9,4 +9,12 @@
         <item name="background">@color/background</item>
     </style>
 
+    <style name="CustomDialog" parent="android:Theme.Material.Dialog">
+        <item name="android:background">@color/background</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+
+
+    </style>
+
 </resources>

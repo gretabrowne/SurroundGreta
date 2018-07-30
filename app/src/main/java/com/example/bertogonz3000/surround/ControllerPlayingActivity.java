@@ -327,7 +327,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         // Display the dialog
         alertDialog.show();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.alertDialogBackground);
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.background);
     }
 
     //Update timer on seekbar

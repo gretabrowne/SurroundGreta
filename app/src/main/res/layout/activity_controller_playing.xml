@@ -72,7 +72,7 @@
         android:background="@drawable/button_border"
         android:fontFamily="@font/roboto"
         android:onClick="checkConnection"
-        android:text="Throw Sound"
+        android:text="Throw"
         android:textColor="@android:color/white" />
 
     <SeekBar

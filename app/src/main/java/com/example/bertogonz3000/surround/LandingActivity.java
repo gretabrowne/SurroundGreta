@@ -16,6 +16,7 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+        getSupportActionBar().hide();
 
         //init Buttons
         speakerButton = findViewById(R.id.speakerButton);

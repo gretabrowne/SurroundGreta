@@ -8,6 +8,15 @@
     xmlns:circular="http://schemas.android.com/apk/res-auto"
     tools:context=".ControllerPlayingActivity">
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/skyblur"
+        android:alpha="0.4"
+        android:layout_alignParentTop="true" />
+
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/croller"
         android:layout_width="match_parent"

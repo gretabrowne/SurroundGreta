@@ -4,8 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="#000000"
     tools:context=".SelectZone">
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/blur"
+        android:alpha="0.4"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="" />
 
     <ImageButton
         android:id="@+id/nextBtn"
@@ -37,12 +46,13 @@
         android:layout_height="426dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvZoneChoice"
-        app:back_circle_color="@color/colorPrimary"
+        app:back_circle_color="@android:color/transparent"
         app:indicator_color="@color/colorAccent"
         app:indicator_width="10"
         app:is_continuous="true"
         app:label_color="#000000"
-        app:main_circle_color="@color/background"
+        app:main_circle_color="@android:color/transparent"
         app:progress_primary_color="#BCA9E6" />
+
 
 </RelativeLayout>

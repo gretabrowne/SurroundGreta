@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="#E6000000"
     tools:context=".LandingActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="@drawable/darkpurple"
-        android:alpha="0.2"
+        android:background="@drawable/sky"
+        android:alpha="0.5"
         android:layout_alignParentTop="true" />
     <TextView
         android:id="@+id/tvTitle"

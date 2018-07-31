@@ -9,6 +9,11 @@
         <item name="background">@color/background</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="CustomDialog" parent="android:Theme.Material.Dialog">
         <item name="android:background">@color/background</item>
         <item name="android:textColor">#FFFFFF</item>

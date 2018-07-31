@@ -64,7 +64,7 @@ public class SelectZone extends AppCompatActivity {
             Handler handle = new Handler() {
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
-                    progressDialog.incrementProgressBy(10); // Incremented By Value 2
+                    progressDialog.incrementProgressBy(10); // Incremented By Value 10
                 }
             };
 

@@ -8,6 +8,14 @@
     tools:context=".LandingActivity">
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/darkpurple"
+        android:alpha="0.2"
+        android:layout_alignParentTop="true" />
+    <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +35,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="93dp"
+        android:alpha="0.8"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:background="@drawable/button_border"
@@ -41,6 +50,7 @@
         android:id="@+id/speakerButton"
         android:layout_width="match_parent"
         android:layout_height="220dp"
+        android:alpha="0.9"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="30dp"
@@ -53,5 +63,6 @@
         android:text="Speaker"
         android:textColor="@color/colorAccent"
         android:textSize="34sp" />
+
 
 </RelativeLayout>

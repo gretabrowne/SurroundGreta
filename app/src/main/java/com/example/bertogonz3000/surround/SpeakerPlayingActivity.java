@@ -2,25 +2,28 @@ package com.example.bertogonz3000.surround;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.LiveQueryException;
 import com.parse.ParseLiveQueryClient;
+import com.parse.ParseLiveQueryClientCallbacks;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
 
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
-    boolean connected;  //TODO - update this?
     int centerID, frontRightID, frontLeftID, backRightID, backLeftID, phoneVol;
     boolean isPlaying, throwing;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
@@ -45,8 +48,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         background = findViewById(R.id.background);
 
-        connected = true;
-
         throwing = false;
         background.setAlpha(0);
         //position selected for this phone.
@@ -55,19 +56,34 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        //TODO - later make sure the speaker is connected to the master device and server
-        if(!connected) {
-            Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
-            startActivity(intent);
-        }
-
         //        // Make sure the Parse server is setup to configured for live queries
 //        // URL for server is determined by Parse.initialize() call.
         parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
+        //this should respond to errors when speaker is disconnected from the server
+        parseLiveQueryClient.registerListener(new ParseLiveQueryClientCallbacks() {
+            @Override
+            public void onLiveQueryClientConnected(ParseLiveQueryClient client) {}
+
+            @Override
+            public void onLiveQueryClientDisconnected(ParseLiveQueryClient client, boolean userInitiated) {
+                disconnect();
+                Log.d("speakerplaying", "onlivequerydisconnected");
+            }
+
+            @Override
+            public void onLiveQueryError(ParseLiveQueryClient client, LiveQueryException reason) {
+                disconnect();
+                Log.d("speakerplaying", "onlivequeryerror");
+            }
+
+            @Override
+            public void onSocketError(ParseLiveQueryClient client, Throwable reason) {
+                disconnect();
+                Log.d("speakerplaying", "onsocketerror");
+            }
+        });
 //
         ParseQuery<Song> query = ParseQuery.getQuery(Song.class);
-
 //        if(!query.isRunning())
 //            disconnect();
 
@@ -198,7 +214,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
-                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect");
+                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect in DELETE");
                 disconnect();
             }
         });
@@ -208,8 +224,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onError(ParseQuery<Song> query, LiveQueryException exception) {
                 disconnect();
+                Log.d("speakerplaying", "handleerror");
             }
         });
+
+
     }
 
     @Override
@@ -231,25 +250,68 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     //TODO - later make sure the speaker is connected to the master device and server
     //TODO - Why do we have 2 disconnect methods? (idk but they do the exact same thing so we should delete one)
     public void disconnect() {
-//        Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
-//        startActivity(intent);
-//        finish();
-        parseLiveQueryClient.disconnect();
-        setContentView(R.layout.activity_lost_connection);
-    }
-
-    //TODO - CHANGED
-    public void disconnect(View view) {
-//        Intent intent = new Intent(SpeakerPlayingActivity.this, LostConnectionActivity.class);
-        if(frontRightMP != null) {
+        Log.d("speakerplaying", "disconnectfunction");
+        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
             pauseAll();
             releaseAll();
             nullAll();
         }
-        parseLiveQueryClient.disconnect();
-        setContentView(R.layout.activity_lost_connection);
-//        startActivity(intent);
-//        finish();
+
+        //Run code on the UI thread
+        runOnUiThread(new Runnable() {
+                          @ Override
+                          public void run() {
+                              //Create the alert dialog
+                              createAlertDialog();
+                          }
+                      });
+    }
+
+
+    public void disconnect(View view) {
+        parseLiveQueryClient.disconnect();  //only if user initiated the disconnect from the server
+        disconnect();
+    }
+
+    public void createAlertDialog() {
+
+        View alertView = LayoutInflater.from(SpeakerPlayingActivity.this).inflate(R.layout.activity_lost_connection, null);
+        // Create alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SpeakerPlayingActivity.this);
+        // set message_item.xml to AlertDialog builder
+        alertDialogBuilder.setView(alertView);
+
+        // Create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+
+        // Configure dialog button (Refresh)
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Reconnect",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //TODO - check again if there is a connection to the server
+                        parseLiveQueryClient.reconnect();
+                        //if connected, then dismiss and return to the ControllerPlayingActivity
+                        dialog.dismiss();
+                    }
+                });
+
+        // Configure dialog button (Restart)
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "End Session",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //if the restart button is hit, just return to the home screen
+                        Intent intent = new Intent(SpeakerPlayingActivity.this, LandingActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+        // Display the dialog
+        alertDialog.show();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.background);
     }
 
     public void checkConnection(View view) {
@@ -364,11 +426,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        frontLeftMP.release();
-        frontRightMP.release();
-        backLeftMP.release();
-        backRightMP.release();
-        centerMP.release();
+        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
+            frontLeftMP.release();
+            frontRightMP.release();
+            backLeftMP.release();
+            backRightMP.release();
+            centerMP.release();
+        }
     }
 
 }

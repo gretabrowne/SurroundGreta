@@ -291,7 +291,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
     //TODO - make this check the connection of the server (maybe in the onCreate)
     public void checkConnection(View view) {
-        View alertView = LayoutInflater.from(ControllerPlayingActivity.this).inflate(R.layout.dialog_speaker_disconnected, null);
+        View alertView = LayoutInflater.from(ControllerPlayingActivity.this).inflate(R.layout.dialog_controller_disconnected, null);
         // Create alert dialog builder
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ControllerPlayingActivity.this);
         // set message_item.xml to AlertDialog builder
@@ -338,8 +338,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     //Background Runnable thread
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-            long totalDuration = mp.getDuration();
-            long currentDuration = mp.getCurrentPosition();
+
+            if(mp!= null) {
+                long totalDuration = mp.getDuration();
+                long currentDuration = mp.getCurrentPosition();
+            }
 
 
             // Displaying Total Duration time

@@ -342,21 +342,19 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             if(mp!= null) {
                 long totalDuration = mp.getDuration();
                 long currentDuration = mp.getCurrentPosition();
+                // Displaying Total Duration time
+                tvEnd.setText(""+utils.milliSecondsToTimer(totalDuration));
+                // Displaying time completed playing
+                tvCurrent.setText(""+utils.milliSecondsToTimer(currentDuration));
+
+                // Updating progress bar
+                int progress = (int)(utils.getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                seekbar.setProgress(progress);
+
+                // Running this thread after 100 milliseconds
+                mHandler.postDelayed(this, 100);
             }
-
-
-            // Displaying Total Duration time
-            tvEnd.setText(""+utils.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            tvCurrent.setText(""+utils.milliSecondsToTimer(currentDuration));
-
-            // Updating progress bar
-            int progress = (int)(utils.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            seekbar.setProgress(progress);
-
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
         }
     };
 

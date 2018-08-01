@@ -7,29 +7,79 @@
     android:layout_height="match_parent"
     tools:context=".SpeakerPlayingActivity">
 
+    <RelativeLayout
+        android:id="@+id/defaultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/blur"
+        android:alpha="0.4"
+        android:visibility="invisible">
 
-    <Button
-        android:id="@+id/disconnectBtn"
-        android:layout_width="104dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="25dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/button_border"
-        android:fontFamily="@font/roboto"
-        android:onClick="disconnect"
-        android:text="Disconnect"
-        android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/disconnectBtn"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_border"
+            android:fontFamily="@font/roboto"
+            android:onClick="disconnect"
+            android:text="Disconnect"
+            android:textColor="@android:color/white" />
 
-    <View
-        android:id="@+id/background"
-        android:layout_width="wrap_content"
-        android:background="@color/colorAccent"
-        android:layout_height="wrap_content"
-        android:alpha="0"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        <View
+            android:id="@+id/background"
+            android:layout_width="wrap_content"
+            android:background="@color/colorAccent"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/lostConnectionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/reconnectBtn"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_border"
+            android:fontFamily="@font/roboto"
+            android:onClick="reconnect"
+            android:text="Reconnect"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/ivWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:tint="@color/colorAccent"
+            app:srcCompat="@drawable/wifi" />
+
+        <ImageView
+            android:id="@+id/ximage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="93dp"
+            android:layout_marginEnd="59dp"
+            app:srcCompat="@drawable/ic_close_white" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/loaderContainer"

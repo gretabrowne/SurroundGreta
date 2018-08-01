@@ -33,7 +33,7 @@ public class ParseApplication extends Application{
                 .applicationId("SurroundId")
                 .clientKey(null)
                 .clientBuilder(builder)
-                .server("http://172.21.79.146:1337/parse").build());
+                .server("http://172.26.202.212:1337/parse").build());
 
 //        //Init the Parse Server
 //        Parse.initialize(new Parse.Configuration.Builder(this)

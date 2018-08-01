@@ -2,17 +2,13 @@ package com.example.bertogonz3000.surround;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -35,7 +31,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     double movingNode = 0.5;
     View background;
     ParseLiveQueryClient parseLiveQueryClient;
+//    AlertDialog alertDialog;
+    RelativeLayout lostConnection;
     RelativeLayout loaderContainer;
+    RelativeLayout defaultContainer;
 
 
     @Override
@@ -50,6 +49,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2, 0);
 
         background = findViewById(R.id.background);
+        lostConnection = findViewById(R.id.lostConnectionContainer);
+        defaultContainer = findViewById(R.id.defaultContainer);
 
         throwing = false;
         background.setAlpha(0);
@@ -60,6 +61,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 loaderContainer.setVisibility(View.INVISIBLE);
+                defaultContainer.setVisibility(View.VISIBLE);
             }
         }, 3000); // 3000 milliseconds delay
 
@@ -76,7 +78,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         //this should respond to errors when speaker is disconnected from the server
         parseLiveQueryClient.registerListener(new ParseLiveQueryClientCallbacks() {
             @Override
-            public void onLiveQueryClientConnected(ParseLiveQueryClient client) {}
+            public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
+                defaultContainer.setVisibility(View.VISIBLE);
+                lostConnection.setVisibility(View.INVISIBLE);
+            }
 
             @Override
             public void onLiveQueryClientDisconnected(ParseLiveQueryClient client, boolean userInitiated) {
@@ -92,8 +97,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
             @Override
             public void onSocketError(ParseLiveQueryClient client, Throwable reason) {
-                disconnect();
+//                disconnect();
                 Log.d("speakerplaying", "onsocketerror");
+                parseLiveQueryClient.reconnect();
+                parseLiveQueryClient.connectIfNeeded();
             }
         });
 //
@@ -273,12 +280,22 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         //Run code on the UI thread
         runOnUiThread(new Runnable() {
-                          @ Override
-                          public void run() {
-                              //Create the alert dialog
-                              createAlertDialog();
-                          }
-                      });
+            @ Override
+            public void run() {
+                //display the view for lost connection
+                defaultContainer.setVisibility(View.INVISIBLE);
+                lostConnection.setVisibility(View.VISIBLE);
+            }
+        });
+
+//        //Run code on the UI thread
+//        runOnUiThread(new Runnable() {
+//                          @ Override
+//                          public void run() {
+//                              //Create the alert dialog
+//                              createAlertDialog();
+//                          }
+//                      });
     }
 
 
@@ -286,51 +303,57 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.disconnect();  //only if user initiated the disconnect from the server
         disconnect();
     }
+//
+//    public void createAlertDialog() {
+//
+//        View alertView = LayoutInflater.from(SpeakerPlayingActivity.this).inflate(R.layout.activity_lost_connection, null);
+//        // Create alert dialog builder
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SpeakerPlayingActivity.this);
+//        // set message_item.xml to AlertDialog builder
+//        alertDialogBuilder.setView(alertView);
+//
+//        // Create alert dialog
+//        alertDialog = alertDialogBuilder.create();
+//
+//
+//        // Configure dialog button (Refresh)
+//        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Reconnect",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        //TODO - check again if there is a connection to the server
+//                        parseLiveQueryClient.reconnect();
+//                        //if connected, then dismiss and return to the ControllerPlayingActivity
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//        // Configure dialog button (Restart)
+//        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "End Session",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                        //if the restart button is hit, just return to the home screen
+//                        Intent intent = new Intent(SpeakerPlayingActivity.this, LandingActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                });
+//
+//        try{
+//            alertDialog.show();
+//            alertDialog.getWindow().setBackgroundDrawableResource(R.color.background);
+//        } catch (WindowManager.BadTokenException e) {
+//            Log.d("SpeakerPlaying", "couldn't show alert dialog");
+//        }
+//
+//    }
 
-    public void createAlertDialog() {
-
-        View alertView = LayoutInflater.from(SpeakerPlayingActivity.this).inflate(R.layout.activity_lost_connection, null);
-        // Create alert dialog builder
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SpeakerPlayingActivity.this);
-        // set message_item.xml to AlertDialog builder
-        alertDialogBuilder.setView(alertView);
-
-        // Create alert dialog
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-
-
-        // Configure dialog button (Refresh)
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Reconnect",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //TODO - check again if there is a connection to the server
-                        parseLiveQueryClient.reconnect();
-                        //if connected, then dismiss and return to the ControllerPlayingActivity
-                        dialog.dismiss();
-                    }
-                });
-
-        // Configure dialog button (Restart)
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "End Session",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        //if the restart button is hit, just return to the home screen
-                        Intent intent = new Intent(SpeakerPlayingActivity.this, LandingActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-        // Display the dialog
-        alertDialog.show();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.background);
-    }
-
-    public void checkConnection(View view) {
-        setContentView(R.layout.activity_speaker_playing);
+    public void reconnect(View view) {
         parseLiveQueryClient.reconnect();
+        parseLiveQueryClient.connectIfNeeded();
+        defaultContainer.setVisibility(View.VISIBLE);
+        lostConnection.setVisibility(View.INVISIBLE);
     }
 
     //Create mediaplayers based on given songIds
@@ -452,6 +475,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             backLeftMP = null;
             backRightMP = null;
             centerMP = null;
+
         }
     }
 

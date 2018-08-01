@@ -446,6 +446,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             backLeftMP.release();
             backRightMP.release();
             centerMP.release();
+
+            frontLeftMP = null;
+            frontRightMP = null;
+            backLeftMP = null;
+            backRightMP = null;
+            centerMP = null;
         }
     }
 

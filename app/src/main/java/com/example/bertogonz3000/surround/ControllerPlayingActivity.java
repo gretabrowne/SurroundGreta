@@ -268,6 +268,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         super.onDestroy();
         song.deleteInBackground();
         mp.release();
+        mp = null;
     }
 
     @Override
@@ -384,7 +385,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         mp.release();
+        mp = null;
     }
-
 
 }

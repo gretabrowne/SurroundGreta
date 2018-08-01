@@ -74,8 +74,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         slider.setVisibility(View.GONE);
         croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
-        croller.setBackCircleColor(Color.parseColor("#EDEDED"));
-        croller.setMainCircleColor(Color.parseColor("#212121"));
         croller.setIsContinuous(false);
         //TODO - fix this to work for all phones - create a method to scale
         croller.setProgress(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2);
@@ -84,7 +82,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));
         croller.setProgressSecondaryCircleSize(3);
-        croller.setProgressSecondaryColor(Color.parseColor("#ffffff"));
         croller.setProgressPrimaryCircleSize(5);
 
         croller.setMax(audioManager

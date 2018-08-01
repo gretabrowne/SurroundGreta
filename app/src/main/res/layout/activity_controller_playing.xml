@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:background="@drawable/skyblur"
+        android:background="@drawable/blur"
         android:alpha="0.4"
         android:layout_alignParentTop="true" />
 
@@ -23,15 +23,15 @@
         android:layout_height="426dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        app:back_circle_color="#EDEDED"
+        app:back_circle_color="@android:color/transparent"
         app:indicator_color="@color/colorAccent"
         app:indicator_width="10"
         app:is_continuous="true"
         app:label_color="#000000"
-        app:main_circle_color="#FFFFFF"
+        app:main_circle_color="@android:color/transparent"
         app:min="0"
         app:progress_primary_color="#BCA9E6"
-        app:progress_secondary_color="#EEEEEE"
+        app:progress_secondary_color="#33ffffff"
         app:start_offset="45" />
 
     <me.angrybyte.circularslider.CircularSlider

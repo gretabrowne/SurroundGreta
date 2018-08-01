@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.bertogonz3000.surround.Models.Track;
 
 import org.parceler.Parcels;
@@ -46,6 +48,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         //Set views based on model
 
         holder.tvTrackName.setText(track.getName());
+        holder.tvArtist.setText(track.getArtist());
+
+        Context context = holder.itemView.getContext();
+        Glide.with(context)
+                .load(track.getDrawable())
+                .into(holder.ivCover);
     }
 
     @Override
@@ -60,12 +68,16 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tvTrackName;
+        public TextView tvArtist;
+        public ImageView ivCover;
         private final Context context = itemView.getContext();
 
         public ViewHolder(View itemView){
             super(itemView);
 
             tvTrackName = itemView.findViewById(R.id.tvTrackName);
+            tvArtist = itemView.findViewById(R.id.tvArtist);
+            ivCover = itemView.findViewById(R.id.ivCover);
 
             itemView.setOnClickListener(this);
 

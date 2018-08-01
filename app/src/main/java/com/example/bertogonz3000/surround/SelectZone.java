@@ -38,9 +38,9 @@ public class SelectZone extends AppCompatActivity {
         croller.setLabel("");
         croller.setProgressPrimaryColor(Color.parseColor("#BCA9E6"));
         croller.setIndicatorColor(Color.parseColor("#BCA9E6"));
-        croller.setProgressSecondaryCircleSize(3);
+        croller.setProgressSecondaryCircleSize(7);
         croller.setProgressSecondaryColor(Color.parseColor("#33ffffff"));
-        croller.setProgressPrimaryCircleSize(5);
+        croller.setProgressPrimaryCircleSize(7);
         croller.setSweepAngle(360);
         Log.d("SelectZoneAngle", String.valueOf(croller.getProgress()));
 

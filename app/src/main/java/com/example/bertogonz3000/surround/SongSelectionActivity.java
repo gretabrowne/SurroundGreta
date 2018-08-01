@@ -9,9 +9,7 @@ import android.view.MenuItem;
 
 import com.example.bertogonz3000.surround.Models.Track;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SongSelectionActivity extends AppCompatActivity {
 
@@ -59,7 +57,8 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         heyJudeList.add(R.raw.heyjuderight);
 
-        Track heyJude = new Track("Hey Jude", heyJudeList);
+        Track heyJude = new Track("Hey Jude", "The Beatles", heyJudeList);
+        heyJude.setDrawable(R.drawable.heyjude);
 
         tracklist.add(heyJude);
 
@@ -77,7 +76,8 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         yesterdayList.add(R.raw.yesterdayright);
 
-        Track yesterday = new Track("Yesterday", yesterdayList);
+        Track yesterday = new Track("Yesterday", "The Beatles", yesterdayList);
+        yesterday.setDrawable(R.drawable.yesterday);
 
         tracklist.add(yesterday);
 
@@ -95,7 +95,8 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         testList.add(R.raw.rightsurroundtest);
 
-        Track testTrack = new Track("Test Track", testList);
+        Track testTrack = new Track("Test Track", "Dolby Atmos", testList);
+        testTrack.setDrawable(R.drawable.dolby);
 
         tracklist.add(testTrack);
 

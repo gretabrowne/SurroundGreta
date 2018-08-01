@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.parse.LiveQueryException;
 import com.parse.ParseLiveQueryClient;
@@ -33,6 +35,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     double movingNode = 0.5;
     View background;
     ParseLiveQueryClient parseLiveQueryClient;
+    RelativeLayout loaderContainer;
 
 
     @Override
@@ -50,6 +53,17 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         throwing = false;
         background.setAlpha(0);
+
+        loaderContainer = findViewById(R.id.loaderContainer);
+        loaderContainer.setVisibility(View.VISIBLE);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                loaderContainer.setVisibility(View.INVISIBLE);
+            }
+        }, 3000); // 3000 milliseconds delay
+
+
         //position selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);

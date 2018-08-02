@@ -35,7 +35,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     RelativeLayout loaderContainer;
     RelativeLayout defaultContainer;
     boolean loaded = false;
-
+    boolean reconnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(loaded) {
                     defaultContainer.setVisibility(View.VISIBLE);
                     lostConnection.setVisibility(View.INVISIBLE);
+                    if(reconnected) {
+                        if(centerMP != null) {
+                            playAll();
+                            reconnected = false;
+                        }
+                    }
                 }
             }
 
@@ -175,6 +181,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 }
 
                 //if the time of the speaker is too different from the time of the controller by 500 ms
+                //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
                 if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
                     changeTime(object.getTime());
                 }
@@ -304,6 +311,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.disconnect();  //only if user initiated the disconnect from the server
         disconnect();
         pauseAll();
+        reconnected = false;
     }
 
     public void reconnect(View view) {
@@ -311,6 +319,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.connectIfNeeded();
         defaultContainer.setVisibility(View.VISIBLE);
         lostConnection.setVisibility(View.INVISIBLE);
+        reconnected = true;
         playAll();
     }
 

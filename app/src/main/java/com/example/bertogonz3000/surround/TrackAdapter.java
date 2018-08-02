@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.bertogonz3000.surround.Models.Track;
+import com.parse.ParseException;
 
 import org.parceler.Parcels;
 
@@ -91,10 +92,13 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             song.setIsPlaying(true);
             song.setIsThrowing(false);
             //song.setVolume(0);
-            // song.setTestString("test string");
             song.setTime(0);
             song.setNumSeek(0);
-            song.saveInBackground();
+            try {
+                song.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             Intent i = new Intent(context, ControllerPlayingActivity.class);
             i.putExtra("song", Parcels.wrap(song));

@@ -175,7 +175,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 }
 
                 //if the time of the speaker is too different from the time of the controller by 500 ms
-                if( (centerMP.getCurrentPosition() > object.getTime() + 500) || (centerMP.getCurrentPosition() < object.getTime() - 500) ) {
+                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
                     changeTime(object.getTime());
                 }
 
@@ -303,6 +303,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     public void disconnect(View view) {
         parseLiveQueryClient.disconnect();  //only if user initiated the disconnect from the server
         disconnect();
+        pauseAll();
     }
 
     public void reconnect(View view) {
@@ -310,6 +311,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.connectIfNeeded();
         defaultContainer.setVisibility(View.VISIBLE);
         lostConnection.setVisibility(View.INVISIBLE);
+        playAll();
     }
 
     //Create mediaplayers based on given songIds
@@ -330,7 +332,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //pause All 5 mediaplayers
-    private void pauseAll(){
+    synchronized private void pauseAll(){
         centerMP.pause();
         frontLeftMP.pause();
         frontRightMP.pause();
@@ -339,7 +341,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //play all 5 media players
-    private void playAll(){
+    synchronized private void playAll(){
         centerMP.start();
         frontLeftMP.start();
         frontRightMP.start();
@@ -366,7 +368,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //change time of all 5 media players
-    private void changeTime(int time){
+    synchronized private void changeTime(int time){
         centerMP.seekTo(time);
         frontLeftMP.seekTo(time);
         frontRightMP.seekTo(time);

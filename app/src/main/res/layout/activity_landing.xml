@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="@drawable/sky"
+        android:background="@drawable/skyblur"
         android:alpha="0.5"
         android:layout_alignParentTop="true" />
     <TextView

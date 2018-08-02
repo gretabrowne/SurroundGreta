@@ -14,21 +14,6 @@
         android:background="@color/background"
         android:visibility="invisible">
 
-        <Button
-            android:id="@+id/disconnectBtn"
-            android:layout_width="104dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="25dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/roboto"
-            android:onClick="disconnect"
-            android:text="Disconnect"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
-
         <View
             android:id="@+id/background"
             android:layout_width="wrap_content"
@@ -37,6 +22,21 @@
             android:alpha="0"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true" />
+
+        <Button
+            android:id="@+id/disconnectBtn"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="14dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/roboto"
+            android:onClick="disconnect"
+            android:text="Disconnect"
+            android:textColor="@color/halfWhite"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 
@@ -44,8 +44,16 @@
         android:id="@+id/lostConnectionContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
         android:visibility="invisible">
+
+        <View
+            android:id="@+id/backLostConnection"
+            android:layout_width="wrap_content"
+            android:background="@drawable/blur"
+            android:layout_height="wrap_content"
+            android:alpha="0.4"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
         <Button
             android:id="@+id/reconnectBtn"
@@ -53,8 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="14dp"
             android:background="@android:color/transparent"
             android:fontFamily="@font/roboto"
             android:onClick="reconnect"
@@ -66,7 +74,8 @@
             android:id="@+id/ivWifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:tint="@color/colorAccent"
             app:srcCompat="@drawable/wifi" />
 
@@ -86,14 +95,21 @@
         android:id="@+id/loaderContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/blur"
-        android:alpha="0.4"
         android:visibility="visible">
+
+        <View
+            android:id="@+id/backLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:alpha="0.4"
+            android:background="@drawable/blur" />
 
         <com.tuyenmonkey.mkloader.MKLoader
             android:id="@+id/loader"
             android:layout_width="100dp"
-            app:mk_color="#ffffff"
+            app:mk_color="#ccffffff"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
             app:mk_type="TwinFishesSpinner" />
@@ -104,10 +120,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="119dp"
+            android:layout_marginTop="153dp"
             android:fontFamily="@font/roboto"
             android:text="Loading..."
-            android:textSize="30sp" />
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
     </RelativeLayout>
 

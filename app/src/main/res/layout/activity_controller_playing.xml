@@ -70,7 +70,7 @@
         android:fontFamily="@font/roboto"
         android:onClick="checkConnection"
         android:text="Disconnect"
-        android:textColor="#ccffffff"
+        android:textColor="@color/halfWhite"
         android:textStyle="bold" />
 
     <Button

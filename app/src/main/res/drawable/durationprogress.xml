@@ -4,7 +4,7 @@
         android:id="@android:id/background"
         android:height="3dp"
         android:gravity="center_vertical"
-        android:drawable="@color/alertDialogBackground"/>
+        android:drawable="@color/halfWhite"/>
     <item android:id="@android:id/progress"
         android:height="3dp"
         android:gravity="center_vertical">

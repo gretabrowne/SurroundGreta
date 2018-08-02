@@ -34,6 +34,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     RelativeLayout lostConnection;
     RelativeLayout loaderContainer;
     RelativeLayout defaultContainer;
+    boolean loaded = false;
 
 
     @Override
@@ -63,6 +64,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void run() {
                 loaderContainer.setVisibility(View.INVISIBLE);
                 defaultContainer.setVisibility(View.VISIBLE);
+                loaded = true;
             }
         }, 3000); // 3000 milliseconds delay
 
@@ -81,8 +83,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.registerListener(new ParseLiveQueryClientCallbacks() {
             @Override
             public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
-                defaultContainer.setVisibility(View.VISIBLE);
-                lostConnection.setVisibility(View.INVISIBLE);
+                if(loaded) {
+                    defaultContainer.setVisibility(View.VISIBLE);
+                    lostConnection.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override

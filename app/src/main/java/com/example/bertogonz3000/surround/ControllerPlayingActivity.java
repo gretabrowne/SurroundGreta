@@ -215,7 +215,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         @Override
         public void run() {
             Log.d("ControllerPlayingActivity", "runnable");
-            if(mp != null) {
+            //only update the current time if the media player is valid and is playing
+            if(mp != null && mp.isPlaying()) {
                 song.setTime(mp.getCurrentPosition());
                 song.saveInBackground();
                 timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable every second

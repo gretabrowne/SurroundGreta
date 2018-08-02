@@ -215,9 +215,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         @Override
         public void run() {
             Log.d("ControllerPlayingActivity", "runnable");
-            song.setTime(mp.getCurrentPosition());
-            song.saveInBackground();
-            timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable every second
+            if(mp != null) {
+                song.setTime(mp.getCurrentPosition());
+                song.saveInBackground();
+                timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable every second
+            }
         }
     };
 

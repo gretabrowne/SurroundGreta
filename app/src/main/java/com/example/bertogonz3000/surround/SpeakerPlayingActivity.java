@@ -29,7 +29,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     AudioManager audioManager;
     int numberSeek;
     double movingNode = 0.5;
-    View background;
+    View background;    //this will change color (flash) during throwing
     ParseLiveQueryClient parseLiveQueryClient;
     RelativeLayout lostConnection;
     RelativeLayout loaderContainer;
@@ -56,6 +56,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
         loaderContainer = findViewById(R.id.loaderContainer);
         loaderContainer.setVisibility(View.VISIBLE);
+
+        //this will create the loading screen for "downloading" the track
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -111,7 +113,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         // This query can even be more granular (i.e. only refresh if the entry was added by some other user)
         // parseQuery.whereNotEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
 //
-//        // Connect to Parse server]
+//      Connect to Parse server]
         SubscriptionHandling<Song> subscriptionHandling = parseLiveQueryClient.subscribe(query);
 //
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Song>() {

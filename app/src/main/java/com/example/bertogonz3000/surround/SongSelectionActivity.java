@@ -22,6 +22,7 @@ public class SongSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_song_selection);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Song Selection");
 
         //Find RV
         RecyclerView rvTracks = findViewById(R.id.rvTracks);

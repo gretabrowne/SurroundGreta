@@ -28,8 +28,6 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 import org.parceler.Parcels;
 
-import java.util.Timer;
-
 import me.angrybyte.circularslider.CircularSlider;
 
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
@@ -43,11 +41,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     Button btnThrowSound;
     private MediaPlayer mp;
     // Handler to update UI timer, progress bar etc,.
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler();   //seeking
+    private Handler timerHandler = new Handler();   //universal clock/progress in song
     private Utilities utils;
     ImageButton playButton;
-    // MyTimerTask myTask;
-    Timer myTimer;
     Croller croller;
 
     @SuppressLint("WrongViewCast")
@@ -61,6 +58,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Media Mode");
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -107,18 +105,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setOnCrollerChangeListener(new OnCrollerChangeListener() {
 
             @Override
-            public void onStartTrackingTouch(Croller croller) {
-
-//                // tracking started
-//                mp.setVolume(10,10);
-//                mp.start(); //TODO- comment out when using timertask
-
-                // Changing button image to pause button
-                // playButton.setImageResource(R.drawable.ic_pause_circle_filled);
-//                Log.d("SpeakerPlayingActivity", "tracking touch");
-//                song.setVolume(volume);
-//                song.saveInBackground();
-            }
+            public void onStartTrackingTouch(Croller croller) {}
 
             @Override
             public void onProgressChanged(Croller croller, int progress) {
@@ -127,14 +114,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 //   progress, 0);
 
                 song.setVolume(progress);
-                //  song.setTestString("test string");
                 song.saveInBackground();
             }
 
             @Override
-            public void onStopTrackingTouch(Croller croller) {
-                // tracking stopped
-            }
+            public void onStopTrackingTouch(Croller croller) {}
         });
 
         utils = new Utilities();
@@ -182,11 +166,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         btnThrowSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent i = new Intent(ControllerPlayingActivity.this, ThrowingSoundActivity.class);
-//                // pass song object over
-//                song.setTime(mp.getCurrentPosition());
-//                i.putExtra("song", Parcels.wrap(song));
-//                startActivity(i);
                 if(song.getIsThrowing() == false) {
                     song.setIsThrowing(true);
                     song.saveInBackground();
@@ -222,43 +201,23 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         });
 
     }
-    //TODO- fix timer task
-    //start the global clock timer when the activity appears on the screen
-    //start the song
-    Handler timerHandler = new Handler();
 
-    //TODO - Commented out
     @Override
     public void onResume(){
         super.onResume();
-        // myTask = new MyTimerTask();
-//        myTimer = new Timer();
-//        // myTimer.schedule(myTask, 0, 10000); //check every 10 sec instead
-//        timerHandler.post(runnableCode);
-        // myTimer.schedule(myTask, 0, 1000); //check every 10 sec instead
+        //start the global clock timer when the activity appears on the screen
+        //start the song
+        timerHandler.postDelayed(runnableCode, 1000);
         mp.start();
     }
-//
-//    class MyTimerTask extends TimerTask {
-//        //update the current position every 10 seconds in the parse song class
-//        public void run() {
-//            Log.d("SpeakerPlayingActivity", "mytimertask");
-//            int currentPosition = mp.getCurrentPosition();
-//            song.setTime(currentPosition);
-//            song.saveInBackground();
-//        }
-//    }
-
 
     private Runnable runnableCode = new Runnable() {
         @Override
         public void run() {
             Log.d("ControllerPlayingActivity", "runnable");
-            int currentPosition = mp.getCurrentPosition();
-            song.setTime(currentPosition);
+            song.setTime(mp.getCurrentPosition());
             song.saveInBackground();
-            timerHandler.postDelayed(runnableCode, 10000); // repeat same runnable in 10 seconds
-            // TODO-- clear handler?
+            timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable every second
         }
     };
 

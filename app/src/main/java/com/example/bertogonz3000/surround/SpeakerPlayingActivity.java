@@ -31,7 +31,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     double movingNode = 0.5;
     View background;
     ParseLiveQueryClient parseLiveQueryClient;
-//    AlertDialog alertDialog;
     RelativeLayout lostConnection;
     RelativeLayout loaderContainer;
     RelativeLayout defaultContainer;
@@ -71,6 +70,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         position = getIntent().getFloatExtra("position", 0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Media Mode");
 
         //        // Make sure the Parse server is setup to configured for live queries
 //        // URL for server is determined by Parse.initialize() call.
@@ -125,7 +125,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                 numberSeek = object.getNumSeek();
 
-                //changeTime(object.getTime());  //if speaker joins late then have it match up with the others
+                changeTime(object.getTime());  //if speaker initially joins late then have it match up with the others and the controller
 
                 movingNode = object.getMovingNode();
 
@@ -166,6 +166,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(object.getNumSeek() != numberSeek) {
                     changeTime(object.getTime());
                     numberSeek = object.getNumSeek();
+                }
+
+                //if the time of the speaker is too different from the time of the controller by 500 ms
+                if( (centerMP.getCurrentPosition() > object.getTime() + 500) || (centerMP.getCurrentPosition() < object.getTime() - 500) ) {
+                    changeTime(object.getTime());
                 }
 
                 if (isPlaying != object.getIsPlaying()) {
@@ -231,7 +236,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
-        //TODO - CHANGED
         subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Song>() {
             @Override
             public void onEvent(ParseQuery<Song> query, Song object) {
@@ -287,15 +291,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 lostConnection.setVisibility(View.VISIBLE);
             }
         });
-
-//        //Run code on the UI thread
-//        runOnUiThread(new Runnable() {
-//                          @ Override
-//                          public void run() {
-//                              //Create the alert dialog
-//                              createAlertDialog();
-//                          }
-//                      });
     }
 
 
@@ -303,51 +298,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.disconnect();  //only if user initiated the disconnect from the server
         disconnect();
     }
-//
-//    public void createAlertDialog() {
-//
-//        View alertView = LayoutInflater.from(SpeakerPlayingActivity.this).inflate(R.layout.activity_lost_connection, null);
-//        // Create alert dialog builder
-//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SpeakerPlayingActivity.this);
-//        // set message_item.xml to AlertDialog builder
-//        alertDialogBuilder.setView(alertView);
-//
-//        // Create alert dialog
-//        alertDialog = alertDialogBuilder.create();
-//
-//
-//        // Configure dialog button (Refresh)
-//        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Reconnect",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        //TODO - check again if there is a connection to the server
-//                        parseLiveQueryClient.reconnect();
-//                        //if connected, then dismiss and return to the ControllerPlayingActivity
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//        // Configure dialog button (Restart)
-//        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "End Session",
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                        //if the restart button is hit, just return to the home screen
-//                        Intent intent = new Intent(SpeakerPlayingActivity.this, LandingActivity.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                });
-//
-//        try{
-//            alertDialog.show();
-//            alertDialog.getWindow().setBackgroundDrawableResource(R.color.background);
-//        } catch (WindowManager.BadTokenException e) {
-//            Log.d("SpeakerPlaying", "couldn't show alert dialog");
-//        }
-//
-//    }
 
     public void reconnect(View view) {
         parseLiveQueryClient.reconnect();
@@ -450,14 +400,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             node = 0.375;
         }
 
-
         Log.e("Adjustment", "node = " + node);
         Log.e("Adjustment", "position = " + position);
 
-
-
         mp.setVolume(getMaxVol(node), getMaxVol(node));
-
     }
 
     @Override
@@ -475,8 +421,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             backLeftMP = null;
             backRightMP = null;
             centerMP = null;
-
         }
     }
-
 }

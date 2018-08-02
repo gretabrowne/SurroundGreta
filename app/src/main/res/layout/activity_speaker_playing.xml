@@ -11,8 +11,7 @@
         android:id="@+id/defaultContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/blur"
-        android:alpha="0.4"
+        android:background="@color/background"
         android:visibility="invisible">
 
         <Button
@@ -44,7 +43,8 @@
         android:id="@+id/lostConnectionContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="@drawable/blur"
+        android:alpha="0.4"
         android:visibility="invisible">
 
         <Button
@@ -95,6 +95,17 @@
             android:layout_height="100dp"
             android:layout_centerInParent="true"
             app:mk_type="TwinFishesSpinner" />
+
+        <TextView
+            android:id="@+id/tvLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="119dp"
+            android:fontFamily="@font/roboto"
+            android:text="Loading..."
+            android:textSize="30sp" />
 
     </RelativeLayout>
 

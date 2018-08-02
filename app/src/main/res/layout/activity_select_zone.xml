@@ -17,16 +17,18 @@
         android:layout_alignParentTop="true"
         android:text="" />
 
-    <ImageButton
+    <Button
         android:id="@+id/nextBtn"
         android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="14dp"
         android:background="@android:color/transparent"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_check_circle_48" />
+        android:fontFamily="@font/roboto"
+        android:text="Next"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvZoneChoice"

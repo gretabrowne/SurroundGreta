@@ -1,6 +1,5 @@
 package com.example.bertogonz3000.surround;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,14 +16,13 @@ import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 public class SelectZone extends AppCompatActivity {
     float position;
     ImageButton setLocation;
-    ProgressDialog progressDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_zone);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Select Location");
         setLocation = findViewById(R.id.nextBtn);
 
 

@@ -178,35 +178,31 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(object.getNumSeek() != numberSeek) {
                     changeTime(object.getTime());
                     numberSeek = object.getNumSeek();
+                    return;
                 }
 
-                //if the time of the speaker is too different from the time of the controller by 500 ms
-                //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
-                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
-                    changeTime(object.getTime());
+                if (phoneVol != object.getVolume() ) {
+                    Log.d("SpeakerPlayingActivity", "changing volume");
+                    phoneVol = (int) object.getVolume();
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+                    return;
                 }
 
                 if (isPlaying != object.getIsPlaying()) {
                     isPlaying = object.getIsPlaying();
                     if (!isPlaying){
                         Log.d("SpeakerPlayingActivity", "switching pause/play");
-                        changeTime(object.getTime());
                         pauseAll();
+                        changeTime(object.getTime());   //change time after the media players are paused
+                        return;
                     } else {
                         Log.d("SpeakerPlayingActivity", "switching pause/play");
-                        changeTime(object.getTime());
+                        changeTime(object.getTime());   //change time before resuming
                         playAll();
+                        return;
                     }
-
-                    //TODO - should object.getVolume be a float or an int? I think it depends on
-                    //TODO - where we want to do the conversion between whatever input the croller gives
-                    //TODO - us and what we need to set volume
-                } else if (phoneVol != object.getVolume()) {
-                    Log.d("SpeakerPlayingActivity", "changing volume");
-                    phoneVol = (int) object.getVolume();
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
-
                 }
+
                 // TODO - check logic of these if statements, right now it'll start as if controller wants node
                 // TODO - 0.5 to be where sound is and will re-ping server when node is moved, this seems like an extra step
                 else if (throwing != object.getIsThrowing()) {
@@ -230,7 +226,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         setToMaxVol(backRightMP);
                     }
 
-                } else if (movingNode != object.getMovingNode()){
+                }
+                if (movingNode != object.getMovingNode()){
 
                     movingNode = object.getMovingNode();
                     Log.d("SpeakerPlayingActivity", "movingnode != object.getmovingnode");
@@ -244,7 +241,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     //0 means the view is completely transparent and 1 means the view is completely opaque.
                     //sets the color to full purple if it is closest to the movingNode position
                     background.setAlpha(getMaxVol(movingNode));
+                    return;
+                }
 
+                //if the time of the speaker is too different from the time of the controller
+                //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
+                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
+                    changeTime(object.getTime());
                 }
             }
         });

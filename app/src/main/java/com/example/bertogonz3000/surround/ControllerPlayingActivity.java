@@ -23,16 +23,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.bertogonz3000.surround.Models.Utilities;
+import com.example.bertogonz3000.surround.views.VolcationSpinner;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
 import org.parceler.Parcels;
 
-import me.angrybyte.circularslider.CircularSlider;
-
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     private AudioManager audioManager;
-    CircularSlider slider;
+    VolcationSpinner spinner;
     int volume;
     Song song;
     TextView tvCurrent;
@@ -67,9 +66,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar = findViewById(R.id.seekBar);
         playButton = findViewById(R.id.playButton);
         btnThrowSound = findViewById(R.id.btnThrowSound);
-        slider = findViewById(R.id.circularSlider);
+        spinner = findViewById(R.id.spinner);
 
-        slider.setVisibility(View.GONE);
+        spinner.setVisibility(View.GONE);
+        spinner.setMaxVol(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+
         croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
         croller.setIsContinuous(false);
@@ -110,9 +111,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             @Override
             public void onProgressChanged(Croller croller, int progress) {
                 // use the progress
-                //   audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                //   progress, 0);
-
                 song.setVolume(progress);
                 song.saveInBackground();
             }
@@ -146,7 +144,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                         playButton.setImageResource(R.drawable.ic_play_circle_filled_60dp);
                         mp.pause();
                         song.setIsPlaying(false);
-                        song.setTime(mp.getCurrentPosition());
+                        song.setTime(mp.getCurrentPosition());  //fix time after pausing the song
                         song.saveInBackground();
                     }
                 }else{
@@ -154,8 +152,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                     if(mp!=null){
                         // Changing button image to pause button
                         playButton.setImageResource(R.drawable.ic_pause_circle_filled);
+                        song.setTime(mp.getCurrentPosition());  //fix time before resuming the song
                         song.setIsPlaying(true);
-                        song.setTime(mp.getCurrentPosition());
                         song.saveInBackground();
                         mp.start();
                     }
@@ -169,14 +167,14 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 if(song.getIsThrowing() == false) {
                     song.setIsThrowing(true);
                     song.saveInBackground();
-                    slider.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.VISIBLE);
                     croller.setVisibility(View.GONE);
                     btnThrowSound.setText("Surround");
                 }
                 else {
                     song.setIsThrowing(false);
                     song.saveInBackground();
-                    slider.setVisibility(View.GONE);
+                    spinner.setVisibility(View.GONE);
                     croller.setVisibility(View.VISIBLE);
                     btnThrowSound.setText("Throw");
                 }
@@ -185,20 +183,30 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             }
         });
 
-        slider.setStartAngle(0);    //double value
-
-        slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
+        spinner.setOnThumbChangeListener(new VolcationSpinner.OnThumbChangeListener() {
             @Override
-            public void onSliderMoved(double pos) {
-                if (pos < 0) {
-                    // if negative, make it bigger
-                    pos = pos + 1;
-                }
-                Log.d("ThrowingSoundActivity", "in listener");
-                song.setMovingNode(pos);
+            public void onLocationChanged(float volume, float location) {
+                Log.d("LOCATIONCHANGE", "newvol = " + volume + ", location  = " + location);
+                song.setMovingNode(location);
+                song.setVolume(volume);
                 song.saveInBackground();
             }
         });
+
+//        slider.setStartAngle(0);    //double value
+//
+//        slider.setOnSliderMovedListener(new CircularSlider.OnSliderMovedListener() {
+//            @Override
+//            public void onSliderMoved(double pos) {
+//                if (pos < 0) {
+//                    // if negative, make it bigger
+//                    pos = pos + 1;
+//                }
+//                Log.d("ThrowingSoundActivity", "in listener");
+//                song.setMovingNode(pos);
+//                song.saveInBackground();
+//            }
+//        });
 
     }
 
@@ -216,7 +224,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         public void run() {
             Log.d("ControllerPlayingActivity", "runnable");
             //only update the current time if the media player is valid and is playing
-            if(mp != null && mp.isPlaying()) {
+            if(mp != null ) {
                 song.setTime(mp.getCurrentPosition());
                 song.saveInBackground();
                 timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable every second
@@ -228,6 +236,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        song.setIsConnected(false);
+//        song.saveInBackground();
         song.deleteInBackground();
         mp.release();
         mp = null;
@@ -246,6 +256,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     public boolean onSupportNavigateUp(){
         finish();
+//        song.setIsConnected(false);
+//        song.saveInBackground();
         return true;
     }
 

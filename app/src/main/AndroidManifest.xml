@@ -20,16 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ZoneChoiceActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.LandingActivity" />
-        </activity>
-        <activity android:name=".ZoneChoiceUpdateActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.LandingActivity" />
-        </activity>
         <activity android:name=".SpeakerPlayingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -54,21 +44,12 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".LostConnectionActivity" />
         <activity
             android:name=".SelectZone"
             android:parentActivityName=".LandingActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bertogonz3000.surround.LandingActivity" />
-        </activity>
-
-        <activity
-            android:name=".ThrowingSoundActivity"
-            android:parentActivityName=".ControllerPlayingActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.bertogonz3000.surround.ControllerPlayingActivity"/>
         </activity>
 
     </application>

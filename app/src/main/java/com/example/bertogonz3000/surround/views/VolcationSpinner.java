@@ -219,7 +219,7 @@ public class VolcationSpinner extends View {
         paint.setColor(Color.BLUE);
 //            paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth((float) 30);
+        paint.setStrokeWidth((float) 10);
 
         //Circle Radius paint
         volumeBarRadius = 100;

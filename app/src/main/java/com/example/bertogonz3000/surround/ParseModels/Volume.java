@@ -10,9 +10,9 @@ public class Volume extends ParseObject{
     public String getVolumeID(){return getObjectId();}
 
     //TODO -- Change Volume to a float instead of an integer
-    public int getVolume(){return getInt("volume");}
+    public float getVolume(){return getInt("volume");}
 
 
     //Setters
-    public void setVolume(int volume){put("volume", volume);}
+    public void setVolume(float volume){put("volume", volume);}
 }

@@ -23,6 +23,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.bertogonz3000.surround.Models.Utilities;
+import com.example.bertogonz3000.surround.ParseModels.AudioIDs;
+import com.example.bertogonz3000.surround.ParseModels.PlayPause;
+import com.example.bertogonz3000.surround.ParseModels.Session;
+import com.example.bertogonz3000.surround.ParseModels.Throwing;
+import com.example.bertogonz3000.surround.ParseModels.Time;
+import com.example.bertogonz3000.surround.ParseModels.Volume;
 import com.example.bertogonz3000.surround.views.VolcationSpinner;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
@@ -32,8 +38,16 @@ import org.parceler.Parcels;
 public class ControllerPlayingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
     private AudioManager audioManager;
     VolcationSpinner spinner;
-    int volume;
-    Song song;
+//    Song song;
+
+    //Parse objects
+    Session session;
+    AudioIDs audioIDs;
+    PlayPause playPause;
+    Volume volume;
+    Time time;
+    Throwing throwing;
+
     TextView tvCurrent;
     TextView tvEnd;
     SeekBar seekbar;
@@ -53,8 +67,16 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+//        //new server design unwrap from intent
+        session = Parcels.unwrap(getIntent().getParcelableExtra("session"));
+        audioIDs = Parcels.unwrap(getIntent().getParcelableExtra("audioIDs"));
+        playPause = Parcels.unwrap(getIntent().getParcelableExtra("playPause"));
+        throwing = Parcels.unwrap(getIntent().getParcelableExtra("throwing"));
+        time = Parcels.unwrap(getIntent().getParcelableExtra("time"));
+        volume = Parcels.unwrap(getIntent().getParcelableExtra("volume"));
 
-        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
+//        //TODO - uncomment to use old server design
+//        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Media Mode");
@@ -89,7 +111,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         //        .getStreamVolume(AudioManager.STREAM_MUSIC));
 
 
-        mp = MediaPlayer.create(ControllerPlayingActivity.this, song.getAudioIds().get(0));
+        mp = MediaPlayer.create(ControllerPlayingActivity.this, audioIDs.getIDs().get(0));
         mp.setVolume(0,0);
         //MediaPlayer.TrackInfo[] trackInfo = song.getTrackInfo();
         // Changing button image to play button
@@ -111,8 +133,13 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             @Override
             public void onProgressChanged(Croller croller, int progress) {
                 // use the progress
-                song.setVolume(progress);
-                song.saveInBackground();
+                //from new server
+                volume.setVolume(progress);
+                volume.saveInBackground();
+
+                //from old server
+//                song.setVolume(progress);
+//                song.saveInBackground();
             }
 
             @Override
@@ -135,7 +162,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
                 int totalDuration = mp.getDuration();
                 int currentPosition = utils.progressToTimer(seekbar.getProgress(), totalDuration);
-                song.setTime(currentPosition);
+                time.setTime(currentPosition);
+//                song.setTime(currentPosition);    //old server
 
                 // check for already playing, then pause
                 if(mp.isPlaying()){
@@ -143,19 +171,35 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                         // Changing button image to play button
                         playButton.setImageResource(R.drawable.ic_play_circle_filled_60dp);
                         mp.pause();
-                        song.setIsPlaying(false);
-                        song.setTime(mp.getCurrentPosition());  //fix time after pausing the song
-                        song.saveInBackground();
+//                        //new server
+                        playPause.setPlaying(false);
+                        playPause.saveInBackground();
+                        time.setTime(mp.getCurrentPosition());
+                        time.saveInBackground();
+
+                        //old server
+//                        song.setIsPlaying(false);
+//                        song.setTime(mp.getCurrentPosition());  //fix time after pausing the song
+//                        song.saveInBackground();
                     }
                 }else{
                     // Resume song (play)
                     if(mp!=null){
                         // Changing button image to pause button
                         playButton.setImageResource(R.drawable.ic_pause_circle_filled);
-                        song.setTime(mp.getCurrentPosition());  //fix time before resuming the song
-                        song.setIsPlaying(true);
-                        song.saveInBackground();
+
+                        //new server
+                        time.setTime(mp.getCurrentPosition());
+                        time.saveInBackground();
+                        playPause.setPlaying(true);
+                        playPause.saveInBackground();
                         mp.start();
+
+                        //old server
+//                        song.setTime(mp.getCurrentPosition());  //fix time before resuming the song
+//                        song.setIsPlaying(true);
+//                        song.saveInBackground();
+//                        mp.start();
                     }
                 }
             }
@@ -164,20 +208,38 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         btnThrowSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(song.getIsThrowing() == false) {
-                    song.setIsThrowing(true);
-                    song.saveInBackground();
+
+                //new server
+                if (throwing.getThrowing() == false) {
+                    throwing.setThrowing(true);
+                    throwing.saveInBackground();
                     spinner.setVisibility(View.VISIBLE);
                     croller.setVisibility(View.GONE);
                     btnThrowSound.setText("Surround");
                 }
                 else {
-                    song.setIsThrowing(false);
-                    song.saveInBackground();
+                    throwing.setThrowing(false);
+                    throwing.saveInBackground();
                     spinner.setVisibility(View.GONE);
                     croller.setVisibility(View.VISIBLE);
                     btnThrowSound.setText("Throw");
                 }
+
+                //old server
+//                if(song.getIsThrowing() == false) {
+//                    song.setIsThrowing(true);
+//                    song.saveInBackground();
+//                    spinner.setVisibility(View.VISIBLE);
+//                    croller.setVisibility(View.GONE);
+//                    btnThrowSound.setText("Surround");
+//                }
+//                else {
+//                    song.setIsThrowing(false);
+//                    song.saveInBackground();
+//                    spinner.setVisibility(View.GONE);
+//                    croller.setVisibility(View.VISIBLE);
+//                    btnThrowSound.setText("Throw");
+//                }
 
 
             }
@@ -185,11 +247,18 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         spinner.setOnThumbChangeListener(new VolcationSpinner.OnThumbChangeListener() {
             @Override
-            public void onLocationChanged(float volume, float location) {
-                Log.d("LOCATIONCHANGE", "newvol = " + volume + ", location  = " + location);
-                song.setMovingNode(location);
-                song.setVolume(volume);
-                song.saveInBackground();
+            public void onLocationChanged(float vol, float location) {
+                Log.d("LOCATIONCHANGE", "newvol = " + vol + ", location  = " + location);
+                throwing.setLocation(location);
+                throwing.saveInBackground();
+
+                volume.setVolume(vol);
+                volume.saveInBackground();
+
+                //old server
+//                song.setMovingNode(location);
+//                song.setVolume(volume);
+//                song.saveInBackground();
             }
         });
 
@@ -225,8 +294,12 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             Log.d("ControllerPlayingActivity", "runnable");
             //only update the current time if the media player is valid and is playing
             if(mp != null ) {
-                song.setTime(mp.getCurrentPosition());
-                song.saveInBackground();
+                time.setTime(mp.getCurrentPosition());
+                time.saveInBackground();
+
+                //old server
+//                song.setTime(mp.getCurrentPosition());
+//                song.saveInBackground();
                 timerHandler.postDelayed(runnableCode, 1000); // repeat same runnable every second
             }
         }
@@ -238,7 +311,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         super.onDestroy();
 //        song.setIsConnected(false);
 //        song.saveInBackground();
-        song.deleteInBackground();
+
+//        song.deleteInBackground();
         mp.release();
         mp = null;
     }
@@ -348,12 +422,21 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         // forward or backward to certain seconds
         mp.seekTo(currentPosition);
-        song.setNumSeek(song.getNumSeek()+1);   //update the number of times used seek bar
 
         // update timer progress again
         updateProgressBar();
-        song.setTime(currentPosition);
-        song.saveInBackground();
+        time.setTime(currentPosition);
+        time.saveInBackground();
+
+        //old server
+//        // forward or backward to certain seconds
+//        mp.seekTo(currentPosition);
+//        song.setNumSeek(song.getNumSeek()+1);   //update the number of times used seek bar
+//
+//        // update timer progress again
+//        updateProgressBar();
+//        song.setTime(currentPosition);
+//        song.saveInBackground();
     }
 
     @Override

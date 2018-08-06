@@ -1,6 +1,5 @@
 package com.example.bertogonz3000.surround;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -13,6 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.example.bertogonz3000.surround.ParseModels.AudioIDs;
+import com.example.bertogonz3000.surround.ParseModels.PlayPause;
+import com.example.bertogonz3000.surround.ParseModels.Session;
+import com.example.bertogonz3000.surround.ParseModels.Throwing;
+import com.example.bertogonz3000.surround.ParseModels.Time;
+import com.example.bertogonz3000.surround.ParseModels.Volume;
 import com.parse.LiveQueryException;
 import com.parse.ParseLiveQueryClient;
 import com.parse.ParseLiveQueryClientCallbacks;
@@ -36,6 +41,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     RelativeLayout defaultContainer;
     boolean loaded = false;
     boolean reconnected = false;
+    AudioIDs audioIDholder;
+    boolean prepared = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +90,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         parseLiveQueryClient.registerListener(new ParseLiveQueryClientCallbacks() {
             @Override
             public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
+                Log.d("speakerplaying", "onlivequery connected");
                 if(loaded) {
                     defaultContainer.setVisibility(View.VISIBLE);
                     lostConnection.setVisibility(View.INVISIBLE);
                     if(reconnected) {
-                        if(centerMP != null) {
-                            playAll();
-                            reconnected = false;
-                        }
+                            if(centerMP != null) {
+                                playAll();
+                                reconnected = false;
+                            }
                     }
                 }
             }
@@ -115,100 +123,218 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 parseLiveQueryClient.connectIfNeeded();
             }
         });
-//
-        ParseQuery<Song> query = ParseQuery.getQuery(Song.class);
-//        if(!query.isRunning())
-//            disconnect();
+//          old server
+//        ParseQuery<Song> query = ParseQuery.getQuery(Song.class);
+        //new server
+        ParseQuery<Session> session = ParseQuery.getQuery(Session.class);
+        final ParseQuery<AudioIDs> audioIDs = ParseQuery.getQuery(AudioIDs.class);
+        ParseQuery<PlayPause> playPause = ParseQuery.getQuery(PlayPause.class);
+        ParseQuery<Throwing> throwingParseQuery = ParseQuery.getQuery(Throwing.class);
+        ParseQuery<Volume> volume = ParseQuery.getQuery(Volume.class);
+        ParseQuery<Time> time = ParseQuery.getQuery(Time.class);
 
-        // This query can even be more granular (i.e. only refresh if the entry was added by some other user)
-        // parseQuery.whereNotEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
-//
-//      Connect to Parse server]
-        SubscriptionHandling<Song> subscriptionHandling = parseLiveQueryClient.subscribe(query);
-//
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Song>() {
+        //subscription handling for audioIDs
+        SubscriptionHandling<AudioIDs> audioIDsSubscriptionHandling = parseLiveQueryClient.subscribe(audioIDs);
+        audioIDsSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<AudioIDs>() {
             @Override
-            public void onEvent(ParseQuery<Song> query, Song object) {
-
+            public void onEvent(ParseQuery<AudioIDs> query, AudioIDs object) {
+                Log.d("SpeakerPlayingActivity", "created audioIDs subscription");
+                audioIDholder = object;
                 prepMediaPlayers(object);
-
-                //TODO - check discrepancy between adapter and controller
-                isPlaying = object.getIsPlaying();
-
-                numberSeek = object.getNumSeek();
-
-                changeTime(object.getTime());  //if speaker initially joins late then have it match up with the others and the controller
-
-                movingNode = object.getMovingNode();
-
-                throwing = object.getIsThrowing();
-
-                if (throwing){
-                    //TODO - what do we do on create if throwing? (right now it'll only be throwing when button in ControllerPlaying is hit, so it will never be in CREATE)
-                }
-
                 setToMaxVol(centerMP);
                 setToMaxVol(frontRightMP);
                 setToMaxVol(backRightMP);
                 setToMaxVol(backLeftMP);
                 setToMaxVol(frontLeftMP);
+            }
+        });
 
-                if (isPlaying){
-                    playAll();
-                } else {
-                    pauseAll();
-                }
-
-                phoneVol = (int) object.getVolume();
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+        //subscription handling for session
+        SubscriptionHandling<Session> sessionSubscriptionHandling = parseLiveQueryClient.subscribe(session);
+        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Session>() {
+            @Override
+            public void onEvent(ParseQuery<Session> query, Session object) {
+                Log.d("SpeakerPlayingActivity", "created session subscription");
+//
+//                prepMediaPlayers(object.getAudioIDs());
+//
+//                isPlaying = object.getPlayPause().getPlaying();
+//
+//                changeTime(object.getTimeObject().getTime());  //if speaker initially joins late then have it match up with the others and the controller
+//
+//                movingNode = object.getThrowingObject().getLocation();
+//                throwing = object.getThrowingObject().getThrowing();
+//
+//                setToMaxVol(centerMP);
+//                setToMaxVol(frontRightMP);
+//                setToMaxVol(backRightMP);
+//                setToMaxVol(backLeftMP);
+//                setToMaxVol(frontLeftMP);
+//
+//                if (isPlaying){
+//                    playAll();
+//                } else {
+//                    pauseAll();
+//                }
+//
+//                phoneVol = (int) object.getVolume().getVolume();
+//                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+//
 
             }
         });
 
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Song>() {
-            @SuppressLint("ResourceAsColor")
+        //subscription handling for playpause
+        SubscriptionHandling<PlayPause> playPauseSubscriptionHandling = parseLiveQueryClient.subscribe(playPause);
+        playPauseSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<PlayPause>() {
+
+                    @Override
+                    public void onEvent(ParseQuery<PlayPause> query, PlayPause object) {
+                        Log.d("SpeakerPlayingActivity", "created play pause subscription");
+                        isPlaying = object.getPlaying();
+                        if (isPlaying){
+                            playAll();
+                        } else {
+                            pauseAll();
+                        }
+                    }
+                });
+        playPauseSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<PlayPause>() {
+
             @Override
-            public void onEvent(ParseQuery<Song> query, Song object) {
-                // when volume, song, or playing status is updated
-
-                Log.d("SpeakerPlayingActivity", "in on update");
-                Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
-
-                //if the scrubber was used to change the position in the song
-                if(object.getNumSeek() != numberSeek) {
-                    changeTime(object.getTime());
-                    numberSeek = object.getNumSeek();
-                    return;
+            public void onEvent(ParseQuery<PlayPause> query, PlayPause object) {
+                if (isPlaying != object.getPlaying()) {
+                    isPlaying = object.getPlaying();
+                    if (!isPlaying){
+                        Log.d("SpeakerPlayingActivity", "switching pause/play");
+                        pauseAll();
+//                        changeTime(object.getTime());   //change time after the media players are paused
+                        return;
+                    } else {
+                        Log.d("SpeakerPlayingActivity", "switching pause/play");
+//                        changeTime(object.getTime());   //change time before resuming
+                        playAll();
+                        return;
+                    }
                 }
+            }
+        } );
 
+        playPauseSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<PlayPause>() {
+            @Override
+            public void onEvent(ParseQuery<PlayPause> query, PlayPause object) {
+                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect in DELETE");
+                disconnect();
+            }
+        });
+
+        //if error in subscription handling, then call disconnect
+        playPauseSubscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<PlayPause>() {
+            @Override
+            public void onError(ParseQuery<PlayPause> query, LiveQueryException exception) {
+                disconnect();
+                Log.d("speakerplaying", "handleerror");
+            }
+        });
+
+        //subscription handling for volume
+        SubscriptionHandling<Volume> volumeSubscriptionHandling = parseLiveQueryClient.subscribe(volume);
+        volumeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Volume>() {
+
+            @Override
+            public void onEvent(ParseQuery<Volume> query, Volume object) {
+                Log.d("SpeakerPlayingActivity", "created volume subscription");
+
+                phoneVol = (int) object.getVolume();
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+            }
+        });
+
+        volumeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Volume>() {
+            @Override
+            public void onEvent(ParseQuery<Volume> query, Volume object) {
                 if (phoneVol != object.getVolume() ) {
                     Log.d("SpeakerPlayingActivity", "changing volume");
                     phoneVol = (int) object.getVolume();
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
                     return;
                 }
+            }
+        });
+        volumeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Volume>() {
+            @Override
+            public void onEvent(ParseQuery<Volume> query, Volume object) {
+                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect in DELETE");
+                disconnect();
+            }
+        });
+        //if error in subscription handling, then call disconnect
+        volumeSubscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<Volume>() {
+            @Override
+            public void onError(ParseQuery<Volume> query, LiveQueryException exception) {
+                disconnect();
+                Log.d("speakerplaying", "handleerror");
+            }
+        });
 
-                if (isPlaying != object.getIsPlaying()) {
-                    isPlaying = object.getIsPlaying();
-                    if (!isPlaying){
-                        Log.d("SpeakerPlayingActivity", "switching pause/play");
-                        pauseAll();
-                        changeTime(object.getTime());   //change time after the media players are paused
-                        return;
-                    } else {
-                        Log.d("SpeakerPlayingActivity", "switching pause/play");
-                        changeTime(object.getTime());   //change time before resuming
-                        playAll();
-                        return;
-                    }
+        SubscriptionHandling<Time> timeSubscriptionHandling = parseLiveQueryClient.subscribe(time);
+        timeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Time>() {
+            @Override
+            public void onEvent(ParseQuery<Time> query, Time object) {
+                Log.d("SpeakerPlayingActivity", "created time subscription");
+
+                if(!prepared)
+                    prepMediaPlayers(audioIDholder);
+                changeTime(object.getTime());  //if speaker initially joins late then have it match up with the others and the controller
+            }
+        });
+
+        timeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Time>() {
+            @Override
+            public void onEvent(ParseQuery<Time> query, Time object) {
+                //if the time of the speaker is too different from the time of the controller
+                //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
+                if(!prepared)
+                    prepMediaPlayers(audioIDholder);
+                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
+                    changeTime(object.getTime());
                 }
+            }
+        });
 
-                // TODO - check logic of these if statements, right now it'll start as if controller wants node
-                // TODO - 0.5 to be where sound is and will re-ping server when node is moved, this seems like an extra step
-                else if (throwing != object.getIsThrowing()) {
+        timeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Time>() {
+            @Override
+            public void onEvent(ParseQuery<Time> query, Time object) {
+                disconnect();
+                Log.d("speakerplaying", "handleerror");
+            }
+        });
+
+        timeSubscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<Time>() {
+            @Override
+            public void onError(ParseQuery<Time> query, LiveQueryException exception) {
+                disconnect();
+                Log.d("speakerplaying", "handleerror");
+            }
+        });
+
+        SubscriptionHandling<Throwing> throwingSubscriptionHandling = parseLiveQueryClient.subscribe(throwingParseQuery);
+        throwingSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Throwing>() {
+            @Override
+            public void onEvent(ParseQuery<Throwing> query, Throwing object) {
+                Log.d("SpeakerPlayingActivity", "created throwing subscription");
+
+                movingNode = object.getLocation();
+                throwing = object.getThrowing();
+            }
+        });
+        throwingSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Throwing>() {
+            @Override
+            public void onEvent(ParseQuery<Throwing> query, Throwing object) {
+                if (throwing != object.getThrowing()) {
                     Log.d("SpeakerPlayingActivity", "throwing != object.getIsThrowing");
                     // set throwing boolean to be equal to whether controller wants to be throwing sound or not
-                    throwing = object.getIsThrowing();
+                    throwing = object.getThrowing();
 
                     if (throwing) {
                         Log.e("SpeakerPlayingActivity", "throwing and setting volume to " + getMaxVol(movingNode) + "" + getMaxVol(movingNode));
@@ -227,9 +353,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     }
 
                 }
-                if (movingNode != object.getMovingNode()){
+                if (movingNode != object.getLocation()){
 
-                    movingNode = object.getMovingNode();
+                    movingNode = object.getLocation();
                     Log.d("SpeakerPlayingActivity", "movingnode != object.getmovingnode");
                     Log.d("SpeakerPlayingActivity", "setting volume to " + getMaxVol(movingNode) + " , " + getMaxVol(movingNode));
                     centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
@@ -243,33 +369,163 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     background.setAlpha(getMaxVol(movingNode));
                     return;
                 }
-
-                //if the time of the speaker is too different from the time of the controller
-                //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
-                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
-                    changeTime(object.getTime());
-                }
             }
         });
-
-        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Song>() {
+        throwingSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Throwing>() {
             @Override
-            public void onEvent(ParseQuery<Song> query, Song object) {
-                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect in DELETE");
-                disconnect();
-            }
-        });
-
-        //if error in subscription handling, then call disconnect
-        subscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<Song>() {
-            @Override
-            public void onError(ParseQuery<Song> query, LiveQueryException exception) {
+            public void onEvent(ParseQuery<Throwing> query, Throwing object) {
                 disconnect();
                 Log.d("speakerplaying", "handleerror");
             }
         });
-
-
+        throwingSubscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<Throwing>() {
+            @Override
+            public void onError(ParseQuery<Throwing> query, LiveQueryException exception) {
+                disconnect();
+                Log.d("speakerplaying", "handleerror");
+            }
+        });
+//
+//        SubscriptionHandling<Song> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+////
+//        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Song>() {
+//            @Override
+//            public void onEvent(ParseQuery<Song> query, Song object) {
+////
+////                prepMediaPlayers(object);
+//
+//                //TODO - check discrepancy between adapter and controller
+////                isPlaying = object.getIsPlaying();
+////                numberSeek = object.getNumSeek();
+//
+////                changeTime(object.getTime());  //if speaker initially joins late then have it match up with the others and the controller
+//
+////                movingNode = object.getMovingNode();
+////                throwing = object.getIsThrowing();
+//
+////                setToMaxVol(centerMP);
+////                setToMaxVol(frontRightMP);
+////                setToMaxVol(backRightMP);
+////                setToMaxVol(backLeftMP);
+////                setToMaxVol(frontLeftMP);
+//
+////                if (isPlaying){
+////                    playAll();
+////                } else {
+////                    pauseAll();
+////                }
+////
+////                phoneVol = (int) object.getVolume();
+////                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+//
+//            }
+//        });
+//
+//        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Song>() {
+//            @SuppressLint("ResourceAsColor")
+//            @Override
+//            public void onEvent(ParseQuery<Song> query, Song object) {
+//                // when volume, song, or playing status is updated
+//
+//                Log.d("SpeakerPlayingActivity", "in on update");
+//                Log.d("SpeakerPlayingActivity", "time: " + object.getTime());
+//
+//                //if the scrubber was used to change the position in the song
+//                if(object.getNumSeek() != numberSeek) {
+//                    changeTime(object.getTime());
+//                    numberSeek = object.getNumSeek();
+//                    return;
+//                }
+//
+////                if (phoneVol != object.getVolume() ) {
+////                    Log.d("SpeakerPlayingActivity", "changing volume");
+////                    phoneVol = (int) object.getVolume();
+////                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+////                    return;
+////                }
+//
+////                if (isPlaying != object.getIsPlaying()) {
+////                    isPlaying = object.getIsPlaying();
+////                    if (!isPlaying){
+////                        Log.d("SpeakerPlayingActivity", "switching pause/play");
+////                        pauseAll();
+////                        changeTime(object.getTime());   //change time after the media players are paused
+////                        return;
+////                    } else {
+////                        Log.d("SpeakerPlayingActivity", "switching pause/play");
+////                        changeTime(object.getTime());   //change time before resuming
+////                        playAll();
+////                        return;
+////                    }
+////                }
+//
+//                // TODO - check logic of these if statements, right now it'll start as if controller wants node
+//                // TODO - 0.5 to be where sound is and will re-ping server when node is moved, this seems like an extra step
+////                else if (throwing != object.getIsThrowing()) {
+////                    Log.d("SpeakerPlayingActivity", "throwing != object.getIsThrowing");
+////                    // set throwing boolean to be equal to whether controller wants to be throwing sound or not
+////                    throwing = object.getIsThrowing();
+////
+////                    if (throwing) {
+////                        Log.e("SpeakerPlayingActivity", "throwing and setting volume to " + getMaxVol(movingNode) + "" + getMaxVol(movingNode));
+////                        centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+////                        frontLeftMP.setVolume(0, 0);
+////                        backLeftMP.setVolume(0, 0);
+////                        frontRightMP.setVolume(0, 0);
+////                        backRightMP.setVolume(0, 0);
+////                    } else {
+////                        Log.e("THROWING", "Returned");
+////                        setToMaxVol(centerMP);
+////                        setToMaxVol(frontLeftMP);
+////                        setToMaxVol(backLeftMP);
+////                        setToMaxVol(frontRightMP);
+////                        setToMaxVol(backRightMP);
+////                    }
+////
+////                }
+////                if (movingNode != object.getMovingNode()){
+////
+////                    movingNode = object.getMovingNode();
+////                    Log.d("SpeakerPlayingActivity", "movingnode != object.getmovingnode");
+////                    Log.d("SpeakerPlayingActivity", "setting volume to " + getMaxVol(movingNode) + " , " + getMaxVol(movingNode));
+////                    centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+////                    frontLeftMP.setVolume(0, 0);
+////                    backLeftMP.setVolume(0, 0);
+////                    frontRightMP.setVolume(0, 0);
+////                    backRightMP.setVolume(0, 0);
+////
+////                    //0 means the view is completely transparent and 1 means the view is completely opaque.
+////                    //sets the color to full purple if it is closest to the movingNode position
+////                    background.setAlpha(getMaxVol(movingNode));
+////                    return;
+////                }
+//
+////                //if the time of the speaker is too different from the time of the controller
+////                //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
+////                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
+////                    changeTime(object.getTime());
+////                }
+//            }
+//        });
+//
+//        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Song>() {
+//            @Override
+//            public void onEvent(ParseQuery<Song> query, Song object) {
+//                Log.d("SpeakerPlayingActivity", "onEvent leave to disconnect in DELETE");
+//                disconnect();
+//            }
+//        });
+//
+//        //if error in subscription handling, then call disconnect
+//        subscriptionHandling.handleError(new SubscriptionHandling.HandleErrorCallback<Song>() {
+//            @Override
+//            public void onError(ParseQuery<Song> query, LiveQueryException exception) {
+//                disconnect();
+//                Log.d("speakerplaying", "handleerror");
+//            }
+//        });
+//
+//
     }
 
     @Override
@@ -318,6 +574,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     public void reconnect(View view) {
+        Log.d("SpeakerPlaying", "in reconnect function");
         parseLiveQueryClient.reconnect();
         parseLiveQueryClient.connectIfNeeded();
         defaultContainer.setVisibility(View.VISIBLE);
@@ -325,23 +582,41 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         reconnected = true;
         playAll();
     }
-
     //Create mediaplayers based on given songIds
-    private void prepMediaPlayers(Song object){
+    private void prepMediaPlayers(AudioIDs audioIDs){
 
-        centerID = object.getAudioIds().get(0);
-        frontLeftID = object.getAudioIds().get(1);
-        frontRightID = object.getAudioIds().get(2);
-        backLeftID = object.getAudioIds().get(3);
-        backRightID = object.getAudioIds().get(4);
+        centerID = audioIDs.getIDs().get(0);
+        frontLeftID = audioIDs.getIDs().get(1);
+        frontRightID = audioIDs.getIDs().get(2);
+        backLeftID = audioIDs.getIDs().get(3);
+        backRightID = audioIDs.getIDs().get(4);
 
         centerMP = MediaPlayer.create(SpeakerPlayingActivity.this, centerID);
         frontLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontLeftID);
         frontRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontRightID);
         backLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, backLeftID);
         backRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, backRightID);
+        Log.d("prepMediaPlayers", "finished setting up media players");
+        prepared = true;
 
+        if(isPlaying)
+            playAll();
     }
+//    //Create mediaplayers based on given songIds
+//    private void prepMediaPlayers(Song object){
+//
+//        centerID = object.getAudioIds().get(0);
+//        frontLeftID = object.getAudioIds().get(1);
+//        frontRightID = object.getAudioIds().get(2);
+//        backLeftID = object.getAudioIds().get(3);
+//        backRightID = object.getAudioIds().get(4);
+//
+//        centerMP = MediaPlayer.create(SpeakerPlayingActivity.this, centerID);
+//        frontLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontLeftID);
+//        frontRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontRightID);
+//        backLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, backLeftID);
+//        backRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, backRightID);
+//    }
 
     //pause All 5 mediaplayers
     synchronized private void pauseAll(){

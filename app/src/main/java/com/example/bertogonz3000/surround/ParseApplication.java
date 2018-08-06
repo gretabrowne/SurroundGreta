@@ -2,6 +2,12 @@ package com.example.bertogonz3000.surround;
 
 import android.app.Application;
 
+import com.example.bertogonz3000.surround.ParseModels.AudioIDs;
+import com.example.bertogonz3000.surround.ParseModels.PlayPause;
+import com.example.bertogonz3000.surround.ParseModels.Session;
+import com.example.bertogonz3000.surround.ParseModels.Throwing;
+import com.example.bertogonz3000.surround.ParseModels.Time;
+import com.example.bertogonz3000.surround.ParseModels.Volume;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -14,7 +20,13 @@ public class ParseApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
-        ParseObject.registerSubclass(Song.class);
+//        ParseObject.registerSubclass(Song.class);
+        ParseObject.registerSubclass(AudioIDs.class);
+        ParseObject.registerSubclass(PlayPause.class);
+        ParseObject.registerSubclass(Session.class);
+        ParseObject.registerSubclass(Throwing.class);
+        ParseObject.registerSubclass(Time.class);
+        ParseObject.registerSubclass(Volume.class);
 
         //troubleshooting
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);

@@ -13,6 +13,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.bertogonz3000.surround.Models.Track;
+import com.example.bertogonz3000.surround.ParseModels.AudioIDs;
+import com.example.bertogonz3000.surround.ParseModels.PlayPause;
+import com.example.bertogonz3000.surround.ParseModels.Session;
+import com.example.bertogonz3000.surround.ParseModels.Throwing;
+import com.example.bertogonz3000.surround.ParseModels.Time;
+import com.example.bertogonz3000.surround.ParseModels.Volume;
 import com.parse.ParseException;
 
 import org.parceler.Parcels;
@@ -87,23 +93,100 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
         //TODO - CHANGED
         public void onClick(View view){
             Track track = trackList.get(getAdapterPosition());
-            Song song = new Song();
-            song.setAudioIds(track.getAudioIds());
-            song.setIsPlaying(true);
-            song.setIsThrowing(false);
-            //song.setVolume(0);
-            song.setTime(0);
-            song.setNumSeek(0);
+
+            //new server redesign
+            Time time = new Time();
+            time.setTime(0);
             try {
-                song.save();
+                time.save();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            Intent i = new Intent(context, ControllerPlayingActivity.class);
-            i.putExtra("song", Parcels.wrap(song));
-            Log.d("TrackAdapter", "volume" + song.getVolume());
-            context.startActivity(i);
+            AudioIDs audioIDs = new AudioIDs();
+            audioIDs.setIDs(track.getAudioIds());
+            try {
+                audioIDs.save();
+                Log.d("TrackAdapter", "saved audio ID's");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            PlayPause playPause = new PlayPause();
+            playPause.setPlaying(true);
+            try {
+                playPause.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Throwing throwing = new Throwing();
+            throwing.setThrowing(true);
+            try {
+                throwing.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            Volume volume = new Volume();
+            try {
+                volume.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+//            try {
+//                audioIDs.save();
+//                playPause.save();
+//                throwing.save();
+//                time.save();
+//                volume.save();
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+            Session session = new Session();
+            Log.d("TrackAdapter", (String) playPause.getPlayPauseID());
+            session.setPlayPause(playPause);
+            session.setAudio(audioIDs);
+            session.setThrowing(throwing);
+            session.setTimeObject(time);
+            session.setVolume(volume);
+//            Session session = new Session(playPause.getPlayPauseID(), time.getTimeID(), throwing.getThrowingID(), volume.getVolumeID(), audioIDs.getAudioID());
+            try {
+                session.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            Intent intent = new Intent(context, ControllerPlayingActivity.class);
+            intent.putExtra("session", Parcels.wrap(session));
+            intent.putExtra("audioIDs", Parcels.wrap(audioIDs));
+            intent.putExtra("playPause", Parcels.wrap(playPause));
+            intent.putExtra("throwing", Parcels.wrap(throwing));
+            intent.putExtra("time", Parcels.wrap(time));
+            intent.putExtra("volume", Parcels.wrap(volume));
+            context.startActivity(intent);
+
+            //TODO - uncomment if you want to use the old server design
+            //old server
+//            Song song = new Song();
+//            song.setAudioIds(track.getAudioIds());
+//            song.setIsPlaying(true);
+//            song.setIsThrowing(false);
+//            song.setTime(0);
+//            song.setNumSeek(0);
+//            try {
+//                song.save();
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//
+//            Intent i = new Intent(context, ControllerPlayingActivity.class);
+//            i.putExtra("song", Parcels.wrap(song));
+//            Log.d("TrackAdapter", "volume" + song.getVolume());
+//            context.startActivity(i);
         }
 
     }

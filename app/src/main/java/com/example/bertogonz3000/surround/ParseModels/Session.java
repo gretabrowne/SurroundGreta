@@ -4,8 +4,6 @@ package com.example.bertogonz3000.surround.ParseModels;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-import java.util.List;
-
 @ParseClassName("Session")
 public class Session  extends ParseObject{
 
@@ -30,17 +28,14 @@ public class Session  extends ParseObject{
         return (Volume) get("volume");
     }
     public Time getTimeObject() {
-        return (Time) getParseObject("audioIDs");
+        return (Time) getParseObject("time");
     }
     public Throwing getThrowingObject() {
         return (Throwing) get("throwing");
     }
-
-    public List<Integer> getIDs(){return getList("IDs");}
-
-
-    //Setters
-    public void setIDs(List<Integer> list){put("IDs", list);}
+    public boolean isConnected() {
+        return (Boolean) get("isConnected");
+    }
 
     //Setters
     public void setPlayPause(PlayPause playPause){put("playPause", playPause);}
@@ -52,4 +47,6 @@ public class Session  extends ParseObject{
     public void setVolume(Volume volume){put("volume", volume);}
 
     public void setAudio(AudioIDs audio){put("audioIDs", audio);}
+
+    public void setConnected(Boolean bool) {put("isConnected", bool); }
 }

@@ -152,6 +152,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             session.setThrowing(throwing);
             session.setTimeObject(time);
             session.setVolume(volume);
+            session.setConnected(true);
 //            Session session = new Session(playPause.getPlayPauseID(), time.getTimeID(), throwing.getThrowingID(), volume.getVolumeID(), audioIDs.getAudioID());
             try {
                 session.save();

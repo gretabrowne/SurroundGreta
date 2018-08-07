@@ -18,11 +18,15 @@ import com.example.bertogonz3000.surround.ParseModels.Session;
 import com.example.bertogonz3000.surround.ParseModels.Throwing;
 import com.example.bertogonz3000.surround.ParseModels.Time;
 import com.example.bertogonz3000.surround.ParseModels.Volume;
+import com.parse.GetCallback;
 import com.parse.LiveQueryException;
+import com.parse.ParseException;
 import com.parse.ParseLiveQueryClient;
 import com.parse.ParseLiveQueryClientCallbacks;
 import com.parse.ParseQuery;
 import com.parse.SubscriptionHandling;
+
+import org.parceler.Parcels;
 
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
@@ -43,6 +47,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean reconnected = false;
     AudioIDs audioIDholder;
     boolean prepared = false;
+    Session existingSession = null;
+    boolean joining = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +85,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         //position selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
-
+        if(getIntent().hasExtra("session")) {
+            existingSession = Parcels.unwrap(getIntent().getParcelableExtra("session"));
+            joining = true;
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Media Mode");
 
@@ -131,7 +140,59 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         ParseQuery<PlayPause> playPause = ParseQuery.getQuery(PlayPause.class);
         ParseQuery<Throwing> throwingParseQuery = ParseQuery.getQuery(Throwing.class);
         ParseQuery<Volume> volume = ParseQuery.getQuery(Volume.class);
-        ParseQuery<Time> time = ParseQuery.getQuery(Time.class);
+        ParseQuery<Time> timeQuery = ParseQuery.getQuery(Time.class);
+
+        if(joining) { //if the speaker is joining an existing session
+            session.whereEqualTo("objectId", existingSession.getObjectId());
+            playPause.whereEqualTo("objectId", existingSession.getPlayPause().getPlayPauseID());
+            volume.whereEqualTo("objectId", existingSession.getVolume().getVolumeID());
+            timeQuery.whereEqualTo("objectId", existingSession.getTimeObject().getTimeID());
+            throwingParseQuery.whereEqualTo("objectId", existingSession.getThrowingObject().getThrowingID());
+            audioIDs.whereEqualTo("objectId", existingSession.getAudioIDs().getAudioID());
+
+            //initialize everything so the speaker can catch up with the others
+            audioIDs.getFirstInBackground(new GetCallback<AudioIDs>() {
+                @Override
+                public void done(AudioIDs object, ParseException e) {
+                    audioIDholder = object;
+                    prepMediaPlayers(object);
+                    setToMaxVol(centerMP);
+                    setToMaxVol(frontRightMP);
+                    setToMaxVol(backRightMP);
+                    setToMaxVol(backLeftMP);
+                    setToMaxVol(frontLeftMP);
+                }
+            });
+            playPause.getFirstInBackground(new GetCallback<PlayPause>() {
+                @Override
+                public void done(PlayPause object, ParseException e) {
+                    isPlaying = object.getPlaying();
+                    if(prepared) {
+                        if(isPlaying) {
+                            playAll();
+                        } else {
+                            pauseAll();
+                        }
+                    }
+                }
+            });
+            timeQuery.getFirstInBackground(new GetCallback<Time>() {
+                @Override
+                public void done(Time object, ParseException e) {
+                    if(!prepared)
+                        prepMediaPlayers(audioIDholder);
+                    changeTime(object.getTime());
+                }
+            });
+
+            volume.getFirstInBackground(new GetCallback<Volume>() {
+                @Override
+                public void done(Volume object, ParseException e) {
+                    phoneVol = (int) object.getVolume();
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+                }
+            });
+        }
 
         //subscription handling for audioIDs
         SubscriptionHandling<AudioIDs> audioIDsSubscriptionHandling = parseLiveQueryClient.subscribe(audioIDs);
@@ -277,7 +338,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
-        SubscriptionHandling<Time> timeSubscriptionHandling = parseLiveQueryClient.subscribe(time);
+        SubscriptionHandling<Time> timeSubscriptionHandling = parseLiveQueryClient.subscribe(timeQuery);
         timeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Time>() {
             @Override
             public void onEvent(ParseQuery<Time> query, Time object) {

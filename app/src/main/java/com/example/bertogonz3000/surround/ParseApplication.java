@@ -45,7 +45,7 @@ public class ParseApplication extends Application{
                 .applicationId("SurroundSound47")
                 .clientKey(null)
                 .clientBuilder(builder)
-                .server("http://172.21.71.108:1337/parse").build());
+                .server("http://10.0.0.140:1337/parse").build());
 
 //        //Init the Parse Server (Greta's server)
 //        Parse.initialize(new Parse.Configuration.Builder(this)

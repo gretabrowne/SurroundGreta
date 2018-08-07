@@ -272,7 +272,7 @@ public class VolcationSpinner extends View {
         volumeDistance -= widgetDistFront;
         float widgetLength = widgetDistEnd - widgetDistFront;
         float volumePercent = volumeDistance/widgetLength;
-        return volumePercent * maxVol;
+        return volumePercent;
     }
 
     public float getLocationByAngle(){

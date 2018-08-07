@@ -295,6 +295,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
                 time.setTime(mp.getCurrentPosition());
                 time.saveInBackground();
 
+
                 //old server
 //                song.setTime(mp.getCurrentPosition());
 //                song.saveInBackground();
@@ -305,14 +306,16 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
 //        song.setIsConnected(false);
 //        song.saveInBackground();
 
 //        song.deleteInBackground();
         mp.release();
         mp = null;
+        session.setConnected(false);
+        session.saveInBackground();
     }
 
     @Override
@@ -441,6 +444,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     public void onCompletion(MediaPlayer mediaPlayer) {
         mp.release();
         mp = null;
+        session.setConnected(false);
+        session.saveInBackground();
     }
 
 }

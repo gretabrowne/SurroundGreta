@@ -10,8 +10,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.bertogonz3000.surround.ParseModels.Session;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
+
+import org.parceler.Parcels;
+
+import java.util.List;
 
 public class SelectZone extends AppCompatActivity {
     float position;
@@ -54,16 +62,45 @@ public class SelectZone extends AppCompatActivity {
             }
 
             @Override
-            public void onStopTrackingTouch(Croller croller) {}
+            public void onStopTrackingTouch(Croller croller) {
+            }
         });
 
         setLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SelectZone.this, SpeakerPlayingActivity.class);
-                position = position/100;
-                i.putExtra("position", position);
-                startActivity(i);
+                //the class we want to query is Session
+                ParseQuery<Session> query = ParseQuery.getQuery(Session.class);
+                //if there is a session currently happening
+                query.whereEqualTo("isConnected", true);
+
+                query.setLimit(1); // we only want one session, the most recent one
+                query.orderByDescending("createdAt");
+                // Execute the find asynchronously
+                query.findInBackground(new FindCallback<Session>() {
+                    @Override
+                    public void done(List<Session> objects, ParseException e) {
+                        {
+                            if (objects != null && objects.isEmpty()) {
+                                //if there is no session available, then go to speakerplaying and wait for a session to begin
+                                Intent i = new Intent(SelectZone.this, SpeakerPlayingActivity.class);
+                                position = position / 100;
+                                i.putExtra("position", position);
+                                startActivity(i);
+                                Log.d("SelectZone", "There aren't any sessions");
+                            } else if (e == null) {
+                                // there is a connected session and no error, then join the connected session
+                                Intent i = new Intent(SelectZone.this, SpeakerPlayingActivity.class);
+                                position = position / 100;
+                                i.putExtra("position", position);
+                                i.putExtra("session", Parcels.wrap(objects.get(0)));
+                                startActivity(i);
+                            } else {
+                                Log.d("item", "Error: " + e.getMessage());
+                            }
+                        }
+                    }
+                });
             }
         });
     }

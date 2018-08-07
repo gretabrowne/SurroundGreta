@@ -188,8 +188,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             volume.getFirstInBackground(new GetCallback<Volume>() {
                 @Override
                 public void done(Volume object, ParseException e) {
-                    phoneVol = (int) object.getVolume();
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+                    phoneVolPercentage = object.getVolume();
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)*phoneVolPercentage), 0);
                 }
             });
         }

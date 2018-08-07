@@ -91,7 +91,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         spinner = findViewById(R.id.spinner);
 
         spinner.setVisibility(View.GONE);
-        spinner.setMaxVol(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        spinner.setMaxVol(100);
 
         croller = (Croller) findViewById(R.id.croller);
         croller.setIndicatorWidth(10);
@@ -105,10 +105,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         croller.setProgressSecondaryCircleSize(3);
         croller.setProgressPrimaryCircleSize(5);
 
-        croller.setMax(audioManager
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        //croller.setProgress(audioManager
-        //        .getStreamVolume(AudioManager.STREAM_MUSIC));
+        croller.setMax(100);
+        croller.setProgress(50);
 
 
         mp = MediaPlayer.create(ControllerPlayingActivity.this, audioIDs.getIDs().get(0));
@@ -134,7 +132,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             public void onProgressChanged(Croller croller, int progress) {
                 // use the progress
                 //from new server
-                volume.setVolume(progress);
+                volume.setVolume((float)progress/(float)100);
                 volume.saveInBackground();
 
                 //from old server

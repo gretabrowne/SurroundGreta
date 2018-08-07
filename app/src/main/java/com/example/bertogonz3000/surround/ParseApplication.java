@@ -42,10 +42,10 @@ public class ParseApplication extends Application{
 
       //  Init the Parse Server (Hannah's server)
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("SurroundId")
+                .applicationId("SurroundSound47")
                 .clientKey(null)
                 .clientBuilder(builder)
-                .server("http://172.21.79.146:1337/parse").build());
+                .server("http://172.21.71.108:1337/parse").build());
 
 //        //Init the Parse Server (Greta's server)
 //        Parse.initialize(new Parse.Configuration.Builder(this)

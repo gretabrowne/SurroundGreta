@@ -27,10 +27,10 @@ import com.parse.SubscriptionHandling;
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
-    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, phoneVol;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID;
     boolean isPlaying, throwing;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
-    float position;
+    float position, phoneVolPercentage;
     AudioManager audioManager;
     int numberSeek;
     double movingNode = 0.5;
@@ -177,8 +177,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //                    pauseAll();
 //                }
 //
-//                phoneVol = (int) object.getVolume().getVolume();
-//                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+//                phoneVolPercentage = (int) object.getVolume().getVolume();
+//                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVolPercentage, 0);
 //
 
             }
@@ -245,18 +245,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Volume> query, Volume object) {
                 Log.d("SpeakerPlayingActivity", "created volume subscription");
 
-                phoneVol = (int) object.getVolume();
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+                phoneVolPercentage = object.getVolume();
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)*phoneVolPercentage), 0);
             }
         });
 
         volumeSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Volume>() {
             @Override
             public void onEvent(ParseQuery<Volume> query, Volume object) {
-                if (phoneVol != object.getVolume() ) {
+                if (phoneVolPercentage != object.getVolume() ) {
                     Log.d("SpeakerPlayingActivity", "changing volume");
-                    phoneVol = (int) object.getVolume();
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+                    phoneVolPercentage = object.getVolume();
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,(int) (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)*phoneVolPercentage), 0);
                     return;
                 }
             }
@@ -415,8 +415,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 ////                    pauseAll();
 ////                }
 ////
-////                phoneVol = (int) object.getVolume();
-////                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+////                phoneVolPercentage = (int) object.getVolume();
+////                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVolPercentage, 0);
 //
 //            }
 //        });
@@ -437,10 +437,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //                    return;
 //                }
 //
-////                if (phoneVol != object.getVolume() ) {
+////                if (phoneVolPercentage != object.getVolume() ) {
 ////                    Log.d("SpeakerPlayingActivity", "changing volume");
-////                    phoneVol = (int) object.getVolume();
-////                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVol, 0);
+////                    phoneVolPercentage = (int) object.getVolume();
+////                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVolPercentage, 0);
 ////                    return;
 ////                }
 //

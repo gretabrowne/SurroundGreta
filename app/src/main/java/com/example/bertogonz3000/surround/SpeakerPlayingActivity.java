@@ -46,7 +46,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean loaded = false;
     boolean reconnected = false;
     boolean userInitiatedDisconnect = false;
-    AudioIDs audioIDholder;
+    AudioIDs audioIDholder = null;
     boolean prepared = false;
     Session existingSession = null;
     boolean joining = false;
@@ -196,8 +196,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             timeQuery.getFirstInBackground(new GetCallback<Time>() {
                 @Override
                 public void done(Time object, ParseException e) {
-                    if(!prepared)
+                    if(!prepared && audioIDholder != null)
                         prepMediaPlayers(audioIDholder);
+                    if(isPlaying) {
+                        playAll();
+                    } else {
+                        pauseAll();
+                    }
                     changeTime(object.getTime());
                     if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                         changeTime(object.getTime());
@@ -366,7 +371,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Time> query, Time object) {
                 Log.d("SpeakerPlayingActivity", "created time subscription");
 
-                if(!prepared)
+                if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
                 changeTime(object.getTime());  //if speaker initially joins late then have it match up with the others and the controller
             }
@@ -377,7 +382,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Time> query, Time object) {
                 //if the time of the speaker is too different from the time of the controller
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
-                if(!prepared)
+                if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
                 if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                     changeTime(object.getTime());
@@ -670,5 +675,24 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             backRightMP = null;
             centerMP = null;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
+            frontLeftMP.release();
+            frontRightMP.release();
+            backLeftMP.release();
+            backRightMP.release();
+            centerMP.release();
+
+            frontLeftMP = null;
+            frontRightMP = null;
+            backLeftMP = null;
+            backRightMP = null;
+            centerMP = null;
+        }
+
     }
 }

@@ -11,7 +11,7 @@ public class Throwing extends ParseObject{
 
     public boolean getThrowing(){return getBoolean("throwing");}
 
-    public float getLocation(){return (float) getNumber("location");}
+    public float getLocation(){return (float) getDouble("location");}
 
     //Setters
     public void setThrowing(boolean throwing){put("throwing", throwing);}

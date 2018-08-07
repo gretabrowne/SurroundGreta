@@ -199,6 +199,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     if(!prepared)
                         prepMediaPlayers(audioIDholder);
                     changeTime(object.getTime());
+                    if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
+                        changeTime(object.getTime());
+                    } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
+                        changeTime(object.getTime() + 100);
+                    }
                 }
             });
 
@@ -374,8 +379,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
                 if(!prepared)
                     prepMediaPlayers(audioIDholder);
-                if( (centerMP.getCurrentPosition() > object.getTime() + 300) || (centerMP.getCurrentPosition() < object.getTime() - 300) ) {
+                if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                     changeTime(object.getTime());
+                } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
+                    changeTime(object.getTime() + 100);
                 }
             }
         });
@@ -526,6 +533,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         defaultContainer.setVisibility(View.VISIBLE);
         lostConnection.setVisibility(View.INVISIBLE);
     }
+
+    //TODO- should these be synchronized?
     //Create mediaplayers based on given songIds
     private void prepMediaPlayers(AudioIDs audioIDs){
 
@@ -599,7 +608,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     //change time of all 5 media players
-    synchronized private void changeTime(int time){
+    private void changeTime(int time){
         centerMP.seekTo(time);
         frontLeftMP.seekTo(time);
         frontRightMP.seekTo(time);

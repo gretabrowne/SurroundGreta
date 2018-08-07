@@ -283,7 +283,9 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         //start the global clock timer when the activity appears on the screen
         //start the song
         timerHandler.postDelayed(runnableCode, 1000);
-        mp.start();
+        if(mp != null) {
+            mp.start();
+        }
     }
 
     private Runnable runnableCode = new Runnable() {

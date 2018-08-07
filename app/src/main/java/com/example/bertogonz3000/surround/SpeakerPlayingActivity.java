@@ -182,6 +182,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     if(!prepared)
                         prepMediaPlayers(audioIDholder);
                     changeTime(object.getTime());
+                    if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
+                        changeTime(object.getTime());
+                    } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
+                        changeTime(object.getTime() + 100);
+                    }
                 }
             });
 
@@ -357,9 +362,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
                 if(!prepared)
                     prepMediaPlayers(audioIDholder);
-                if( (centerMP.getCurrentPosition() > object.getTime() + 300)) {
+                if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                     changeTime(object.getTime());
-                } else if (centerMP.getCurrentPosition() < object.getTime() - 300){
+                } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                     changeTime(object.getTime() + 100);
                 }
             }

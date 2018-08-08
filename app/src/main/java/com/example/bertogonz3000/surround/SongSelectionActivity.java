@@ -46,28 +46,28 @@ public class SongSelectionActivity extends AppCompatActivity {
 
     //This method should only be called in onCreate
     public void createTracks(){
-        ArrayList<Integer> heyJudeList = new ArrayList<Integer>();
-
-        heyJudeList.add(R.raw.heyjude);
-
-        heyJudeList.add(R.raw.heyjudeleft);
-
-        heyJudeList.add(R.raw.heyjuderight);
-
-        heyJudeList.add(R.raw.heyjudeleft);
-
-        heyJudeList.add(R.raw.heyjuderight);
-
-        Track heyJude = new Track("Hey Jude", "The Beatles", heyJudeList);
-        heyJude.setDrawable(R.drawable.heyjude);
-
-        tracklist.add(heyJude);
-
-        adapter.notifyItemInserted(0);
-
+//        ArrayList<Integer> heyJudeList = new ArrayList<Integer>();
+//
+//        heyJudeList.add(R.raw.heyjude);
+//
+//        heyJudeList.add(R.raw.heyjudeleft);
+//
+//        heyJudeList.add(R.raw.heyjuderight);
+//
+//        heyJudeList.add(R.raw.heyjudeleft);
+//
+//        heyJudeList.add(R.raw.heyjuderight);
+//
+//        Track heyJude = new Track("Hey Jude", "The Beatles", heyJudeList);
+//        heyJude.setDrawable(R.drawable.heyjude);
+//
+//        tracklist.add(heyJude);
+//
+//        adapter.notifyItemInserted(0);
+//
         ArrayList<Integer> yesterdayList = new ArrayList<Integer>();
 
-        yesterdayList.add(R.raw.yesterdaycenter);
+        yesterdayList.add(R.raw.yesterdayfull);
 
         yesterdayList.add(R.raw.yesterdayleft);
 
@@ -82,26 +82,69 @@ public class SongSelectionActivity extends AppCompatActivity {
 
         tracklist.add(yesterday);
 
+        adapter.notifyItemInserted(0);
+//
+//        ArrayList<Integer> testList = new ArrayList<Integer>();
+//
+//        testList.add(R.raw.frontcentertest);
+//
+//        testList.add(R.raw.frontlefttest);
+//
+//        testList.add(R.raw.frontrighttest);
+//
+//        testList.add(R.raw.leftsurroundtest);
+//
+//        testList.add(R.raw.rightsurroundtest);
+//
+//        Track testTrack = new Track("Test Track", "Dolby Atmos", testList);
+//        testTrack.setDrawable(R.drawable.dolby);
+//
+//        tracklist.add(testTrack);
+//
+//        adapter.notifyItemInserted(2);
+
+        ArrayList<Integer> heliList = new ArrayList<Integer>();
+
+        heliList.add(R.raw.helicopter);
+        heliList.add(R.raw.helicopter);
+        heliList.add(R.raw.helicopter);
+        heliList.add(R.raw.helicopter);
+        heliList.add(R.raw.helicopter);
+
+        Track heliTrack = new Track("Helicopter", "Single Sound", heliList);
+
+        tracklist.add(heliTrack);
+
         adapter.notifyItemInserted(1);
 
-        ArrayList<Integer> testList = new ArrayList<Integer>();
+        ArrayList<Integer> starwarsList = new ArrayList<Integer>();
 
-        testList.add(R.raw.frontcentertest);
+        starwarsList.add(R.raw.starwarsfull);
+        starwarsList.add(R.raw.stawarsleft);
+        starwarsList.add(R.raw.starwarsright);
+        starwarsList.add(R.raw.stawarsleft);
+        starwarsList.add(R.raw.starwarsright);
 
-        testList.add(R.raw.frontlefttest);
+        Track starwarsTrack = new Track("Star Wars 7 Trailer", "Lucasfilm", starwarsList);
 
-        testList.add(R.raw.frontrighttest);
-
-        testList.add(R.raw.leftsurroundtest);
-
-        testList.add(R.raw.rightsurroundtest);
-
-        Track testTrack = new Track("Test Track", "Dolby Atmos", testList);
-        testTrack.setDrawable(R.drawable.dolby);
-
-        tracklist.add(testTrack);
+        tracklist.add(starwarsTrack);
 
         adapter.notifyItemInserted(2);
+
+        ArrayList<Integer> houseList = new ArrayList<Integer>();
+
+        houseList.add(R.raw.housefull);
+        houseList.add(R.raw.houseleft);
+        houseList.add(R.raw.houseright);
+        houseList.add(R.raw.houseleft);
+        houseList.add(R.raw.houseright);
+
+
+        Track houseTrack = new Track("House of the Flying Daggers Scene", "Flim", houseList);
+
+        tracklist.add(houseTrack);
+
+        adapter.notifyItemInserted(3);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -36,7 +36,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position, phoneVolPercentage;
     AudioManager audioManager;
-    int numberSeek;
     double movingNode = 0.5;
     View background;    //this will change color (flash) during throwing
     ParseLiveQueryClient parseLiveQueryClient;
@@ -50,6 +49,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean prepared = false;
     Session existingSession = null;
     boolean joining = false;
+    int savedTime;
+    Handler stoppedHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         }, 3000); // 3000 milliseconds delay
 
+//        //if the controller crashed so the saved time is the same as the
+//        stoppedHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(loaded) {
+//                    if(savedTime == )
+//                }
+//            }
+//        }, 3000);
 
         //position selected for this phone.
         //TODO - switch from int to float from intent
@@ -102,14 +112,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
                 Log.d("speakerplaying", "onlivequery connected");
                 if(loaded) {
-                    reconnectViews();
+                    runOnUiThread(reconnectViews);
                     if(reconnected) {
                             if(centerMP != null && isPlaying) {
                                 playAll();
                                 reconnected = false;
                             }
+                        userInitiatedDisconnect = false;
                     }
-                    userInitiatedDisconnect = false;
                 }
             }
 
@@ -117,14 +127,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onLiveQueryClientDisconnected(ParseLiveQueryClient client, boolean userInitiated) {
                 disconnect();
                 Log.d("speakerplaying", "onlivequerydisconnected");
-                if(!userInitiatedDisconnect) {
-                    client.reconnect();
-                    reconnected = true;
-                    reconnectViews();
-                    if(centerMP != null && isPlaying) {
-                        playAll();
-                    }
-                }
+//                if(!userInitiatedDisconnect) {
+//                    client.reconnect();
+//                    reconnected = true;
+//                    userInitiatedDisconnect = false;
+//                    runOnUiThread(reconnectViews);
+//                    if(centerMP != null && isPlaying) {
+//                        playAll();
+//                    }
+//                }
             }
 
             @Override
@@ -142,7 +153,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(!userInitiatedDisconnect) {
                     client.reconnect();
                     reconnected = true;
-                    reconnectViews();
+                    runOnUiThread(reconnectViews);
                     if(centerMP != null && isPlaying) {
                         playAll();
                     }
@@ -384,7 +395,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
                 if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
-                if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
+                if( (centerMP.getCurrentPosition() > object.getTime() + 200) ) {
                     changeTime(object.getTime());
                 } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                     changeTime(object.getTime() + 100);
@@ -497,8 +508,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         Log.d("speakerplaying", "disconnectfunction");
         if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
             pauseAll();
-//            releaseAll();
-//            nullAll();
         }
 
         //Run code on the UI thread
@@ -534,10 +543,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         }
     }
 
-    public void reconnectViews() {
-        defaultContainer.setVisibility(View.VISIBLE);
-        lostConnection.setVisibility(View.INVISIBLE);
-    }
+
+    //Background Runnable thread
+    private Runnable reconnectViews = new Runnable() {
+        public void run() {
+            defaultContainer.setVisibility(View.VISIBLE);
+            lostConnection.setVisibility(View.INVISIBLE);
+            }
+    };
 
     //TODO- should these be synchronized?
     //Create mediaplayers based on given songIds
@@ -594,7 +607,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backRightMP.start();
     }
 
-    //TODO - CREATED
     private void releaseAll(){
         centerMP.release();
         frontLeftMP.release();
@@ -603,7 +615,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backRightMP.release();
     }
 
-    //TODO - CREATED
     private void nullAll(){
         centerMP = null;
         frontLeftMP = null;

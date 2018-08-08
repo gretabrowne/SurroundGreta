@@ -30,6 +30,7 @@ import com.example.bertogonz3000.surround.ParseModels.Throwing;
 import com.example.bertogonz3000.surround.ParseModels.Time;
 import com.example.bertogonz3000.surround.ParseModels.Volume;
 import com.example.bertogonz3000.surround.views.VolcationSpinner;
+import com.parse.ParseException;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
@@ -314,11 +315,23 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 //        song.saveInBackground();
 
 //        song.deleteInBackground();
+        mp.pause();
         mp.release();
         mp = null;
         session.setConnected(false);
         session.saveInBackground();
     }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            session.delete();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -444,6 +457,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        mp.pause();
         mp.release();
         mp = null;
         session.setConnected(false);

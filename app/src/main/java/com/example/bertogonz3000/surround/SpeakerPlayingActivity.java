@@ -214,7 +214,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     } else {
                         pauseAll();
                     }
-                    changeTime(object.getTime());
                     if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                         changeTime(object.getTime());
                     } else if (centerMP.getCurrentPosition() < object.getTime() - 200){

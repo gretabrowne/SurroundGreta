@@ -73,6 +73,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+
         //implementing shared preferences to make controller resilient to crashes
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
@@ -162,6 +163,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar.setMax(100);
 
         updateProgressBar();
+
 
         String trackName = session.getTrackName();
         //if the app crashed before, so now you want to resume the song as the controller at the position you last left off on

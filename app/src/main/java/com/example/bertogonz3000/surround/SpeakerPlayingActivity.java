@@ -249,36 +249,24 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         });
 
         //subscription handling for session
-        SubscriptionHandling<Session> sessionSubscriptionHandling = parseLiveQueryClient.subscribe(session);
+        final SubscriptionHandling<Session> sessionSubscriptionHandling = parseLiveQueryClient.subscribe(session);
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
                 Log.d("SpeakerPlayingActivity", "created session subscription");
-//
-//                prepMediaPlayers(object.getAudioIDs());
-//
-//                isPlaying = object.getPlayPause().getPlaying();
-//
-//                changeTime(object.getTimeObject().getTime());  //if speaker initially joins late then have it match up with the others and the controller
-//
-//                movingNode = object.getThrowingObject().getLocation();
-//                throwing = object.getThrowingObject().getThrowing();
-//
-//                setToMaxVol(centerMP);
-//                setToMaxVol(frontRightMP);
-//                setToMaxVol(backRightMP);
-//                setToMaxVol(backLeftMP);
-//                setToMaxVol(frontLeftMP);
-//
-//                if (isPlaying){
-//                    playAll();
-//                } else {
-//                    pauseAll();
-//                }
-//
-//                phoneVolPercentage = (int) object.getVolume().getVolume();
-//                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,phoneVolPercentage, 0);
-//
+            }
+        });
+
+        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Session>() {
+            @Override
+            public void onEvent(ParseQuery<Session> query, Session object) {
+                if(object.isConnected() == false) {
+                }
+            }
+        });
+        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
+            @Override
+            public void onEvent(ParseQuery<Session> query, Session object) {
 
             }
         });

@@ -311,10 +311,6 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     protected void onStop() {
         super.onStop();
-//        song.setIsConnected(false);
-//        song.saveInBackground();
-
-//        song.deleteInBackground();
         mp.pause();
         mp.release();
         mp = null;
@@ -324,6 +320,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         try {
             session.delete();
         } catch (ParseException e) {

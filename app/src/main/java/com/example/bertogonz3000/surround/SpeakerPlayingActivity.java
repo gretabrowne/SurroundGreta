@@ -214,12 +214,21 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     } else {
                         pauseAll();
                     }
+
+                    //if the controller app crashed
+                    //the playback time is the same, then pause all the speaker media players
+                    if(savedTime == object.getTime() && isPlaying); {
+                        pauseAll();
+                    }
+
                     changeTime(object.getTime());
                     if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                         changeTime(object.getTime());
                     } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                         changeTime(object.getTime() + 100);
                     }
+
+                    savedTime = object.getTime();
                 }
             });
 
@@ -261,13 +270,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
                 if(object.isConnected() == false) {
+                    pauseAll();
+                    releaseAll();
+                    nullAll();
                 }
             }
         });
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
-
+                pauseAll();
+                releaseAll();
+                nullAll();
             }
         });
 

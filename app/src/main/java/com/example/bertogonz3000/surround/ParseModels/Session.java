@@ -36,6 +36,7 @@ public class Session  extends ParseObject{
     public boolean isConnected() {
         return (Boolean) get("isConnected");
     }
+    public String getTrackName() { return (String) get("trackName"); }
 
     //Setters
     public void setPlayPause(PlayPause playPause){put("playPause", playPause);}
@@ -49,4 +50,6 @@ public class Session  extends ParseObject{
     public void setAudio(AudioIDs audio){put("audioIDs", audio);}
 
     public void setConnected(Boolean bool) {put("isConnected", bool); }
+
+    public void setTrackName(String trackName) { put("trackName", trackName); }
 }

@@ -214,6 +214,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     } else {
                         pauseAll();
                     }
+
                     if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                         changeTime(object.getTime());
                     } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
@@ -260,13 +261,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
                 if(object.isConnected() == false) {
+                    pauseAll();
+                    releaseAll();
+                    nullAll();
                 }
             }
         });
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
-
+                pauseAll();
+                releaseAll();
+                nullAll();
             }
         });
 
@@ -382,11 +388,20 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
                 if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
+
+                //if the controller app crashed
+                //the playback time is the same, then pause all the speaker media players
+                if(savedTime == object.getTime() && isPlaying); {
+                    pauseAll();
+                }
+
                 if( (centerMP.getCurrentPosition() > object.getTime() + 200) ) {
                     changeTime(object.getTime());
                 } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                     changeTime(object.getTime() + 100);
                 }
+
+                savedTime = object.getTime();
             }
         });
 

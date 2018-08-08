@@ -123,6 +123,16 @@
         android:text="02:54"
         android:textColor="@android:color/white" />
 
+    <ImageButton
+        android:id="@+id/replayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/playButton"
+        android:layout_alignEnd="@+id/seekBar"
+        android:background="@android:color/transparent"
+        android:onClick="replay"
+        circular:srcCompat="@drawable/ic_replay_40" />
+
     <!--<ImageView-->
         <!--android:id="@+id/imageView"-->
         <!--android:layout_width="wrap_content"-->

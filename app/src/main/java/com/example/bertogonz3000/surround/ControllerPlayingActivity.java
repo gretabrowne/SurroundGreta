@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -61,12 +63,19 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     ImageButton playButton;
     Croller croller;
 
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        //implementing shared preferences to make controller resilient to crashes
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
 //        //new server design unwrap from intent
         session = Parcels.unwrap(getIntent().getParcelableExtra("session"));
@@ -153,6 +162,21 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar.setMax(100);
 
         updateProgressBar();
+
+        Log.d("preferences trackName", preferences.getString("trackName", null));
+        Log.d("Session trackName", session.getTrackName());
+        String trackName = session.getTrackName();
+        //if the app crashed before, so now you want to resume the song as the controller at the position you last left off on
+        if(trackName.equals(preferences.getString("trackName", null))) {
+
+            int pos = preferences.getInt("currentPosition", 1000);
+            mp.seekTo(pos);
+
+            // update timer progress
+            updateProgressBar();
+            time.setTime(pos);
+            time.saveInBackground();
+        }
 
         //pausing and playing the song
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -311,11 +335,24 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     protected void onStop() {
         super.onStop();
-        mp.pause();
-        mp.release();
-        mp = null;
+
+        if(mp!= null) {
+            editor.putString("trackName", session.getTrackName());
+            editor.putInt("currentPosition", mp.getCurrentPosition());
+            editor.apply();
+
+            mp.pause();
+            mp.release();
+            mp = null;
+        }
         session.setConnected(false);
+//        try {
+//            session.delete();   //check
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
         session.saveInBackground();
+        finish();   //check
     }
 
     @Override
@@ -326,6 +363,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        finish();
     }
 
 
@@ -389,6 +427,14 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.background);
     }
 
+    public void replay(View view) {
+        if(mp != null) {
+            mp.seekTo(0);
+            updateProgressBar();
+            time.setTime(0);
+            time.saveInBackground();
+        }
+    }
     //Update timer on seekbar
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 100);

@@ -49,7 +49,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     boolean prepared = false;
     Session existingSession = null;
     boolean joining = false;
-    int savedTime;
+    int savedTime = -1;
     Handler stoppedHandler = new Handler();
 
     @Override
@@ -165,18 +165,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         //new server
         ParseQuery<Session> session = ParseQuery.getQuery(Session.class);
         final ParseQuery<AudioIDs> audioIDs = ParseQuery.getQuery(AudioIDs.class);
-        ParseQuery<PlayPause> playPause = ParseQuery.getQuery(PlayPause.class);
         ParseQuery<Throwing> throwingParseQuery = ParseQuery.getQuery(Throwing.class);
         ParseQuery<Volume> volume = ParseQuery.getQuery(Volume.class);
         ParseQuery<Time> timeQuery = ParseQuery.getQuery(Time.class);
+        ParseQuery<PlayPause> playPause = ParseQuery.getQuery(PlayPause.class);
 
         if(joining) { //if the speaker is joining an existing session
             session.whereEqualTo("objectId", existingSession.getObjectId());
-            playPause.whereEqualTo("objectId", existingSession.getPlayPause().getPlayPauseID());
+            audioIDs.whereEqualTo("objectId", existingSession.getAudioIDs().getAudioID());
+            throwingParseQuery.whereEqualTo("objectId", existingSession.getThrowingObject().getThrowingID());
             volume.whereEqualTo("objectId", existingSession.getVolume().getVolumeID());
             timeQuery.whereEqualTo("objectId", existingSession.getTimeObject().getTimeID());
-            throwingParseQuery.whereEqualTo("objectId", existingSession.getThrowingObject().getThrowingID());
-            audioIDs.whereEqualTo("objectId", existingSession.getAudioIDs().getAudioID());
+            playPause.whereEqualTo("objectId", existingSession.getPlayPause().getPlayPauseID());
 
             //initialize everything so the speaker can catch up with the others
             audioIDs.getFirstInBackground(new GetCallback<AudioIDs>() {
@@ -389,11 +389,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
 
-                //if the controller app crashed
-                //the playback time is the same, then pause all the speaker media players
-                if(savedTime == object.getTime() && isPlaying); {
-                    pauseAll();
-                }
+//                //if the controller app crashed
+//                //the playback time is the same, then pause all the speaker media players
+//                if(savedTime == object.getTime() && isPlaying); {
+//                    pauseAll();
+//                }
 
                 if( (centerMP.getCurrentPosition() > object.getTime() + 200) ) {
                     changeTime(object.getTime());

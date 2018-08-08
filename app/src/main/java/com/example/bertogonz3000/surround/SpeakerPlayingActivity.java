@@ -215,20 +215,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         pauseAll();
                     }
 
-                    //if the controller app crashed
-                    //the playback time is the same, then pause all the speaker media players
-                    if(savedTime == object.getTime() && isPlaying); {
-                        pauseAll();
-                    }
-
-                    changeTime(object.getTime());
                     if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                         changeTime(object.getTime());
                     } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                         changeTime(object.getTime() + 100);
                     }
-
-                    savedTime = object.getTime();
                 }
             });
 
@@ -397,11 +388,20 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
                 if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
+
+                //if the controller app crashed
+                //the playback time is the same, then pause all the speaker media players
+                if(savedTime == object.getTime() && isPlaying); {
+                    pauseAll();
+                }
+
                 if( (centerMP.getCurrentPosition() > object.getTime() + 200) ) {
                     changeTime(object.getTime());
                 } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                     changeTime(object.getTime() + 100);
                 }
+
+                savedTime = object.getTime();
             }
         });
 

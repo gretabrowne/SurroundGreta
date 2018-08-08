@@ -346,11 +346,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             mp = null;
         }
         session.setConnected(false);
-        try {
-            session.delete();   //check
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            session.delete();   //check
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
         session.saveInBackground();
         finish();   //check
     }

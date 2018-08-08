@@ -74,8 +74,8 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         //implementing shared preferences to make controller resilient to crashes
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = preferences.edit();
+//        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        editor = preferences.edit();
 
 //        //new server design unwrap from intent
         session = Parcels.unwrap(getIntent().getParcelableExtra("session"));
@@ -163,20 +163,20 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         updateProgressBar();
 
-        Log.d("preferences trackName", preferences.getString("trackName", null));
-        Log.d("Session trackName", session.getTrackName());
+//        Log.d("preferences trackName", preferences.getString("trackName", null));
+//        Log.d("Session trackName", session.getTrackName());
         String trackName = session.getTrackName();
         //if the app crashed before, so now you want to resume the song as the controller at the position you last left off on
-        if(trackName.equals(preferences.getString("trackName", null))) {
-
-            int pos = preferences.getInt("currentPosition", 1000);
-            mp.seekTo(pos);
-
-            // update timer progress
-            updateProgressBar();
-            time.setTime(pos);
-            time.saveInBackground();
-        }
+//        if(trackName.equals(preferences.getString("trackName", null))) {
+//
+//            int pos = preferences.getInt("currentPosition", 1000);
+//            mp.seekTo(pos);
+//
+//            // update timer progress
+//            updateProgressBar();
+//            time.setTime(pos);
+//            time.saveInBackground();
+//        }
 
         //pausing and playing the song
         playButton.setOnClickListener(new View.OnClickListener() {

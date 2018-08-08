@@ -209,11 +209,11 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 public void done(Time object, ParseException e) {
                     if(!prepared && audioIDholder != null)
                         prepMediaPlayers(audioIDholder);
-                    if(isPlaying) {
-                        playAll();
-                    } else {
-                        pauseAll();
-                    }
+//                    if(isPlaying) {
+//                        playAll();
+//                    } else {
+//                        pauseAll();
+//                    }
 
                     if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
                         changeTime(object.getTime());
@@ -257,16 +257,16 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         });
 
-        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Session>() {
-            @Override
-            public void onEvent(ParseQuery<Session> query, Session object) {
-                if(object.isConnected() == false) {
-                    pauseAll();
-                    releaseAll();
-                    nullAll();
-                }
-            }
-        });
+//        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Session>() {
+//            @Override
+//            public void onEvent(ParseQuery<Session> query, Session object) {
+//                if(object.isConnected() == false) {
+//                    pauseAll();
+//                    releaseAll();
+//                    nullAll();
+//                }
+//            }
+//        });
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {

@@ -83,16 +83,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         }, 3000); // 3000 milliseconds delay
 
-//        //if the controller crashed so the saved time is the same as the
-//        stoppedHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(loaded) {
-//                    if(savedTime == )
-//                }
-//            }
-//        }, 3000);
-
         //position selected for this phone.
         //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
@@ -264,6 +254,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     pauseAll();
                     releaseAll();
                     nullAll();
+                    joining = false;
                 }
             }
         });
@@ -273,6 +264,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 pauseAll();
                 releaseAll();
                 nullAll();
+                joining = false;
             }
         });
 
@@ -389,18 +381,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(!prepared && audioIDholder != null)
                     prepMediaPlayers(audioIDholder);
 
-//                //if the controller app crashed
-//                //the playback time is the same, then pause all the speaker media players
-//                if(savedTime == object.getTime() && isPlaying); {
-//                    pauseAll();
-//                }
+                //if the controller app crashed
+                //the playback time is the same, then pause all the speaker media players
+                if(savedTime == object.getTime() && isPlaying) {
+                    pauseAll();
+                    return;
+                }
 
                 if( (centerMP.getCurrentPosition() > object.getTime() + 200) ) {
                     changeTime(object.getTime());
                 } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
                     changeTime(object.getTime() + 100);
                 }
-
                 savedTime = object.getTime();
             }
         });

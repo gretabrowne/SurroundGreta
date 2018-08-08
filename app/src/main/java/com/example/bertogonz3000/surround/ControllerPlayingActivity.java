@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -72,9 +73,9 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-//        //implementing shared preferences to make controller resilient to crashes
-//        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        editor = preferences.edit();
+        //implementing shared preferences to make controller resilient to crashes
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = preferences.edit();
 
 //        //new server design unwrap from intent
         session = Parcels.unwrap(getIntent().getParcelableExtra("session"));
@@ -164,16 +165,16 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
 
         String trackName = session.getTrackName();
         //if the app crashed before, so now you want to resume the song as the controller at the position you last left off on
-//        if(trackName.equals(preferences.getString("trackName", null))) {
-//
-//            int pos = preferences.getInt("currentPosition", 1000);
-//            mp.seekTo(pos);
-//
-//            // update timer progress
-//            updateProgressBar();
-//            time.setTime(pos);
-//            time.saveInBackground();
-//        }
+        if(trackName.equals(preferences.getString("trackName", null))) {
+
+            int pos = preferences.getInt("currentPosition", 1000);
+            mp.seekTo(pos);
+
+            // update timer progress
+            updateProgressBar();
+            time.setTime(pos);
+            time.saveInBackground();
+        }
 
         //pausing and playing the song
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -334,20 +335,20 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         super.onStop();
 
         if(mp!= null) {
-//            editor.putString("trackName", session.getTrackName());
-//            editor.putInt("currentPosition", mp.getCurrentPosition());
-//            editor.apply();
+            editor.putString("trackName", session.getTrackName());
+            editor.putInt("currentPosition", mp.getCurrentPosition());
+            editor.apply();
 
             mp.pause();
             mp.release();
             mp = null;
         }
         session.setConnected(false);
-//        try {
-//            session.delete();   //check
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            session.delete();   //check
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         session.saveInBackground();
         finish();   //check
     }

@@ -169,6 +169,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder>{
             intent.putExtra("throwing", Parcels.wrap(throwing));
             intent.putExtra("time", Parcels.wrap(time));
             intent.putExtra("volume", Parcels.wrap(volume));
+            intent.putExtra("track", Parcels.wrap(track));
             context.startActivity(intent);
 
             //TODO - uncomment if you want to use the old server design

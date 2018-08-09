@@ -75,8 +75,6 @@ public class VolcationSpinner extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawColor(Color.BLACK);
-
         createCircle(canvas);
 
         createLine(canvas);

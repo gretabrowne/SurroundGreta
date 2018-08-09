@@ -21,9 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.bertogonz3000.surround.Models.Track;
 import com.example.bertogonz3000.surround.Models.Utilities;
 import com.example.bertogonz3000.surround.ParseModels.AudioIDs;
 import com.example.bertogonz3000.surround.ParseModels.PlayPause;
@@ -50,6 +54,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     Volume volume;
     Time time;
     Throwing throwing;
+    Track track;
 
     TextView tvCurrent;
     TextView tvEnd;
@@ -62,6 +67,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     private Utilities utils;
     ImageButton playButton;
     Croller croller;
+    ImageView ivCover;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -73,6 +79,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         setContentView(R.layout.activity_controller_playing);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+        ivCover = findViewById(R.id.ivCoverArt);
 
         //implementing shared preferences to make controller resilient to crashes
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -85,6 +92,12 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         throwing = Parcels.unwrap(getIntent().getParcelableExtra("throwing"));
         time = Parcels.unwrap(getIntent().getParcelableExtra("time"));
         volume = Parcels.unwrap(getIntent().getParcelableExtra("volume"));
+        track = Parcels.unwrap(getIntent().getParcelableExtra("track"));
+
+        Glide.with(this)
+                .load(track.getDrawable())
+                .apply(RequestOptions.circleCropTransform())
+                .into(ivCover);
 
 //        //TODO - uncomment to use old server design
 //        song = Parcels.unwrap(getIntent().getParcelableExtra("song"));

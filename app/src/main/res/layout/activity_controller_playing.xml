@@ -17,6 +17,14 @@
         android:alpha="0.4"
         android:layout_alignParentTop="true" />
 
+    <ImageView
+        android:id="@+id/ivCoverArt"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true"
+        app:srcCompat="@android:color/white" />
+
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/croller"
         android:layout_width="match_parent"
@@ -39,19 +47,6 @@
         android:layout_height="match_parent"
         android:id="@+id/spinner"
         android:layout_centerInParent="true"/>
-    <!--<me.angrybyte.circularslider.CircularSlider-->
-        <!--android:id="@+id/circularSlider"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:padding="30dp"-->
-        <!--circular:angle="6.28"-->
-        <!--android:rotation="90"-->
-        <!--android:scaleX="-1"-->
-        <!--circular:border_color="#505090"-->
-        <!--circular:border_thickness="14dp"-->
-        <!--circular:border_gradient_colors="#6830C9;#BBA6DE;#8253D4;#6830C9"-->
-        <!--circular:thumb_color="#FFFFFF"-->
-        <!--circular:thumb_size="24dp" />-->
 
 
     <ImageButton
@@ -132,24 +127,5 @@
         android:background="@android:color/transparent"
         android:onClick="replay"
         circular:srcCompat="@drawable/ic_replay_40" />
-
-    <!--<ImageView-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/playButton"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_marginEnd="72dp"-->
-        <!--circular:srcCompat="@drawable/ic_fast_forward_50" />-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/imageView2"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/playButton"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_marginStart="73dp"-->
-        <!--circular:srcCompat="@drawable/ic_fast_rewind_50" />-->
-
 
 </RelativeLayout>

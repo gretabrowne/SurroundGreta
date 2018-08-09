@@ -20,7 +20,7 @@ public class VolcationSpinner extends View {
     private Paint paint, radiusPaint, volumeBarPaint, vinylPaint;
     private float x, y, touchDistance, mTranslateX, mTranslateY, widgetDistFront, widgetDistEnd, volumeBarRadius;
     private int radius, thumbRadius, volumeThumbRadius, thumbX,
-            thumbY, volThumbX, volThumbY, volumeThumbDist, volWidgetX, volWidgetY, maxVol, circleWidth = 30;
+            thumbY, volThumbX, volThumbY, volumeThumbDist, volWidgetX, volWidgetY, maxVol, circleWidth = 15;
     private Drawable thumb, volumeThumb;
     private OnThumbChangeListener listener;
     private double angle, volWidgetXEnd, volWidgetYEnd;

@@ -43,10 +43,11 @@
         app:start_offset="45" />
 
     <com.example.bertogonz3000.surround.views.VolcationSpinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/spinner"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:padding="25dp" />
 
 
     <ImageButton

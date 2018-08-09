@@ -1,13 +1,18 @@
 package com.example.bertogonz3000.surround.Models;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
+@Parcel
 public class Track {
 
     private String name;
     private String artist;
     private ArrayList<Integer> audio;
     private int drawable;
+
+    public Track() {}
 
     public Track(String name, String artist, ArrayList<Integer> audioIds){
         this.name = name;

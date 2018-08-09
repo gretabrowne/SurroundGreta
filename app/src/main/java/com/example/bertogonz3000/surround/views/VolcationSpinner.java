@@ -20,7 +20,7 @@ public class VolcationSpinner extends View {
     private Paint paint, radiusPaint, volumeBarPaint, vinylPaint;
     private float x, y, touchDistance, mTranslateX, mTranslateY, widgetDistFront, widgetDistEnd, volumeBarRadius;
     private int radius, thumbRadius, volumeThumbRadius, thumbX,
-            thumbY, volThumbX, volThumbY, volumeThumbDist, volWidgetX, volWidgetY, maxVol, circleWidth = 30;
+            thumbY, volThumbX, volThumbY, volumeThumbDist, volWidgetX, volWidgetY, maxVol, circleWidth = 15;
     private Drawable thumb, volumeThumb;
     private OnThumbChangeListener listener;
     private double angle, volWidgetXEnd, volWidgetYEnd;
@@ -75,8 +75,6 @@ public class VolcationSpinner extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawColor(Color.BLACK);
-
         createCircles(canvas);
 
         createLine(canvas);
@@ -89,7 +87,6 @@ public class VolcationSpinner extends View {
 
         //Log.e("VOLUME", "Volume = " + getVolumeByDistance());
         Log.e("LOCATION", "Location = " + getLocationByAngle());
-
 
     }
 

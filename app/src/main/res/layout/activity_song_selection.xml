@@ -24,8 +24,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="13dp"
         android:fontFamily="@font/roboto"
-        android:text="Song Selection"
-        android:textAlignment="center"
+        android:text="  My Tracks"
+        android:textAlignment="textStart"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 

@@ -126,7 +126,7 @@ public class SongSelectionActivity extends AppCompatActivity {
         starwarsList.add(R.raw.stawarsleft);
         starwarsList.add(R.raw.starwarsright);
 
-        Track starwarsTrack = new Track("Star Wars 7 Trailer", "Lucasfilm", starwarsList);
+        Track starwarsTrack = new Track("Star Wars: the Force Awakens", "Lucasfilm", starwarsList);
         starwarsTrack.setDrawable(R.drawable.starwars7);
 
         tracklist.add(starwarsTrack);
@@ -142,7 +142,7 @@ public class SongSelectionActivity extends AppCompatActivity {
         houseList.add(R.raw.houseright);
 
 
-        Track houseTrack = new Track("House of the Flying Daggers", "Flim", houseList);
+        Track houseTrack = new Track("House of the Flying Daggers", "Edko Films", houseList);
         houseTrack.setDrawable(R.drawable.house);
 
         tracklist.add(houseTrack);

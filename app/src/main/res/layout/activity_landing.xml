@@ -12,57 +12,119 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="@drawable/skyblur"
-        android:alpha="0.5"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:alpha="0.7"
+        android:background="@drawable/skyblurgood"
+        android:fontFamily="@font/roboto" />
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="30dp"
-        android:fontFamily="@font/roboto_light"
-        android:text="CHOOSE YOUR ROLE"
+        android:layout_marginTop="26dp"
+        android:fontFamily="@font/roboto"
+        android:text="Choose a role"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
-        android:textSize="30sp" />
+        android:textSize="36sp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/controllerButton"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="93dp"
-        android:alpha="0.8"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@drawable/button_border"
-        android:fontFamily="@font/roboto_light"
-        android:onClick="selectController"
-        android:padding="40dp"
-        android:text="Controller"
-        android:textColor="@color/colorAccent"
-        android:textSize="34sp" />
-
-    <Button
-        android:id="@+id/speakerButton"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:alpha="0.9"
-        android:layout_alignParentBottom="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/button_border"
-        android:fontFamily="@font/roboto_light"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="130dp"
+        android:alpha="0.9"
+        android:adjustViewBounds="true"
+        android:tint="@android:color/white"
+        android:scaleType="fitXY"
+        android:background="@drawable/landing_button_borders"
+        android:onClick="selectController"
+        android:src="@drawable/controllercircle" />
+
+    <ImageButton
+        android:id="@+id/speakerButton"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignBottom="@id/controllerButton"
+        android:layout_alignEnd="@+id/textView5"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:alpha="0.9"
+        android:background="@drawable/landing_button_borders"
         android:onClick="selectSpeaker"
-        android:padding="40dp"
+        android:src="@drawable/speakercircle" />
+
+    <TextView
+        android:id="@+id/tvSpeaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="198dp"
+        android:layout_marginRight="10dp"
+        android:layout_toStartOf="@+id/speakerButton"
+        android:fontFamily="@font/roboto"
         android:text="Speaker"
-        android:textColor="@color/colorAccent"
-        android:textSize="34sp" />
+        android:textColor="@android:color/white"
+        android:textSize="23sp" />
+
+    <TextView
+        android:id="@+id/tvController"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="186dp"
+        android:layout_toEndOf="@+id/controllerButton"
+        android:fontFamily="@font/roboto"
+        android:text="Controller"
+        android:textColor="@android:color/white"
+        android:textSize="23sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/tvController"
+        android:layout_below="@+id/tvController"
+        android:alpha=".7"
+        android:fontFamily="@font/roboto"
+        android:text="pick music"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvSpeaker"
+        android:layout_below="@+id/tvSpeaker"
+        android:layout_marginTop="-197dp"
+        android:alpha=".7"
+        android:fontFamily="@font/roboto"
+        android:text="play music"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="313dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:alpha=".7"
+        android:text="If you'd like to control the output and location  of your own track, be a controller. If not, be a speaker and hear music stream out of your device."
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

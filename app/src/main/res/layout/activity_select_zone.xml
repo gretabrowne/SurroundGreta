@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/selectZone"
     android:layout_height="match_parent"
     android:background="#000000"
+    android:id="@+id/selectZone"
     tools:context=".SelectZone">
 
     <TextView
@@ -20,15 +20,17 @@
 
     <Button
         android:id="@+id/nextBtn"
-        android:layout_width="48dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="14dp"
-        android:background="@android:color/transparent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_border"
         android:fontFamily="@font/roboto"
-        android:text="Next"
+        android:text="I'm Set"
         android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
@@ -38,9 +40,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="15dp"
-        android:fontFamily="@font/roboto_light"
-        android:text="Location Selection"
-        android:textAlignment="center"
+        android:fontFamily="@font/roboto"
+        android:text="  Locate Yourself"
+        android:textAlignment="textStart"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
@@ -51,12 +53,37 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvZoneChoice"
         app:back_circle_color="@android:color/transparent"
+        android:layout_centerInParent="true"
         app:indicator_color="@color/colorAccent"
         app:indicator_width="10"
         app:is_continuous="true"
         app:label_color="#000000"
         app:main_circle_color="@android:color/transparent"
         app:progress_primary_color="#BCA9E6" />
+
+    <TextView
+        android:id="@+id/tvBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:layout_below="@id/croller"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/roboto"
+        android:text="BACK"
+        android:textColor="@color/halfWhite"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvFrontCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvZoneChoice"
+        android:layout_marginTop="7dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/roboto"
+        android:text="FRONT"
+        android:textColor="@color/halfWhite"
+        android:textSize="18sp" />
 
 
 </RelativeLayout>

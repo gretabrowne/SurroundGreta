@@ -88,7 +88,6 @@ public class VolcationSpinner extends View {
         //Log.e("VOLUME", "Volume = " + getVolumeByDistance());
         Log.e("LOCATION", "Location = " + getLocationByAngle());
 
-
     }
 
     @Override

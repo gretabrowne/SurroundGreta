@@ -61,6 +61,8 @@ public class ParseApplication extends Application{
                 .clientBuilder(builder)
                 .server("http://" + ipAddress + ":1337/parse").build());
 
+
+
 //        //Init the Parse Server (Greta's server)
 //        Parse.initialize(new Parse.Configuration.Builder(this)
 //        .applicationId("bghsurround")

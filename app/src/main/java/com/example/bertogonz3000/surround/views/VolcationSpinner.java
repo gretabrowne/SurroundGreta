@@ -17,10 +17,10 @@ import com.example.bertogonz3000.surround.R;
 
 public class VolcationSpinner extends View {
 
-    private Paint paint, radiusPaint, volumeBarPaint;
+    private Paint paint, radiusPaint, volumeBarPaint, vinylPaint;
     private float x, y, touchDistance, mTranslateX, mTranslateY, widgetDistFront, widgetDistEnd, volumeBarRadius;
     private int radius, thumbRadius, volumeThumbRadius, thumbX,
-            thumbY, volThumbX, volThumbY, volumeThumbDist, volWidgetX, volWidgetY, maxVol;
+            thumbY, volThumbX, volThumbY, volumeThumbDist, volWidgetX, volWidgetY, maxVol, circleWidth = 30;
     private Drawable thumb, volumeThumb;
     private OnThumbChangeListener listener;
     private double angle, volWidgetXEnd, volWidgetYEnd;
@@ -75,7 +75,7 @@ public class VolcationSpinner extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        createCircle(canvas);
+        createCircles(canvas);
 
         createLine(canvas);
 
@@ -100,8 +100,8 @@ public class VolcationSpinner extends View {
         mTranslateX = (int) (width * 0.5f);
         mTranslateY = (int) (height * 0.5f);
         radius = circleDiameter / 2;
-        thumbRadius = radius/4;
-        volumeThumbRadius = thumbRadius/4;
+        volumeThumbRadius = radius/10;
+        thumbRadius = volumeThumbRadius/3;
         volumeThumbDist = radius/4;
         y = height / 2;
         x = width / 2;
@@ -112,8 +112,8 @@ public class VolcationSpinner extends View {
         volThumbY = (int) (volumeThumbDist * Math.sin(Math.toRadians(angle - Math.toDegrees(Math.PI / 2))));
         volWidgetX = thumbX/10;
         volWidgetY = thumbY/10;
-        volWidgetXEnd = thumbX/1.2;
-        volWidgetYEnd = thumbY/1.2;
+        volWidgetXEnd = thumbX/1.1;
+        volWidgetYEnd = thumbY/1.1;
         widgetDistFront = (float) Math.sqrt((volWidgetX*volWidgetX) + (volWidgetY*volWidgetY));
         widgetDistEnd = (float) Math.sqrt((volWidgetXEnd*volWidgetXEnd) + (volWidgetYEnd*volWidgetYEnd));
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -192,8 +192,8 @@ public class VolcationSpinner extends View {
 
         volWidgetX = thumbX/10;
         volWidgetY = thumbY/10;
-        volWidgetXEnd = thumbX/1.2;
-        volWidgetYEnd = thumbY/1.2;
+        volWidgetXEnd = thumbX/1.1;
+        volWidgetYEnd = thumbY/1.1;
 
         invalidate();
 
@@ -214,13 +214,13 @@ public class VolcationSpinner extends View {
     private void setUpPaints(){
         //Circle paint
         paint = new Paint();
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.WHITE);
 //            paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth((float) 10);
+        paint.setStrokeWidth(circleWidth);
 
         //Circle Radius paint
-        volumeBarRadius = 100;
+        volumeBarRadius = 50;
         radiusPaint = new Paint();
         radiusPaint.setColor(Color.WHITE);
         radiusPaint.setStrokeWidth(volumeBarRadius);
@@ -230,16 +230,25 @@ public class VolcationSpinner extends View {
         volumeBarPaint.setColor(Color.GRAY);
         volumeBarPaint.setStrokeWidth(volumeBarRadius/4);
 
+        //Vinyl Paint
+        vinylPaint = new Paint();
+        vinylPaint.setColor(Color.GRAY);
+        vinylPaint.setStyle(Paint.Style.STROKE);
+        vinylPaint.setStrokeWidth(circleWidth/10);
+
 
     }
 
-    private void createCircle(Canvas canvas){
+    private void createCircles(Canvas canvas){
         canvas.drawCircle(x, y, radius, paint);
         canvas.drawCircle(x, y, thumbRadius, paint);
+        for(float i = (float) radius/7; i < radius; i= i + radius/7){
+            canvas.drawCircle(x,y, radius - i, vinylPaint);
+        }
     }
 
     private void createThumb(Canvas canvas){
-        thumb = ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher_foreground);
+        thumb = ContextCompat.getDrawable(getContext(), R.drawable.thumb);
         thumb.setBounds((int) mTranslateX - thumbX - thumbRadius, (int) mTranslateY - thumbY - thumbRadius, (int) mTranslateX - thumbX + thumbRadius, (int) mTranslateY - thumbY + thumbRadius);
         thumb.draw(canvas);
     }
@@ -254,7 +263,7 @@ public class VolcationSpinner extends View {
     }
 
     private void createVolumeThumb(Canvas canvas){
-        volumeThumb = ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher_background);
+        volumeThumb = ContextCompat.getDrawable(getContext(), R.drawable.ic_volumethumb);
         volumeThumb.setBounds((int)(mTranslateX - volThumbX - volumeThumbRadius), (int)(mTranslateY - volThumbY - volumeThumbRadius), (int)(mTranslateX - volThumbX + volumeThumbRadius), (int)(mTranslateY - volThumbY + volumeThumbRadius));
         volumeThumb.draw(canvas);
     }

@@ -697,24 +697,24 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        Log.d("test", "ondtop");
-        super.onStop();
-        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
-            frontLeftMP.release();
-            frontRightMP.release();
-            backLeftMP.release();
-            backRightMP.release();
-            centerMP.release();
-
-            frontLeftMP = null;
-            frontRightMP = null;
-            backLeftMP = null;
-            backRightMP = null;
-            centerMP = null;
-        }
-
-    }
+//    @Override
+//    protected void onStop() {
+//        Log.d("test", "ondtop");
+//        super.onStop();
+//        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
+//            frontLeftMP.release();
+//            frontRightMP.release();
+//            backLeftMP.release();
+//            backRightMP.release();
+//            centerMP.release();
+//
+//            frontLeftMP = null;
+//            frontRightMP = null;
+//            backLeftMP = null;
+//            backRightMP = null;
+//            centerMP = null;
+//        }
+//
+//    }
 
 }

@@ -1,10 +1,12 @@
 package com.example.bertogonz3000.surround;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,7 +52,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     Session existingSession = null;
     boolean joining = false;
     int savedTime = -1;
-    Handler stoppedHandler = new Handler();
+    Handler recreateHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +90,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         position = getIntent().getFloatExtra("position", 0);
         if(getIntent().hasExtra("session")) {
             existingSession = Parcels.unwrap(getIntent().getParcelableExtra("session"));
-            joining = true;
+
+            if(existingSession.isConnected()) {
+                joining = true;
+            }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Media Mode");
+
+        recreateHandler = new Handler(Looper.getMainLooper());
 
         //        // Make sure the Parse server is setup to configured for live queries
 //        // URL for server is determined by Parse.initialize() call.
@@ -246,7 +253,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 Log.d("SpeakerPlayingActivity", "created session subscription");
             }
         });
-
+        //do need to keep both update and delete
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
@@ -254,17 +261,21 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     pauseAll();
                     releaseAll();
                     nullAll();
-                    joining = false;
                 }
             }
         });
+
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
                 pauseAll();
                 releaseAll();
                 nullAll();
-                joining = false;
+
+                if(joining) {
+                    joining = false;
+                    recreateHandler.post(recreateRunnable);
+                }
             }
         });
 
@@ -483,6 +494,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        Log.d("test", "recreated");
+        super.onRestart();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -537,6 +554,17 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         }
     }
 
+    //runnable to restart the activity
+    private Runnable recreateRunnable = new Runnable() {
+        @Override
+        public void run() {
+//            recreate();
+            Intent restartIntent = new Intent(SpeakerPlayingActivity.this, SelectZone.class);
+            restartIntent.putExtra("source", "SpeakerPlaying");
+            startActivity(restartIntent);
+            finish();
+        }
+    };
 
     //Background Runnable thread
     private Runnable reconnectViews = new Runnable() {
@@ -567,21 +595,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         if(isPlaying)
             playAll();
     }
-//    //Create mediaplayers based on given songIds
-//    private void prepMediaPlayers(Song object){
-//
-//        centerID = object.getAudioIds().get(0);
-//        frontLeftID = object.getAudioIds().get(1);
-//        frontRightID = object.getAudioIds().get(2);
-//        backLeftID = object.getAudioIds().get(3);
-//        backRightID = object.getAudioIds().get(4);
-//
-//        centerMP = MediaPlayer.create(SpeakerPlayingActivity.this, centerID);
-//        frontLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontLeftID);
-//        frontRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontRightID);
-//        backLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, backLeftID);
-//        backRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, backRightID);
-//    }
 
     //pause All 5 mediaplayers
     synchronized private void pauseAll(){
@@ -666,7 +679,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d("test", "ondestroy");
         super.onDestroy();
+
         if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
             frontLeftMP.release();
             frontRightMP.release();
@@ -684,6 +699,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        Log.d("test", "ondtop");
         super.onStop();
         if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
             frontLeftMP.release();
@@ -700,4 +716,5 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         }
 
     }
+
 }

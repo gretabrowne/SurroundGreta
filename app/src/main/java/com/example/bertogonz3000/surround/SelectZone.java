@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.example.bertogonz3000.surround.ParseModels.Session;
 import com.parse.FindCallback;
@@ -24,6 +25,7 @@ import java.util.List;
 public class SelectZone extends AppCompatActivity {
     float position;
     Button setLocation;
+    RelativeLayout relativeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,7 @@ public class SelectZone extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Select Location");
         setLocation = findViewById(R.id.nextBtn);
+        relativeLayout = findViewById(R.id.selectZone);
 
 
         Croller croller = (Croller) findViewById(R.id.croller);
@@ -103,6 +106,12 @@ public class SelectZone extends AppCompatActivity {
                 });
             }
         });
+
+        if(getIntent().hasExtra("source")) {
+            Intent intent = new Intent(SelectZone.this, SpeakerPlayingActivity.class);
+            startActivity(intent);
+        }
+
     }
 
 
@@ -117,4 +126,5 @@ public class SelectZone extends AppCompatActivity {
 
         }
     }
+
 }

@@ -19,7 +19,7 @@
     <string-array name="appIdslist">
         <item>SurroundSound47</item>
         <item>bghsurround</item>
-        <item>HannahsAppId</item>
+        <item>SurroundId</item>
     </string-array>
 
     <!-- Example settings for Data & Sync -->

@@ -1,10 +1,8 @@
 package com.example.bertogonz3000.surround;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.example.bertogonz3000.surround.ParseModels.AudioIDs;
 import com.example.bertogonz3000.surround.ParseModels.PlayPause;
@@ -73,8 +71,8 @@ public class ParseApplication extends Application{
     private void getPrefs(){
         SharedPreferences serverPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        ipAddress = serverPrefs.getString("ipaddress", "172.21.70.129");
-        appID = serverPrefs.getString("appid", "SurroundSound47");
+        ipAddress = serverPrefs.getString("ipaddress", "172.21.79.146");
+        appID = serverPrefs.getString("appid", "SurroundId");
         //Toast.makeText(this, "appID = " + appID, Toast.LENGTH_SHORT).show();
     }
 }

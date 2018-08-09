@@ -501,6 +501,11 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         mp.pause();
+        //reached end of the song, so next time it should default back to the beginning
+        editor.putString("trackName", session.getTrackName());
+        editor.putInt("currentPosition", 0);
+        editor.apply();
+
 //        mp.release();
 //        mp = null;
 //        session.setConnected(false);

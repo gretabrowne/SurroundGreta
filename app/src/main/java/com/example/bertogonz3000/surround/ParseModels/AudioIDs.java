@@ -13,7 +13,9 @@ public class AudioIDs extends ParseObject{
 
     public List<Integer> getIDs(){return getList("IDs");}
 
+    public int getControllerNumber () {return getInt("controllerNumber");}
 
     //Setters
     public void setIDs(List<Integer> list){put("IDs", list);}
+    public void setControllerNumber (int controllerNumber) {put("controllerNumber", controllerNumber);}
 }

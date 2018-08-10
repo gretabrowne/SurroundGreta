@@ -13,8 +13,12 @@ public class Throwing extends ParseObject{
 
     public float getLocation(){return (float) getDouble("location");}
 
+    public int getControllerNumber () {return getInt("controllerNumber");}
+
     //Setters
     public void setThrowing(boolean throwing){put("throwing", throwing);}
 
     public void setLocation(float location){put("location", location);}
+
+    public void setControllerNumber (int controllerNumber) {put("controllerNumber", controllerNumber);}
 }

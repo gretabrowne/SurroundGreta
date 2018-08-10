@@ -11,7 +11,8 @@ public class PlayPause extends ParseObject {
 
     public boolean getPlaying(){return getBoolean("playing");}
 
-
+    public int getControllerNumber () {return getInt("controllerNumber");}
     //Setters
     public void setPlaying(boolean playing){put("playing", playing);}
+    public void setControllerNumber (int controllerNumber) {put("controllerNumber", controllerNumber);}
 }

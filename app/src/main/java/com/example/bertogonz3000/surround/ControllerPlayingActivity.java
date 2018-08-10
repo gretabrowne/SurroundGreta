@@ -273,7 +273,7 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         //if the app crashed before, so now you want to resume the song as the controller at the position you last left off on
         if(trackName.equals(preferences.getString("trackName", null))) {
 
-            int pos = preferences.getInt("currentPosition", 1000);
+            int pos = preferences.getInt("currentPosition", 0);
             mp.seekTo(pos);
 
             // update timer progress

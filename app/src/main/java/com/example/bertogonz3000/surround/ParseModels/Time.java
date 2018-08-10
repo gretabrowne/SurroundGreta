@@ -11,7 +11,10 @@ public class Time extends ParseObject{
 
     public int getTime(){return getInt("Time");}
 
+    public int getControllerNumber () {return getInt("controllerNumber");}
 
     //Setters
     public void setTime(int time){put("Time", time);}
+
+    public void setControllerNumber (int controllerNumber) {put("controllerNumber", controllerNumber);}
 }

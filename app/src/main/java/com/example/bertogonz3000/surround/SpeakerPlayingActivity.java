@@ -1,11 +1,12 @@
 package com.example.bertogonz3000.surround;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
+import android.os.Looper;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,8 +36,9 @@ import java.util.List;
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
-    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, controllerNumber, numControllers, phoneVol;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, controllerNumber, numControllers, phoneVol;;
     boolean isPlaying0, isPlaying1, throwing, loaded, reconnected, prepared0, prepared1, joining;
+    MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position, phoneVolPercentage;
     AudioManager audioManager;
     double movingNode = 0.5;
@@ -45,17 +47,22 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     RelativeLayout lostConnection;
     RelativeLayout loaderContainer;
     RelativeLayout defaultContainer;
+    boolean userInitiatedDisconnect = false;
     Session existingSession = null;
+    int savedTime = -1;
     List<AudioIDs> allAudioTracks;
     List<MediaPlayer> allMPs;
+    Handler recreateHandler = new Handler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
+
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)/2, 0);
 
         background = findViewById(R.id.background);
@@ -73,6 +80,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         prepared1 = false;
         background.setAlpha(0);
         numControllers = 0;
+        background.setAlpha(0);
 
         loaderContainer = findViewById(R.id.loaderContainer);
         loaderContainer.setVisibility(View.VISIBLE);
@@ -87,20 +95,24 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             }
         }, 3000); // 3000 milliseconds delay
 
-
         //position selected for this phone.
+        //TODO - switch from int to float from intent
         position = getIntent().getFloatExtra("position", 0);
         if(getIntent().hasExtra("session")) {
             existingSession = Parcels.unwrap(getIntent().getParcelableExtra("session"));
-            if (existingSession.isConnected()) {
+
+            if(existingSession.isConnected()) {
+                Log.d("SpeakerPlayingActivity", "existing session connected");
                 joining = true;
             }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Media Mode");
 
+        recreateHandler = new Handler(Looper.getMainLooper());
 
-
+        //        // Make sure the Parse server is setup to configured for live queries
+//        // URL for server is determined by Parse.initialize() call.
         parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
         //this should respond to errors when speaker is disconnected from the server
         parseLiveQueryClient.registerListener(new ParseLiveQueryClientCallbacks() {
@@ -108,16 +120,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
                 Log.d("speakerplaying", "onlivequery connected");
                 if(loaded) {
-                    defaultContainer.setVisibility(View.VISIBLE);
-                    lostConnection.setVisibility(View.INVISIBLE);
+                    runOnUiThread(reconnectViews);
                     if(reconnected) {
                         if(allMPs != null) {
-                            playMPs(0);
-                            if (controllerNumber > 1) {
+                            if (isPlaying0) {
+                                playMPs(0);
+                            }
+                            if (controllerNumber > 1 && isPlaying1) {
                                 playMPs(1);
                             }
                             reconnected = false;
                         }
+                        userInitiatedDisconnect = false;
                     }
                 }
             }
@@ -126,6 +140,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onLiveQueryClientDisconnected(ParseLiveQueryClient client, boolean userInitiated) {
                 disconnect();
                 Log.d("speakerplaying", "onlivequerydisconnected");
+//                if(!userInitiatedDisconnect) {
+//                    client.reconnect();
+//                    reconnected = true;
+//                    userInitiatedDisconnect = false;
+//                    runOnUiThread(reconnectViews);
+//                    if(centerMP != null && isPlaying) {
+//                        playAll();
+//                    }
+//                }
             }
 
             @Override
@@ -136,29 +159,43 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
             @Override
             public void onSocketError(ParseLiveQueryClient client, Throwable reason) {
+                //this happens when there is lost connection from the
 //                disconnect();
                 Log.d("speakerplaying", "onsocketerror");
-                parseLiveQueryClient.reconnect();
-                parseLiveQueryClient.connectIfNeeded();
+
+                if(!userInitiatedDisconnect) {
+                    client.reconnect();
+                    reconnected = true;
+                    runOnUiThread(reconnectViews);
+                    if(allMPs != null) {
+                        if (isPlaying0) {
+                            playMPs(0);
+                        }
+                        if (controllerNumber > 1 && isPlaying1) {
+                            playMPs(1);
+                        }
+                        reconnected = false;
+                    }
+                }
             }
         });
-
+//          old server
+//        ParseQuery<Song> query = ParseQuery.getQuery(Song.class);
         //new server
         ParseQuery<Session> session = ParseQuery.getQuery(Session.class);
-        // what happens if there are multiple sets of audio ids within the same session (multiple controllers)?
         final ParseQuery<AudioIDs> audioIDs = ParseQuery.getQuery(AudioIDs.class);
-        ParseQuery<PlayPause> playPause = ParseQuery.getQuery(PlayPause.class);
         ParseQuery<Throwing> throwingParseQuery = ParseQuery.getQuery(Throwing.class);
         ParseQuery<Volume> volume = ParseQuery.getQuery(Volume.class);
         ParseQuery<Time> timeQuery = ParseQuery.getQuery(Time.class);
+        ParseQuery<PlayPause> playPause = ParseQuery.getQuery(PlayPause.class);
 
         if(joining) { //if the speaker is joining an existing session
             session.whereEqualTo("objectId", existingSession.getObjectId());
-            playPause.whereEqualTo("objectId", existingSession.getPlayPause().getPlayPauseID());
+            audioIDs.whereEqualTo("objectId", existingSession.getAudioIDs().getAudioID());
+            throwingParseQuery.whereEqualTo("objectId", existingSession.getThrowingObject().getThrowingID());
             volume.whereEqualTo("objectId", existingSession.getVolume().getVolumeID());
             timeQuery.whereEqualTo("objectId", existingSession.getTimeObject().getTimeID());
-            throwingParseQuery.whereEqualTo("objectId", existingSession.getThrowingObject().getThrowingID());
-            audioIDs.whereEqualTo("objectId", existingSession.getAudioIDs().getAudioID());
+            playPause.whereEqualTo("objectId", existingSession.getPlayPause().getPlayPauseID());
 
             //initialize everything so the speaker can catch up with the others
             audioIDs.getFirstInBackground(new GetCallback<AudioIDs>() {
@@ -215,22 +252,31 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 //                            }
 //                        }
                     }
-                    // change times
-                    // if (object.getControllerNumber() == 0) {
-                    // if first controller starting session
-                    changeTime(object.getTime(), 0);
-                    // }
-                    // playAll();
-//                    else {
-//                        changeTime(object.getTime(), 1);
-//                    }
+
+                    if (object.getControllerNumber() == 0) {
+                        // if first controller starting session
+                        if (allMPs.get(0).getCurrentPosition() > object.getTime() + 200) {
+                            Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
+                            changeTime(object.getTime(), 0);
+                        } else if (allMPs.get(0).getCurrentPosition() < object.getTime() - 200) {
+                            changeTime(object.getTime() + 100, 0);
+                        }
+                    } else {
+                        // if first controller starting session
+                        if (allMPs.get(1).getCurrentPosition() > object.getTime() + 200) {
+                            Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
+                            changeTime(object.getTime(), 1);
+                        } else if (allMPs.get(5).getCurrentPosition() < object.getTime() - 200) {
+                            changeTime(object.getTime() + 100, 1);
+                        }
+
+                    }
                 }
             });
 
             volume.getFirstInBackground(new GetCallback<Volume>() {
                 @Override
                 public void done(Volume object, ParseException e) {
-                    Log.d("SpeakerPlayingActivity", String.format("phone volume: " + object.getVolume()));
                     phoneVolPercentage = object.getVolume();
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)*phoneVolPercentage), 0);
                 }
@@ -243,7 +289,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<AudioIDs> query, AudioIDs object) {
                 Log.d("SpeakerPlayingActivity", "created audioIDs subscription");
-                // prep these five media players
                 numControllers++;
                 allAudioTracks.add(object);
                 prepMediaPlayers(object, numControllers - 1);
@@ -251,12 +296,43 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         });
 
         //subscription handling for session
-        SubscriptionHandling<Session> sessionSubscriptionHandling = parseLiveQueryClient.subscribe(session);
+        final SubscriptionHandling<Session> sessionSubscriptionHandling = parseLiveQueryClient.subscribe(session);
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
                 Log.d("SpeakerPlayingActivity", "created session subscription");
+            }
+        });
+        //do need to keep both update and delete
+        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Session>() {
+            @Override
+            public void onEvent(ParseQuery<Session> query, Session object) {
+                if(object.isConnected() == false) {
+                    pauseMPs(0);
+                    if (numControllers > 1) {
+                        pauseMPs(1);
+                    }
+                    releaseAll();
+                    nullAll();
+                    joining = false;
+                }
+            }
+        });
 
+        sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
+            @Override
+            public void onEvent(ParseQuery<Session> query, Session object) {
+                pauseMPs(0);
+                if (numControllers > 1) {
+                    pauseMPs(1);
+                }
+                releaseAll();
+                nullAll();
+
+                if(joining) {
+                    joining = false;
+                    recreateHandler.post(recreateRunnable);
+                }
             }
         });
 
@@ -286,26 +362,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         playMPs(1);
                     }
                 }
-//                if (!isPlaying){
-//                    // pause media players that match this object's controller creator
-//                    if (object.getControllerNumber() == 0) {
-//                        // if first controller starting session
-//
-//                    }
-//                    else {
-//
-//                    }
-//                } else {
-//                    // pause media players that match this object's controller creator
-//                    if (object.getControllerNumber() == 0) {
-//                        // if first controller starting session
-//                        Log.d("SpeakerPlayingActivity", "first controller just told phones to play for the first time");
-//                        playMPs(0);
-//                    }
-//                    else {
-//                        Log.d("SpeakerPlayingActivity", "second controller just told phones to play for the first time");
-//                        playMPs(1);
-//                    }
             }
         });
         playPauseSubscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<PlayPause>() {
@@ -335,36 +391,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         }
                     }
                 }
-//                if (isPlaying != object.getPlaying()) {
-//                    isPlaying = object.getPlaying();
-//                    if (isPlaying) {
-//                        Log.d("SpeakerPlayingActivity", "controller updated server to tell phones to play");
-//                    } else {
-//                        Log.d("SpeakerPlayingActivity", "controller updated server to tell phones to pause");
-//                    }
-//                    if (!isPlaying){
-//                        // pause media players that match this object's controller creator
-//                        if (object.getControllerNumber() == 0) {
-//                            // if first controller starting session
-//                            pauseMPs(0);
-//                        }
-//                        else {
-//                            pauseMPs(1);
-//                        }
-//                    } else {
-//                        // pause media players that match this object's controller creator
-//                        Log.d("SpeakerPlayingActivity", "playing media players within UPDATE of playpause");
-//                        if (object.getControllerNumber() == 0) {
-//                            // if first controller starting session
-//                            Log.d("SpeakerPlayingActivity", "first controller just told phones to play in UPDATE");
-//                            playMPs(0);
-//                        }
-//                        else {
-//                            Log.d("SpeakerPlayingActivity", "second controller just told phones to play in UPDATE");
-//                            playMPs(1);
-//                        }
-//                    }
-//                }
             }
         } );
 
@@ -430,6 +456,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Time> query, Time object) {
                 Log.d("SpeakerPlayingActivity", "created time subscription");
+
                 if (object.getControllerNumber() == 0) {
                     if (!prepared0 && !allMPs.isEmpty()) {
                         prepMediaPlayers(allAudioTracks.get(0), 0);
@@ -439,27 +466,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         prepMediaPlayers(allAudioTracks.get(1), 1);
                     }
                 }
-//                if (!prepared){
-//                    // prepare media players for specified controller
-//                    if (object.getControllerNumber() == 0) {
-//                        if (!allMPs.isEmpty()) {
-//                            prepMediaPlayers(allAudioTracks.get(0), 0);
-//                        }
-//                    }
-//                    else {
-//                        if (!allMPs.isEmpty()) {
-//                            prepMediaPlayers(allAudioTracks.get(1), 1);
-//                        }
-//                    }
-//                }
-                // change times
                 if (object.getControllerNumber() == 0) {
                     // if first controller starting session
                     changeTime(object.getTime(), 0);
                 }
                 else {
                     changeTime(object.getTime(), 1);
-                }
+                }  //if speaker initially joins late then have it match up with the others and the controller
             }
         });
 
@@ -468,7 +481,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Time> query, Time object) {
                 //if the time of the speaker is too different from the time of the controller
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
-                Log.d("SpeakerPlayingActivity", "got query to change time");
                 if (object.getControllerNumber() == 0) {
                     if (!prepared0 && !allMPs.isEmpty()) {
                         prepMediaPlayers(allAudioTracks.get(0), 0);
@@ -478,19 +490,38 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                         prepMediaPlayers(allAudioTracks.get(1), 1);
                     }
                 }
-                // change times
+
+                //if the controller app crashed
+                //the playback time is the same, then pause all the speaker media players
+//                if (object.getControllerNumber() == 0 && isPlaying0 && savedTime == object.getTime()) {
+//                    pauseMPs(0);
+//                    return;
+//                }
+//                else if (object.getControllerNumber() == 1 && isPlaying0 && savedTime == object.getTime()) {
+//                    pauseMPs(1);
+//                    return;
+//                }
+
+
                 if (object.getControllerNumber() == 0) {
                     // if first controller starting session
-                    if ((allMPs.get(0).getCurrentPosition() > object.getTime() + 300) || allMPs.get(0).getCurrentPosition() < object.getTime() - 300) {
+                    if (!allMPs.isEmpty() && allMPs.get(0).getCurrentPosition() > object.getTime() + 200) {
                         Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
                         changeTime(object.getTime(), 0);
+                    } else if (!allMPs.isEmpty() && allMPs.get(0).getCurrentPosition() < object.getTime() - 200) {
+                        changeTime(object.getTime() + 100, 0);
                     }
-                }
-                else {
-                    if ((allMPs.get(5).getCurrentPosition() > object.getTime() + 300) || allMPs.get(5).getCurrentPosition() < object.getTime() - 300) {
+                } else {
+                    // if first controller starting session
+                    if (allMPs.get(1).getCurrentPosition() > object.getTime() + 200) {
+                        Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
                         changeTime(object.getTime(), 1);
+                    } else if (allMPs.get(5).getCurrentPosition() < object.getTime() - 200) {
+                        changeTime(object.getTime() + 100, 1);
                     }
+
                 }
+                savedTime = object.getTime();
             }
         });
 
@@ -600,6 +631,12 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        Log.d("test", "recreated");
+        super.onRestart();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -615,14 +652,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         return true;
     }
 
-    //TODO - later make sure the speaker is connected to the master device and server
-    //TODO - Why do we have 2 disconnect methods? (idk but they do the exact same thing so we should delete one)
     public void disconnect() {
         Log.d("speakerplaying", "disconnectfunction");
 //        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
 //            pauseAll();
-//            releaseAll();
-//            nullAll();
 //        }
 
         //Run code on the UI thread
@@ -643,6 +676,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         pauseMPs(0);
         pauseMPs(1);
         reconnected = false;
+        userInitiatedDisconnect = true;
     }
 
     public void reconnect(View view) {
@@ -652,9 +686,35 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         defaultContainer.setVisibility(View.VISIBLE);
         lostConnection.setVisibility(View.INVISIBLE);
         reconnected = true;
-        playMPs(0);
-        playMPs(1);
+
+        if(isPlaying0) {
+            playMPs(0);
+        } else if (isPlaying1) {
+            playMPs(1);
+        }
     }
+
+    //runnable to restart the activity
+    private Runnable recreateRunnable = new Runnable() {
+        @Override
+        public void run() {
+//            recreate();
+            Intent restartIntent = new Intent(SpeakerPlayingActivity.this, SelectZone.class);
+            restartIntent.putExtra("source", "SpeakerPlaying");
+            startActivity(restartIntent);
+            finish();
+        }
+    };
+
+    //Background Runnable thread
+    private Runnable reconnectViews = new Runnable() {
+        public void run() {
+            defaultContainer.setVisibility(View.VISIBLE);
+            lostConnection.setVisibility(View.INVISIBLE);
+        }
+    };
+
+    //TODO- should these be synchronized?
     //Create mediaplayers based on given songIds
     private void prepMediaPlayers(AudioIDs audioIDs, int controller){
 
@@ -681,8 +741,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         setToMaxVol(backRightMP, 2);
         setToMaxVol(backLeftMP, 3);
         setToMaxVol(frontLeftMP, 4);
-
-        // todo-- deal with this (maybe fixed?)
         if(isPlaying0 && controller == 0) {
             Log.d("SpeakerPlayingActivity", "isPlaying for controller 1, so playing media players within prep");
             prepared0 = true;
@@ -777,7 +835,13 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         }
     }
 
+
+
     private float getMaxVol(double node){
+//        float denom = (float) (Math.sqrt(2*Math.PI));
+//        Log.e("MATH", "denom = " + denom);
+//        float left =(float) 2.5066/denom;
+//        Log.e("MATH", "left = " + left);
         float expTop = (float) -(Math.pow((position - node), 2));
         //TODO - CHANGED 12:49 7/26
         double exponent = expTop/0.02;
@@ -787,7 +851,6 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         return maxVol;
     }
 
-    //TODO - Might have to differentiate between nodes, not letting center extend???
     private void setToMaxVol(MediaPlayer mp, int num){
         double node = 0.5;
         if ( num == 0){
@@ -813,4 +876,25 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             nullAll();
         }
     }
+
+//    @Override
+//    protected void onStop() {
+//        Log.d("test", "ondtop");
+//        super.onStop();
+//        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
+//            frontLeftMP.release();
+//            frontRightMP.release();
+//            backLeftMP.release();
+//            backRightMP.release();
+//            centerMP.release();
+//
+//            frontLeftMP = null;
+//            frontRightMP = null;
+//            backLeftMP = null;
+//            backRightMP = null;
+//            centerMP = null;
+//        }
+//
+//    }
+
 }

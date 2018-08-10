@@ -203,10 +203,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             @Override
             public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
                 Log.d("ControllerPlayingActivity", "connected");
-                disconnectBtn.setText("DISCONNECT");
                 ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        disconnectBtn.setText("DISCONNECT");
                         ivConnect.setVisibility(View.VISIBLE);
                         ivDisconnect.setVisibility(View.INVISIBLE);
                     }
@@ -217,10 +217,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             public void onLiveQueryClientDisconnected(ParseLiveQueryClient client, boolean userInitiated) {
                 // disconnect();
                 Log.d("ControllerPlayingActivity", "disconnected");
-                disconnectBtn.setText("CONNECT");
                 ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        disconnectBtn.setText("CONNECT");
                         ivDisconnect.setVisibility(View.VISIBLE);
                         ivConnect.setVisibility(View.INVISIBLE);
                     }
@@ -242,10 +242,10 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
             @Override
             public void onSocketError(ParseLiveQueryClient client, Throwable reason) {
                 Log.d("ControllerPlayingActivity", "onsocketerror");
-                disconnectBtn.setText("CONNECT");
                 ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        disconnectBtn.setText("CONNECT");
                         ivDisconnect.setVisibility(View.VISIBLE);
                         ivConnect.setVisibility(View.INVISIBLE);
                     }

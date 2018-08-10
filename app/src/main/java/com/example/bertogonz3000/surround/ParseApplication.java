@@ -52,7 +52,7 @@ public class ParseApplication extends Application{
 //                .clientBuilder(builder)
 //                .server("http://172.21.79.146:1337/parse").build());
 
-      //  Init the Parse Server (Berto's server)
+      //  Init the Parse Server
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(appID)
                 .clientKey(null)
@@ -66,14 +66,14 @@ public class ParseApplication extends Application{
 //        .applicationId("bghsurround")
 //        .clientKey(null)
 //        .clientBuilder(builder)
-//        .server("http://172.21.74.193:1337/parse").build());
+//        .server("http://172.21.66.14:1337/parse").build());
 
     }
 
     private void getPrefs(){
         SharedPreferences serverPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        ipAddress = serverPrefs.getString("ipaddress", "172.21.79.146");
+        ipAddress = serverPrefs.getString("ipaddress", "172.21.66.14");
         appID = serverPrefs.getString("appid", "SurroundId");
         //Toast.makeText(this, "appID = " + appID, Toast.LENGTH_SHORT).show();
     }

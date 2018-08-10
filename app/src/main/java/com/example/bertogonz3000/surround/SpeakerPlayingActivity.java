@@ -30,11 +30,14 @@ import com.parse.SubscriptionHandling;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class SpeakerPlayingActivity extends AppCompatActivity {
 
-    int centerID, frontRightID, frontLeftID, backRightID, backLeftID;
-    boolean isPlaying, throwing;
+    int centerID, frontRightID, frontLeftID, backRightID, backLeftID, controllerNumber, numControllers, phoneVol;;
+    boolean isPlaying0, isPlaying1, throwing, loaded, reconnected, prepared0, prepared1, joining;
     MediaPlayer centerMP, frontRightMP, frontLeftMP, backRightMP, backLeftMP;
     float position, phoneVolPercentage;
     AudioManager audioManager;
@@ -44,18 +47,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     RelativeLayout lostConnection;
     RelativeLayout loaderContainer;
     RelativeLayout defaultContainer;
-    boolean loaded = false;
-    boolean reconnected = false;
     boolean userInitiatedDisconnect = false;
-    AudioIDs audioIDholder = null;
-    boolean prepared = false;
     Session existingSession = null;
-    boolean joining = false;
     int savedTime = -1;
+    List<AudioIDs> allAudioTracks;
+    List<MediaPlayer> allMPs;
     Handler recreateHandler = new Handler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_playing);
 
@@ -68,8 +68,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         background = findViewById(R.id.background);
         lostConnection = findViewById(R.id.lostConnectionContainer);
         defaultContainer = findViewById(R.id.defaultContainer);
-
+        allAudioTracks = new ArrayList<AudioIDs>();
+        allMPs = new ArrayList<MediaPlayer>();
         throwing = false;
+        loaded = false;
+        joining = false;
+        isPlaying0 = false;
+        isPlaying1 = false;
+        reconnected = false;
+        prepared0 = false;
+        prepared1 = false;
+        background.setAlpha(0);
+        numControllers = 0;
         background.setAlpha(0);
 
         loaderContainer = findViewById(R.id.loaderContainer);
@@ -92,6 +102,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             existingSession = Parcels.unwrap(getIntent().getParcelableExtra("session"));
 
             if(existingSession.isConnected()) {
+                Log.d("SpeakerPlayingActivity", "existing session connected");
                 joining = true;
             }
         }
@@ -111,10 +122,15 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                 if(loaded) {
                     runOnUiThread(reconnectViews);
                     if(reconnected) {
-                            if(centerMP != null && isPlaying) {
-                                playAll();
-                                reconnected = false;
+                        if(allMPs != null) {
+                            if (isPlaying0) {
+                                playMPs(0);
                             }
+                            if (controllerNumber > 1 && isPlaying1) {
+                                playMPs(1);
+                            }
+                            reconnected = false;
+                        }
                         userInitiatedDisconnect = false;
                     }
                 }
@@ -151,8 +167,14 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     client.reconnect();
                     reconnected = true;
                     runOnUiThread(reconnectViews);
-                    if(centerMP != null && isPlaying) {
-                        playAll();
+                    if(allMPs != null) {
+                        if (isPlaying0) {
+                            playMPs(0);
+                        }
+                        if (controllerNumber > 1 && isPlaying1) {
+                            playMPs(1);
+                        }
+                        reconnected = false;
                     }
                 }
             }
@@ -179,24 +201,37 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             audioIDs.getFirstInBackground(new GetCallback<AudioIDs>() {
                 @Override
                 public void done(AudioIDs object, ParseException e) {
-                    audioIDholder = object;
-                    prepMediaPlayers(object);
-                    setToMaxVol(centerMP);
-                    setToMaxVol(frontRightMP);
-                    setToMaxVol(backRightMP);
-                    setToMaxVol(backLeftMP);
-                    setToMaxVol(frontLeftMP);
+                    numControllers++;
+                    allAudioTracks.add(object);
+                    prepMediaPlayers(object, numControllers - 1);
                 }
             });
             playPause.getFirstInBackground(new GetCallback<PlayPause>() {
                 @Override
                 public void done(PlayPause object, ParseException e) {
-                    isPlaying = object.getPlaying();
-                    if(prepared) {
-                        if(isPlaying) {
-                            playAll();
+                    isPlaying0 = object.getPlaying();
+                    if(prepared0) {
+                        if (!isPlaying0){
+                            // pause media players that match this object's controller creator
+                            // todo-- uncomment when support for joining a session with multiple controllers is added
+                            // if (object.getControllerNumber() == 0) {
+                            // if first controller starting session
+                            pauseMPs(0);
+//                            }
+//                            // playAll();
+//                            else {
+//                                pauseMPs(1);
+//                            }
                         } else {
-                            pauseAll();
+                            // pause media players that match this object's controller creator
+                            // if (object.getControllerNumber() == 0) {
+                            // if first controller starting session
+                            playMPs(0);
+//                            }
+//                            // playAll();
+//                            else {
+//                                playMPs(1);
+//                            }
                         }
                     }
                 }
@@ -204,18 +239,37 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             timeQuery.getFirstInBackground(new GetCallback<Time>() {
                 @Override
                 public void done(Time object, ParseException e) {
-                    if(!prepared && audioIDholder != null)
-                        prepMediaPlayers(audioIDholder);
-                    if(isPlaying) {
-                        playAll();
-                    } else {
-                        pauseAll();
+                    if (!prepared0){
+                        // prepare media players for specified controller
+                        // if (object.getControllerNumber() == 0) {
+                        if (!allMPs.isEmpty()) {
+                            prepMediaPlayers(allAudioTracks.get(0), 0);
+                        }
+                        // }
+//                        else {
+//                            if (!allMPs.isEmpty()) {
+//                                prepMediaPlayers(allAudioTracks.get(1), 1);
+//                            }
+//                        }
                     }
 
-                    if( (centerMP.getCurrentPosition() > object.getTime() + 200)) {
-                        changeTime(object.getTime());
-                    } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
-                        changeTime(object.getTime() + 100);
+                    if (object.getControllerNumber() == 0) {
+                        // if first controller starting session
+                        if (allMPs.get(0).getCurrentPosition() > object.getTime() + 200) {
+                            Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
+                            changeTime(object.getTime(), 0);
+                        } else if (allMPs.get(0).getCurrentPosition() < object.getTime() - 200) {
+                            changeTime(object.getTime() + 100, 0);
+                        }
+                    } else {
+                            // if first controller starting session
+                            if (allMPs.get(1).getCurrentPosition() > object.getTime() + 200) {
+                                Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
+                                changeTime(object.getTime(), 1);
+                            } else if (allMPs.get(5).getCurrentPosition() < object.getTime() - 200) {
+                                changeTime(object.getTime() + 100, 1);
+                            }
+
                     }
                 }
             });
@@ -235,13 +289,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<AudioIDs> query, AudioIDs object) {
                 Log.d("SpeakerPlayingActivity", "created audioIDs subscription");
-                audioIDholder = object;
-                prepMediaPlayers(object);
-                setToMaxVol(centerMP);
-                setToMaxVol(frontRightMP);
-                setToMaxVol(backRightMP);
-                setToMaxVol(backLeftMP);
-                setToMaxVol(frontLeftMP);
+                numControllers++;
+                allAudioTracks.add(object);
+                prepMediaPlayers(object, numControllers - 1);
             }
         });
 
@@ -258,7 +308,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
                 if(object.isConnected() == false) {
-                    pauseAll();
+                    pauseMPs(0);
+                if (numControllers > 1) {
+                    pauseMPs(1);
+                }
                     releaseAll();
                     nullAll();
                 }
@@ -268,7 +321,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         sessionSubscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Session>() {
             @Override
             public void onEvent(ParseQuery<Session> query, Session object) {
-                pauseAll();
+                pauseMPs(0);
+                if (numControllers > 1) {
+                    pauseMPs(1);
+                }
                 releaseAll();
                 nullAll();
 
@@ -286,11 +342,24 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(ParseQuery<PlayPause> query, PlayPause object) {
                         Log.d("SpeakerPlayingActivity", "created play pause subscription");
-                        isPlaying = object.getPlaying();
-                        if (isPlaying){
-                            playAll();
+                        if (object.getControllerNumber() == 0) {
+                            isPlaying0 = object.getPlaying();
+                            if (!isPlaying0) {
+                                Log.d("SpeakerPlayingActivity", "first controller just told phones to pause for the first time");
+                                pauseMPs(0);
+                            } else {
+                                Log.d("SpeakerPlayingActivity", "first controller just told phones to play for the first time");
+                                playMPs(0);
+                            }
                         } else {
-                            pauseAll();
+                            isPlaying1 = object.getPlaying();
+                            if (!isPlaying1) {
+                                Log.d("SpeakerPlayingActivity", "second controller just told phones to pause for the first time");
+                                pauseMPs(1);
+                            } else {
+                                Log.d("SpeakerPlayingActivity", "second controller just told phones to play for the first time");
+                                playMPs(1);
+                            }
                         }
                     }
                 });
@@ -298,18 +367,27 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(ParseQuery<PlayPause> query, PlayPause object) {
-                if (isPlaying != object.getPlaying()) {
-                    isPlaying = object.getPlaying();
-                    if (!isPlaying){
-                        Log.d("SpeakerPlayingActivity", "switching pause/play");
-                        pauseAll();
-//                        changeTime(object.getTime());   //change time after the media players are paused
-                        return;
-                    } else {
-                        Log.d("SpeakerPlayingActivity", "switching pause/play");
-//                        changeTime(object.getTime());   //change time before resuming
-                        playAll();
-                        return;
+                if (object.getControllerNumber() == 0) {
+                    if (isPlaying0 != object.getPlaying()) {
+                        isPlaying0 = object.getPlaying();
+                        if (!isPlaying0) {
+                            Log.d("SpeakerPlayingActivity", "controller 1 told phones to pause");
+                            pauseMPs(0);
+                        } else {
+                            Log.d("SpeakerPlayingActivity", "controller 1 told phones to play");
+                            playMPs(0);
+                        }
+                    }
+                } else {
+                    if (isPlaying1 != object.getPlaying()) {
+                        isPlaying1 = object.getPlaying();
+                        if (!isPlaying1) {
+                            Log.d("SpeakerPlayingActivity", "controller 2 told phones to pause");
+                            pauseMPs(1);
+                        } else {
+                            Log.d("SpeakerPlayingActivity", "controller 2 told phones to play");
+                            playMPs(1);
+                        }
                     }
                 }
             }
@@ -378,9 +456,22 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Time> query, Time object) {
                 Log.d("SpeakerPlayingActivity", "created time subscription");
 
-                if(!prepared && audioIDholder != null)
-                    prepMediaPlayers(audioIDholder);
-                changeTime(object.getTime());  //if speaker initially joins late then have it match up with the others and the controller
+                if (object.getControllerNumber() == 0) {
+                    if (!prepared0 && !allMPs.isEmpty()) {
+                        prepMediaPlayers(allAudioTracks.get(0), 0);
+                    }
+                } else {
+                    if (!prepared1 && !allMPs.isEmpty()) {
+                        prepMediaPlayers(allAudioTracks.get(1), 1);
+                    }
+                }
+                if (object.getControllerNumber() == 0) {
+                    // if first controller starting session
+                    changeTime(object.getTime(), 0);
+                }
+                else {
+                    changeTime(object.getTime(), 1);
+                }  //if speaker initially joins late then have it match up with the others and the controller
             }
         });
 
@@ -389,20 +480,45 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
             public void onEvent(ParseQuery<Time> query, Time object) {
                 //if the time of the speaker is too different from the time of the controller
                 //can continue to find "sweet spot" but somewhere between 100 and 500... 300 seems great
-                if(!prepared && audioIDholder != null)
-                    prepMediaPlayers(audioIDholder);
+                if (object.getControllerNumber() == 0) {
+                    if (!prepared0 && !allMPs.isEmpty()) {
+                        prepMediaPlayers(allAudioTracks.get(0), 0);
+                    }
+                } else {
+                    if (!prepared1 && !allMPs.isEmpty()) {
+                        prepMediaPlayers(allAudioTracks.get(1), 1);
+                    }
+                }
 
                 //if the controller app crashed
                 //the playback time is the same, then pause all the speaker media players
-                if(savedTime == object.getTime() && isPlaying) {
-                    pauseAll();
+                if (object.getControllerNumber() == 0 && isPlaying0 && savedTime == object.getTime()) {
+                    pauseMPs(0);
+                    return;
+                }
+                else if (object.getControllerNumber() == 1 && isPlaying0 && savedTime == object.getTime()) {
+                    pauseMPs(1);
                     return;
                 }
 
-                if( (centerMP.getCurrentPosition() > object.getTime() + 200) ) {
-                    changeTime(object.getTime());
-                } else if (centerMP.getCurrentPosition() < object.getTime() - 200){
-                    changeTime(object.getTime() + 100);
+
+                if (object.getControllerNumber() == 0) {
+                    // if first controller starting session
+                    if (!allMPs.isEmpty() && allMPs.get(0).getCurrentPosition() > object.getTime() + 200) {
+                        Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
+                        changeTime(object.getTime(), 0);
+                    } else if (!allMPs.isEmpty() && allMPs.get(0).getCurrentPosition() < object.getTime() - 200) {
+                        changeTime(object.getTime() + 100, 0);
+                    }
+                } else {
+                    // if first controller starting session
+                    if (allMPs.get(1).getCurrentPosition() > object.getTime() + 200) {
+                        Log.d("SpeakerPlayingActivity", "times are off so calling changeTime");
+                        changeTime(object.getTime(), 1);
+                    } else if (allMPs.get(5).getCurrentPosition() < object.getTime() - 200) {
+                        changeTime(object.getTime() + 100, 1);
+                    }
+
                 }
                 savedTime = object.getTime();
             }
@@ -444,18 +560,31 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
                     if (throwing) {
                         Log.e("SpeakerPlayingActivity", "throwing and setting volume to " + getMaxVol(movingNode) + "" + getMaxVol(movingNode));
-                        centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
-                        frontLeftMP.setVolume(0, 0);
-                        backLeftMP.setVolume(0, 0);
-                        frontRightMP.setVolume(0, 0);
-                        backRightMP.setVolume(0, 0);
+                        if (object.getControllerNumber() == 0) {
+                            allMPs.get(0).setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                            for (int i = 1; i < 5; i++) {
+                                allMPs.get(i).setVolume(0, 0);
+                            }
+                        }
+                        else if (object.getControllerNumber() == 1) {
+                            allMPs.get(5).setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                            for (int i = 6; i < 10; i++) {
+                                allMPs.get(i).setVolume(0, 0);
+                            }
+                        }
+
                     } else {
                         Log.e("THROWING", "Returned");
-                        setToMaxVol(centerMP);
-                        setToMaxVol(frontLeftMP);
-                        setToMaxVol(backLeftMP);
-                        setToMaxVol(frontRightMP);
-                        setToMaxVol(backRightMP);
+                        if (object.getControllerNumber() == 0) {
+                            for (int i = 0; i < 5; i++) {
+                                setToMaxVol(allMPs.get(i), i);
+                            }
+                        }
+                        else if (object.getControllerNumber() == 1) {
+                            for (int i = 5; i < 10; i++) {
+                                setToMaxVol(allMPs.get(i), i - 5);
+                            }
+                        }
                     }
 
                 }
@@ -464,11 +593,18 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
                     movingNode = object.getLocation();
                     Log.d("SpeakerPlayingActivity", "movingnode != object.getmovingnode");
                     Log.d("SpeakerPlayingActivity", "setting volume to " + getMaxVol(movingNode) + " , " + getMaxVol(movingNode));
-                    centerMP.setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
-                    frontLeftMP.setVolume(0, 0);
-                    backLeftMP.setVolume(0, 0);
-                    frontRightMP.setVolume(0, 0);
-                    backRightMP.setVolume(0, 0);
+                    if (object.getControllerNumber() == 0) {
+                        allMPs.get(0).setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                        for (int i = 1; i < 5; i++) {
+                            allMPs.get(i).setVolume(0, 0);
+                        }
+                    }
+                    else if (object.getControllerNumber() == 1) {
+                        allMPs.get(5).setVolume(getMaxVol(movingNode), getMaxVol(movingNode));
+                        for (int i = 6; i < 10; i++) {
+                            allMPs.get(i).setVolume(0, 0);
+                        }
+                    }
 
                     //0 means the view is completely transparent and 1 means the view is completely opaque.
                     //sets the color to full purple if it is closest to the movingNode position
@@ -517,9 +653,9 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     public void disconnect() {
         Log.d("speakerplaying", "disconnectfunction");
-        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
-            pauseAll();
-        }
+//        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
+//            pauseAll();
+//        }
 
         //Run code on the UI thread
         runOnUiThread(new Runnable() {
@@ -536,7 +672,8 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
     public void disconnect(View view) {
         parseLiveQueryClient.disconnect();  //only if user initiated the disconnect from the server
         disconnect();
-        pauseAll();
+        pauseMPs(0);
+        pauseMPs(1);
         reconnected = false;
         userInitiatedDisconnect = true;
     }
@@ -549,8 +686,10 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         lostConnection.setVisibility(View.INVISIBLE);
         reconnected = true;
 
-        if(isPlaying) {
-            playAll();
+        if(isPlaying0) {
+            playMPs(0);
+        } else if (isPlaying1) {
+            playMPs(1);
         }
     }
 
@@ -576,7 +715,7 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
 
     //TODO- should these be synchronized?
     //Create mediaplayers based on given songIds
-    private void prepMediaPlayers(AudioIDs audioIDs){
+    private void prepMediaPlayers(AudioIDs audioIDs, int controller){
 
         centerID = audioIDs.getIDs().get(0);
         frontLeftID = audioIDs.getIDs().get(1);
@@ -584,59 +723,115 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         backLeftID = audioIDs.getIDs().get(3);
         backRightID = audioIDs.getIDs().get(4);
 
-        centerMP = MediaPlayer.create(SpeakerPlayingActivity.this, centerID);
-        frontLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontLeftID);
-        frontRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontRightID);
-        backLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, backLeftID);
-        backRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, backRightID);
-        Log.d("prepMediaPlayers", "finished setting up media players");
-        prepared = true;
+        MediaPlayer centerMP = MediaPlayer.create(SpeakerPlayingActivity.this, centerID);
+        MediaPlayer frontLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontLeftID);
+        MediaPlayer frontRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, frontRightID);
+        MediaPlayer backLeftMP = MediaPlayer.create(SpeakerPlayingActivity.this, backLeftID);
+        MediaPlayer backRightMP = MediaPlayer.create(SpeakerPlayingActivity.this, backRightID);
+        allMPs.add(centerMP);
+        allMPs.add(frontLeftMP);
+        allMPs.add(frontRightMP);
+        allMPs.add(backLeftMP);
+        allMPs.add(backRightMP);
+        Log.d("SpeakerPlayingActivity", "finished setting up media players");
 
-        if(isPlaying)
-            playAll();
+        setToMaxVol(centerMP, 0);
+        setToMaxVol(frontRightMP, 1);
+        setToMaxVol(backRightMP, 2);
+        setToMaxVol(backLeftMP, 3);
+        setToMaxVol(frontLeftMP, 4);
+        if(isPlaying0 && controller == 0) {
+            Log.d("SpeakerPlayingActivity", "isPlaying for controller 1, so playing media players within prep");
+            prepared0 = true;
+            playMPs(controller);
+        } else if (isPlaying1 && controller == 1) {
+            Log.d("SpeakerPlayingActivity", "isPlaying for controller 2, so playing media players within prep");
+            prepared1 = true;
+            playMPs(controller);
+        }
     }
 
     //pause All 5 mediaplayers
-    synchronized private void pauseAll(){
-        centerMP.pause();
-        frontLeftMP.pause();
-        frontRightMP.pause();
-        backLeftMP.pause();
-        backRightMP.pause();
+    synchronized private void pauseMPs(int controller){
+        // pause the media players for specified controller
+        if (controller == 0) {
+            // pause mps for first controller
+            for (int i = 0; i < 5; i++) {
+                allMPs.get(i).pause();
+            }
+
+        } else if (numControllers > 1){
+            // pause mps for second controller
+            for (int i = 5; i < 10; i++) {
+                allMPs.get(i).pause();
+            }
+        }
     }
 
-    //play all 5 media players
-    synchronized private void playAll(){
-        centerMP.start();
-        frontLeftMP.start();
-        frontRightMP.start();
-        backLeftMP.start();
-        backRightMP.start();
+    //play all 5 mediaplayers
+    synchronized private void playMPs(int controller){
+        // pause the media players for specified controller
+        if (controller == 0) {
+            // pause mps for first controller
+            for (int i = 0; i < 5; i++) {
+                if (!allMPs.isEmpty()) {
+                    Log.d("SpeakerPlayingActivity", "playing media player " + i);
+                    allMPs.get(i).start();
+                }
+            }
+
+        } else if (numControllers > 1){
+            // pause mps for second controller
+            Log.d("SpeakerPlayingActivity", "more than one controller");
+            Log.d("SpeakerPlayingActivity", String.format("allMPs size: " + allMPs.size()));
+            for (int i = 5; i < 10; i++) {
+                if (allMPs.size() > 5) {
+                    allMPs.get(i).start();
+                }
+            }
+        }
     }
 
+    //TODO - CREATED
     private void releaseAll(){
-        centerMP.release();
-        frontLeftMP.release();
-        frontRightMP.release();
-        backLeftMP.release();
-        backRightMP.release();
+        for (int i = 0; i < allMPs.size(); i++) {
+            if (!allMPs.isEmpty()) {
+                allMPs.get(i).release();
+            }
+        }
     }
 
+    //TODO - CREATED
     private void nullAll(){
-        centerMP = null;
-        frontLeftMP = null;
-        frontRightMP = null;
-        backLeftMP = null;
-        backRightMP = null;
+        MediaPlayer m;
+        for (int i = 0; i < allMPs.size(); i++) {
+            if (!allMPs.isEmpty()) {
+                m = allMPs.get(i);
+                m = null;
+            }
+
+        }
     }
 
-    //change time of all 5 media players
-    private void changeTime(int time){
-        centerMP.seekTo(time);
-        frontLeftMP.seekTo(time);
-        frontRightMP.seekTo(time);
-        backLeftMP.seekTo(time);
-        backRightMP.seekTo(time);
+    //change time of media players with specified controller
+    synchronized private void changeTime(int time, int controller){
+        if (controller == 0) {
+            Log.d("SpeakerPlayingActivity", "changing time for controller 1");
+            for (int i = 0; i < 5; i++) {
+                if (!allMPs.isEmpty()) {
+                    Log.d("SpeakerPlayingActivity", "changing time of media player " + i + "to " + time);
+                    allMPs.get(i).seekTo(time);
+                }
+            }
+
+        } else if (numControllers > 1){
+            // pause mps for second controller
+            for (int i = 5; i < 10; i++) {
+                if (!allMPs.isEmpty()) {
+                    allMPs.get(i).seekTo(time);
+                }
+            }
+        }
     }
 
 
@@ -655,45 +850,29 @@ public class SpeakerPlayingActivity extends AppCompatActivity {
         return maxVol;
     }
 
-    //TODO - Might have to differentiate between nodes, not letting center extend???
-    //TODO - I don't like hardcoding the nodes to the mps here...should we create a dictionary or something?
-    private void setToMaxVol(MediaPlayer mp){
+    private void setToMaxVol(MediaPlayer mp, int num){
         double node = 0.5;
-        if ( mp == centerMP){
+        if ( num == 0){
             node = 0.5;
-        } else if (mp == frontRightMP){
+        } else if (num == 1){
             node = 0.625;
-        } else if (mp == backRightMP){
+        } else if (num == 2){
             node = 0.875;
-        } else if (mp == backLeftMP){
+        } else if (num == 3){
             node = 0.125;
-        } else if (mp == frontLeftMP){
+        } else if (num == 4){
             node = 0.375;
         }
-
-        Log.e("Adjustment", "node = " + node);
-        Log.e("Adjustment", "position = " + position);
 
         mp.setVolume(getMaxVol(node), getMaxVol(node));
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("test", "ondestroy");
         super.onDestroy();
-
-        if(frontRightMP != null && backRightMP != null && frontLeftMP != null && backLeftMP != null && centerMP != null) {
-            frontLeftMP.release();
-            frontRightMP.release();
-            backLeftMP.release();
-            backRightMP.release();
-            centerMP.release();
-
-            frontLeftMP = null;
-            frontRightMP = null;
-            backLeftMP = null;
-            backRightMP = null;
-            centerMP = null;
+        if(allMPs != null) {
+            releaseAll();
+            nullAll();
         }
     }
 

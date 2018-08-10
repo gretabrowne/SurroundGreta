@@ -8,6 +8,11 @@
     xmlns:circular="http://schemas.android.com/apk/res-auto"
     tools:context=".ControllerPlayingActivity">
 
+    <RelativeLayout
+        android:id="@+id/defaultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
@@ -119,6 +124,23 @@
         android:text="02:54"
         android:textColor="@android:color/white" />
 
+    <ImageView
+        android:id="@+id/ivDisconnected"
+        android:layout_width="40dp"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:foregroundGravity="right"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/ivConnected"
+        android:layout_width="40dp"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:foregroundGravity="right" />
+
     <ImageButton
         android:id="@+id/replayButton"
         android:layout_width="wrap_content"
@@ -128,5 +150,7 @@
         android:background="@android:color/transparent"
         android:onClick="replay"
         circular:srcCompat="@drawable/ic_replay_40" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

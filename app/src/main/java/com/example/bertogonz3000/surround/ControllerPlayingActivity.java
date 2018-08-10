@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -36,7 +37,12 @@ import com.example.bertogonz3000.surround.ParseModels.Throwing;
 import com.example.bertogonz3000.surround.ParseModels.Time;
 import com.example.bertogonz3000.surround.ParseModels.Volume;
 import com.example.bertogonz3000.surround.views.VolcationSpinner;
+import com.parse.LiveQueryException;
 import com.parse.ParseException;
+import com.parse.ParseLiveQueryClient;
+import com.parse.ParseLiveQueryClientCallbacks;
+import com.parse.ParseQuery;
+import com.parse.SubscriptionHandling;
 import com.sdsmdg.harjot.crollerTest.Croller;
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener;
 
@@ -68,6 +74,13 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
     ImageButton playButton;
     Croller croller;
     ImageView ivCover;
+
+    ImageView ivDisconnect;
+    ImageView ivConnect;
+    Button disconnectBtn;
+    RelativeLayout lostConnection;
+    RelativeLayout loaderContainer;
+    RelativeLayout defaultContainer;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -113,6 +126,13 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         playButton = findViewById(R.id.playButton);
         btnThrowSound = findViewById(R.id.btnThrowSound);
         spinner = findViewById(R.id.spinner);
+
+        disconnectBtn = findViewById(R.id.disconnectBtn);
+        ivConnect = findViewById(R.id.ivConnected);
+        ivDisconnect = findViewById(R.id.ivDisconnected);
+        lostConnection = findViewById(R.id.lostConnectionContainer);
+        defaultContainer = findViewById(R.id.defaultContainer);
+        defaultContainer.setVisibility(View.VISIBLE);
 
         spinner.setVisibility(View.GONE);
         spinner.setMaxVol(100);
@@ -176,6 +196,77 @@ public class ControllerPlayingActivity extends AppCompatActivity implements Seek
         seekbar.setMax(100);
 
         updateProgressBar();
+
+        final ParseLiveQueryClient parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient();
+
+        parseLiveQueryClient.registerListener(new ParseLiveQueryClientCallbacks() {
+            @Override
+            public void onLiveQueryClientConnected(ParseLiveQueryClient client) {
+                Log.d("ControllerPlayingActivity", "connected");
+                disconnectBtn.setText("DISCONNECT");
+                ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ivConnect.setVisibility(View.VISIBLE);
+                        ivDisconnect.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+
+            @Override
+            public void onLiveQueryClientDisconnected(ParseLiveQueryClient client, boolean userInitiated) {
+                // disconnect();
+                Log.d("ControllerPlayingActivity", "disconnected");
+                disconnectBtn.setText("CONNECT");
+                ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ivDisconnect.setVisibility(View.VISIBLE);
+                        ivConnect.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+
+            @Override
+            public void onLiveQueryError(ParseLiveQueryClient client, LiveQueryException reason) {
+                Log.d("ControllerPlayingActivity", "onlivequeryerror");
+                ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ivDisconnect.setVisibility(View.VISIBLE);
+                        ivConnect.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+
+            @Override
+            public void onSocketError(ParseLiveQueryClient client, Throwable reason) {
+                Log.d("ControllerPlayingActivity", "onsocketerror");
+                disconnectBtn.setText("CONNECT");
+                ControllerPlayingActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ivDisconnect.setVisibility(View.VISIBLE);
+                        ivConnect.setVisibility(View.INVISIBLE);
+                    }
+                });
+                parseLiveQueryClient.reconnect();
+                parseLiveQueryClient.connectIfNeeded();
+            }
+        });
+
+        ParseQuery<Session> query = ParseQuery.getQuery(Session.class);
+        SubscriptionHandling<Session> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Session>() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onEvent(ParseQuery<Session> query, Session object) {
+                // if playing status is updated
+                Log.d("ControllerPlayingActivity", "handled event");
+
+            }
+        });
 
 
         String trackName = session.getTrackName();
